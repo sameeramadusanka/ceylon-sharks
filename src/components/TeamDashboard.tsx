@@ -63,8 +63,8 @@ const displayDate = (date: string) => new Intl.DateTimeFormat('en', { day: '2-di
 const assetPath = (path: string) => {
   const value = path.trim();
   if (!value) return '';
-  if (value.startsWith('/') || value.startsWith('http')) return value;
-  return `/assets/${value.replace(/^assets\//, '')}`;
+  if (value.startsWith('http')) return value;
+  return `${import.meta.env.BASE_URL}${value.replace(/^\/+/, '').replace(/^assets\//, '')}`;
 };
 const initials = (name: string) => name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 const statValue = (value: number | null) => value === null ? '-' : String(value);
@@ -273,7 +273,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
     <main>
       <header className="site-header">
         <a className="brand" href="#home" aria-label={text(site.accessibility.homeLabelTemplate, { team: team.name })}>
-          <img className="brand-mark" src={site.assets.logoImage} alt={`${team.name} logo`} />
+          <img className="brand-mark" src={assetPath(site.assets.logoImage)} alt={`${team.name} logo`} />
           <span><b>{team.shortName.toUpperCase()}</b><small>{team.name === team.shortName ? 'CRICKET CLUB' : team.name.toUpperCase()}</small></span>
         </a>
         <button className="mobile-menu" aria-label={site.accessibility.toggleNavigation} onClick={() => setMobileNavOpen(!mobileNavOpen)}>
@@ -287,7 +287,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
         <a className="header-cta" href="#matches">{site.actions.seasonPrefix} {seasonLabel} <ArrowUpRight size={15} /></a>
       </header>
 
-      <section className="hero" id="home" style={{ '--hero-image': `url(${bannerImages[bannerImageIndex] ?? site.assets.heroImage})` } as React.CSSProperties}>
+        <section className="hero" id="home" style={{ '--hero-image': `url(${bannerImages[bannerImageIndex] ?? assetPath(site.assets.heroImage)})` } as React.CSSProperties}>
         <div className="hero-image" />
         <div className="hero-grid" />
         <div className="hero-content page-width">
@@ -340,6 +340,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{site.sections.records.label}</SectionLabel><div className="records-layout"><div><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2><p>{site.sections.records.description}</p></div><div className="record-list">{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></section>
 
       <footer className="site-footer"><div className="page-width"><div className="footer-brand"><img className="brand-mark" src={site.assets.logoImage} alt={`${team.name} logo`} /><div><strong>{team.name.toUpperCase()}</strong><p>{site.footer.tagline}</p></div></div><div className="footer-bottom"><span>{site.footer.copyrightPrefix} {seasonLabel} {team.name}</span><span>{site.actions.madeForMoments} <ArrowUpRight size={14} /></span></div></div></footer>
+  <footer className="site-footer"><div className="page-width"><div className="footer-brand"><img className="brand-mark" src={assetPath(site.assets.logoImage)} alt={`${team.name} logo`} /><div><strong>{team.name.toUpperCase()}</strong><p>{site.footer.tagline}</p></div></div><div className="footer-bottom"><span>{site.footer.copyrightPrefix} {seasonLabel} {team.name}</span><span>{site.actions.madeForMoments} <ArrowUpRight size={14} /></span></div></div></footer>
 
       {selectedPlayer && <div className="modal-backdrop" role="presentation" onClick={() => setSelectedPlayer(null)}><div className="player-modal" role="dialog" aria-modal="true" aria-labelledby="player-name" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedPlayer(null)} aria-label={site.accessibility.closeProfile}><X size={19} /></button><div className={`modal-photo${selectedPlayer.image ? '' : ' modal-photo--empty'}`} style={selectedPlayer.image ? { backgroundImage: `url(${selectedPlayer.image})` } : undefined}>{!selectedPlayer.image && <strong>{initials(selectedPlayer.name)}</strong>}</div><div className="modal-content"><span className="modal-number">#{String(selectedPlayer.number).padStart(2, '0')}</span><p className="section-label"><span />{site.playerLabels.profile}</p><h2 id="player-name">{selectedPlayer.name}</h2><p className="modal-role">{selectedPlayer.role} · {selectedPlayer.detail}</p><div className="modal-stats"><StatBlock value={selectedPlayer.battingRuns.toLocaleString()} label="Batting runs" accent /><StatBlock value={statValue(selectedPlayer.battingAverage)} label="Batting average" /><StatBlock value={statValue(selectedPlayer.battingStrikeRate)} label="Strike rate" /></div><div className="modal-detail-sections"><section><h3>Batting</h3><div className="modal-detail-grid"><StatBlock value={statValue(selectedPlayer.battingHighestScore)} label="Highest score" /><StatBlock value={statValue(selectedPlayer.battingFours)} label="Fours" /><StatBlock value={statValue(selectedPlayer.battingSixes)} label="Sixes" /></div></section><section><h3>Bowling</h3><div className="modal-detail-grid"><StatBlock value={selectedPlayer.bowlingWickets.toString()} label="Wickets" /><StatBlock value={statValue(selectedPlayer.bowlingEconomy)} label="Economy" /><StatBlock value={statValue(selectedPlayer.bowlingAverage)} label="Average" /><StatBlock value={statValue(selectedPlayer.bowlingStrikeRate)} label="Strike rate" /><StatBlock value={statValue(selectedPlayer.bowlingBestWickets)} label="Best wickets" /></div></section><section><h3>Fielding</h3><div className="modal-detail-grid"><StatBlock value={selectedPlayer.fieldingDismissals.toString()} label="Dismissals" /><StatBlock value={statValue(selectedPlayer.fieldingCatches)} label="Catches" /><StatBlock value={statValue(selectedPlayer.fieldingRunOuts)} label="Run outs" /><StatBlock value={statValue(selectedPlayer.fieldingStumpings)} label="Stumpings" /></div></section></div></div></div></div>}
       {selectedScoreCard && <ScorecardModal scoreCard={selectedScoreCard} onClose={() => setSelectedScoreCard(null)} />}

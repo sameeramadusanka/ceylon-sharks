@@ -102,6 +102,7 @@ This project builds as a static site. The production output is generated in `dis
    ```
 
 2. Deploy the contents of `dist/` to a static hosting provider such as Netlify, Vercel, GitHub Pages, or an Nginx web server.
+2. Deploy the contents of `dist/` to a static hosting provider such as Netlify, Vercel, GitHub Pages, or an Nginx web server.
 
 3. Configure the hosting provider to serve `dist/index.html` for the site root. No server-side runtime or database is required.
 
@@ -112,6 +113,18 @@ rsync -av --delete dist/ user@server:/var/www/ceylon-sharks/
 ```
 
 After changing JSON data, images, or source code, run `npm run check` and `npm run build` again, then redeploy the refreshed `dist/` directory.
+
+### GitHub Pages with GitHub Actions
+
+The repository includes `.github/workflows/deploy.yml`. Every push to `main` runs the checks, builds the Astro site, uploads `dist/`, and deploys it to GitHub Pages.
+
+Enable Pages once in the GitHub repository:
+
+1. Open **Settings > Pages**.
+2. Under **Build and deployment**, choose **GitHub Actions** as the source.
+3. Push to `main` or run the **Deploy Astro site to GitHub Pages** workflow manually from the **Actions** tab.
+
+The site will be available at `https://sameeramadusanka.github.io/ceylon-sharks/` after the workflow completes.
 
 ## Useful Commands
 

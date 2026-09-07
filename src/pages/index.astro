@@ -7,6 +7,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
 const publicDirectory = join(process.cwd(), 'public');
+const basePath = import.meta.env.BASE_URL;
+const publicAsset = (path: string) => `${basePath}${path.replace(/^\/+/, '')}`;
 const filesIn = (directory: string): string[] => (readdirSync(directory, { withFileTypes: true }) as import('node:fs').Dirent[]).flatMap((entry) => {
   const path = join(directory, entry.name);
   return entry.isDirectory() ? filesIn(path) : [path];
@@ -20,15 +22,15 @@ const playersBySeason = Object.fromEntries(
 const bannerImages = (readdirSync(join(publicDirectory, 'banner_images')) as string[])
   .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
   .sort()
-  .map((fileName) => `/banner_images/${fileName}`);
+  .map((fileName) => publicAsset(`/banner_images/${fileName}`));
 const groundImage = (readdirSync(join(publicDirectory, 'ground_images')) as string[])
   .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
   .sort()
-  .map((fileName) => `/ground_images/${fileName}`)[0] ?? '';
+  .map((fileName) => publicAsset(`/ground_images/${fileName}`))[0] ?? '';
 const playerImages = Object.fromEntries(
   (readdirSync(join(publicDirectory, 'player_images')) as string[])
     .filter((fileName) => /^(\d+)\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
-    .map((fileName) => [fileName.replace(/\.[^.]+$/, ''), `/player_images/${fileName}`]),
+    .map((fileName) => [fileName.replace(/\.[^.]+$/, ''), publicAsset(`/player_images/${fileName}`)]),
 );
 const seasonResultsDirectory = join(publicDirectory, 'season_results');
 const scoreCardsDirectory = join(publicDirectory, 'score_cards');
