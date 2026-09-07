@@ -44,7 +44,7 @@ To add another season, create the matching folder under each applicable data dir
 
 ## Requirements
 
-- Node.js 18 or newer
+- Node.js 22.12 or newer
 - npm
 
 ## Local Development
