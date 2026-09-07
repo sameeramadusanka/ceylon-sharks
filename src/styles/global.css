@@ -38,7 +38,7 @@ a { color: inherit; text-decoration: none; }
 .modal-detail-sections { gap: 30px; }
 @media (max-width: 800px) {
 	.player-photo { height: 300px; }
-	.modal-photo { min-height: 360px; }
+	.modal-photo { background-color: var(--cream); background-position: center top; background-size: contain; background-repeat: no-repeat; min-height: 360px; }
 	.modal-content { padding: 42px 30px; }
 }
 @media (max-width: 470px) {
