@@ -1,0 +1,50 @@
+[
+  {
+    "id": 10,
+    "name": "Alex Morgan",
+    "number": 10,
+    "role": "BATTER",
+    "shortRole": "BAT",
+    "image": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=900&q=85",
+    "runs": 1240,
+    "average": "48.2",
+    "strikeRate": "137.6",
+    "detail": "Right-hand bat · Part-time off spin"
+  },
+  {
+    "id": 7,
+    "name": "James Lee",
+    "number": 7,
+    "role": "BOWLER",
+    "shortRole": "BOWL",
+    "image": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=900&q=85",
+    "runs": 32,
+    "average": "21.4",
+    "strikeRate": "7.2",
+    "detail": "Right-arm fast · New-ball specialist"
+  },
+  {
+    "id": 21,
+    "name": "Maya Patel",
+    "number": 21,
+    "role": "ALL-ROUNDER",
+    "shortRole": "AR",
+    "image": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=900&q=85",
+    "runs": 842,
+    "average": "38.3",
+    "strikeRate": "126.2",
+    "detail": "Left-hand bat · Leg spin"
+  },
+  {
+    "id": 1,
+    "name": "Noah Williams",
+    "number": 1,
+    "role": "WICKETKEEPER",
+    "shortRole": "WK",
+    "image": "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&w=900&q=85",
+    "runs": 654,
+    "average": "35.6",
+    "strikeRate": "142.1",
+    "detail": "Right-hand bat · Safe hands"
+  }
+]

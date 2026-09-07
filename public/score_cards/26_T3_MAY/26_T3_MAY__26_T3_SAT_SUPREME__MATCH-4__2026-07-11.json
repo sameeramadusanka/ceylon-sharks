@@ -1,0 +1,96 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-07-11",
+    "teams": {
+      "home": { "name": "Singa Smashers", "shortName": "SS" },
+      "away": { "name": "Ceylon Sharks", "shortName": "CS" }
+    },
+    "result": {
+      "winner": "Ceylon Sharks",
+      "resultType": "WON",
+      "margin": { "type": "WICKETS", "value": 6 },
+      "summary": "Ceylon Sharks won by 6 wickets"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Singa Smashers",
+      "opponent": "Ceylon Sharks",
+      "score": { "runs": 151, "wickets": 6, "overs": "15", "display": "151/6", "runRate": 10.07 },
+      "batting": [
+        { "player": "Francis Balan", "dismissal": { "type": "CAUGHT", "fielder": "Hasanka Chandrasena", "bowler": "Thameera Muthukumarana" }, "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Selva Ganesan", "dismissal": { "type": "CAUGHT", "fielder": "Lahiru Kaluthanthri", "bowler": "Isuru Samarakoon" }, "runs": 6, "balls": 12, "fours": 1, "sixes": 0, "strikeRate": 50.0 },
+        { "player": "Murlaikrishnan Jeyaraman", "dismissal": { "type": "CAUGHT", "fielder": "Thameera Muthukumarana", "bowler": "Tharindu Hettiarachchi" }, "runs": 12, "balls": 17, "fours": 1, "sixes": 1, "strikeRate": 70.59 },
+        { "player": "Mukesh Mali", "dismissal": { "type": "CAUGHT", "fielder": "Thameera Muthukumarana", "bowler": "Nuwan Sanjeewa" }, "runs": 40, "balls": 21, "fours": 3, "sixes": 4, "strikeRate": 190.48 },
+        { "player": "Vinoth Elumalai", "dismissal": { "type": "RUN_OUT", "fielder": "Nuwan Sanjeewa", "bowler": null }, "runs": 31, "balls": 20, "fours": 0, "sixes": 4, "strikeRate": 155.0 },
+        { "player": "Muthukumar Soundararajan", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Nuwan Sanjeewa" }, "runs": 28, "balls": 10, "fours": 0, "sixes": 4, "strikeRate": 280.0 },
+        { "player": "Saurabh Awasthi", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 14, "balls": 7, "fours": 3, "sixes": 0, "strikeRate": 200.0 },
+        { "player": "Sethu Prashant Sharma", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "GS Sudharsaan", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Sri Ganesh SANKARAN", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Nishant Thullichery", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 4, "legByes": 0, "wides": 16, "noBalls": 0, "penalty": 0, "total": 20 },
+      "bowling": [
+        { "player": "Thameera Muthukumarana", "overs": "3", "maidens": 0, "runs": 13, "wickets": 1, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 13, "economy": 4.33 },
+        { "player": "Isuru Samarakoon", "overs": "3", "maidens": 0, "runs": 37, "wickets": 1, "wides": 4, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 12.33 },
+        { "player": "Padmaka Bandara", "overs": "3", "maidens": 1, "runs": 20, "wickets": 0, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 13, "economy": 6.67 },
+        { "player": "Tharindu Hettiarachchi", "overs": "3", "maidens": 0, "runs": 30, "wickets": 1, "wides": 4, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 10.0 },
+        { "player": "Nuwan Sanjeewa", "overs": "3", "maidens": 0, "runs": 47, "wickets": 2, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 15.67 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Francis Balan", "score": 0, "over": "0.1" },
+        { "wicketNumber": 2, "player": "Murlaikrishnan Jeyaraman", "score": 20, "over": "4.2" },
+        { "wicketNumber": 3, "player": "Selva Ganesan", "score": 42, "over": "6.1" },
+        { "wicketNumber": 4, "player": "Mukesh Mali", "score": 90, "over": "9.5" },
+        { "wicketNumber": 5, "player": "Muthukumar Soundararajan", "score": 122, "over": "12.5" },
+        { "wicketNumber": 6, "player": "Vinoth Elumalai", "score": 136, "over": "13.4" }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Ceylon Sharks",
+      "opponent": "Singa Smashers",
+      "score": { "runs": 157, "wickets": 4, "overs": "14.2", "display": "157/4", "runRate": 10.95 },
+      "batting": [
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "CAUGHT", "fielder": "Murlaikrishnan Jeyaraman", "bowler": "Saurabh Awasthi" }, "runs": 32, "balls": 19, "fours": 5, "sixes": 1, "strikeRate": 168.42 },
+        { "player": "Hasitha De Silva", "dismissal": { "type": "CAUGHT", "fielder": "GS Sudharsaan", "bowler": "Vinoth Elumalai" }, "runs": 9, "balls": 11, "fours": 1, "sixes": 0, "strikeRate": 81.82 },
+        { "player": "Padmaka Bandara", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Muthukumar Soundararajan" }, "runs": 19, "balls": 13, "fours": 1, "sixes": 2, "strikeRate": 146.15 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "RUN_OUT", "fielder": "Vinoth Elumalai", "bowler": null }, "runs": 52, "balls": 23, "fours": 0, "sixes": 7, "strikeRate": 226.09 },
+        { "player": "Tharindu Hettiarachchi", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 27, "balls": 18, "fours": 1, "sixes": 3, "strikeRate": 150.0 },
+        { "player": "Lahiru Kaluthanthri", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 10, "balls": 2, "fours": 1, "sixes": 1, "strikeRate": 500.0 },
+        { "player": "Sameera Perera", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Thameera Muthukumarana", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Isuru Samarakoon", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 8, "noBalls": 0, "penalty": 0, "total": 8 },
+      "bowling": [
+        { "player": "Murlaikrishnan Jeyaraman", "overs": "1", "maidens": 0, "runs": 9, "wickets": 0, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 4, "economy": 9.0 },
+        { "player": "Sethu Prashant Sharma", "overs": "1", "maidens": 0, "runs": 14, "wickets": 0, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 1, "economy": 14.0 },
+        { "player": "Saurabh Awasthi", "overs": "3", "maidens": 0, "runs": 36, "wickets": 1, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 4, "economy": 12.0 },
+        { "player": "Muthukumar Soundararajan", "overs": "3", "maidens": 0, "runs": 16, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 5.33 },
+        { "player": "Vinoth Elumalai", "overs": "3", "maidens": 0, "runs": 27, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 9.0 },
+        { "player": "Nishant Thullichery", "overs": "1", "maidens": 0, "runs": 27, "wickets": 0, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 1, "economy": 27.0 },
+        { "player": "Francis Balan", "overs": "2.2", "maidens": 0, "runs": 28, "wickets": 0, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 5, "economy": 12.0 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasanka Chandrasena", "score": 42, "over": "4.4" },
+        { "wicketNumber": 2, "player": "Hasitha De Silva", "score": 44, "over": "5.1" },
+        { "wicketNumber": 3, "player": "Padmaka Bandara", "score": 96, "over": "9.4" },
+        { "wicketNumber": 4, "player": "Kasun Sampath", "score": 142, "over": "13.4" }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Singa Smashers 151/6 (15 overs)",
+    "secondInnings": "Ceylon Sharks 157/4 (14.2 overs)",
+    "winner": "Ceylon Sharks",
+    "margin": "6 wickets"
+  }
+}

@@ -1,0 +1,6 @@
+[
+  { "id": 24, "format": "T20", "date": "18 SEP 2026", "opponent": "Eagles CC", "opponentShort": "EAGLES", "teamScore": "184/6", "opponentScore": "172/8", "result": "WIN", "margin": "12 runs", "venue": "Titan Cricket Ground" },
+  { "id": 23, "format": "T20", "date": "12 SEP 2026", "opponent": "Harbor Kings", "opponentShort": "HARBOR", "teamScore": "206/4", "opponentScore": "198/7", "result": "WIN", "margin": "8 runs", "venue": "Kings Oval" },
+  { "id": 22, "format": "T20", "date": "08 SEP 2026", "opponent": "Metro Strikers", "opponentShort": "METRO", "teamScore": "164/9", "opponentScore": "169/5", "result": "LOSS", "margin": "5 wickets", "venue": "Titan Cricket Ground" },
+  { "id": 21, "format": "T20", "date": "02 SEP 2026", "opponent": "Riverside XI", "opponentShort": "RIVER", "teamScore": "218/5", "opponentScore": "211/8", "result": "WIN", "margin": "7 runs", "venue": "Riverbank Arena" }
+]

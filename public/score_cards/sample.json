@@ -1,0 +1,168 @@
+{
+  "match": {
+    "id": "<MATCH_ID>",
+    "competition": "<COMPETITION>",
+    "matchTitle": "<MATCH_TITLE>",
+    "date": "<YYYY-MM-DD>",
+
+    "teams": {
+      "home": {
+        "name": "<TEAM_1_NAME>",
+        "shortName": "<TEAM_1_SHORT_NAME>"
+      },
+      "away": {
+        "name": "<TEAM_2_NAME>",
+        "shortName": "<TEAM_2_SHORT_NAME>"
+      }
+    },
+
+    "result": {
+      "winner": "<WINNING_TEAM>",
+      "resultType": "<WON|LOST|DRAW|TIE|NO_RESULT>",
+      "margin": {
+        "type": "<RUNS|WICKETS|TIE|NONE>",
+        "value": "<MARGIN_VALUE>"
+      },
+      "summary": "<RESULT_SUMMARY>"
+    }
+  },
+
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "<BATTING_TEAM>",
+      "opponent": "<BOWLING_TEAM>",
+
+      "score": {
+        "runs": "<RUNS>",
+        "wickets": "<WICKETS>",
+        "overs": "<OVERS>",
+        "display": "<RUNS>/<WICKETS>",
+        "runRate": "<RUN_RATE>"
+      },
+
+      "batting": [
+        {
+          "player": "<PLAYER_NAME>",
+
+          "dismissal": {
+            "type": "<CAUGHT|BOWLED|LBW|RUN_OUT|STUMPED|HIT_WICKET|RETIRED_HURT|RETIRED_OUT|NOT_OUT|UNKNOWN>",
+            "fielder": "<FIELDER_NAME_OR_NULL>",
+            "bowler": "<BOWLER_NAME_OR_NULL>"
+          },
+
+          "runs": "<RUNS>",
+          "balls": "<BALLS>",
+          "fours": "<FOURS>",
+          "sixes": "<SIXES>",
+          "strikeRate": "<STRIKE_RATE>"
+        }
+      ],
+
+      "extras": {
+        "byes": "<BYES>",
+        "legByes": "<LEG_BYES>",
+        "wides": "<WIDES>",
+        "noBalls": "<NO_BALLS>",
+        "penalty": "<PENALTY>",
+        "total": "<TOTAL_EXTRAS>"
+      },
+
+      "bowling": [
+        {
+          "player": "<BOWLER_NAME>",
+          "overs": "<OVERS>",
+          "maidens": "<MAIDENS>",
+          "runs": "<RUNS_CONCEDED>",
+          "wickets": "<WICKETS>",
+          "wides": "<WIDES>",
+          "noBalls": "<NO_BALLS>",
+          "hattricks": "<HATTRICKS>",
+          "dotBalls": "<DOT_BALLS>",
+          "economy": "<ECONOMY>"
+        }
+      ],
+
+      "fallOfWickets": [
+        {
+          "wicketNumber": "<WICKET_NUMBER>",
+          "player": "<PLAYER_NAME>",
+          "score": "<TEAM_SCORE>",
+          "over": "<OVER>"
+        }
+      ]
+    },
+
+    {
+      "inningsNumber": 2,
+      "team": "<BATTING_TEAM>",
+      "opponent": "<BOWLING_TEAM>",
+
+      "score": {
+        "runs": "<RUNS>",
+        "wickets": "<WICKETS>",
+        "overs": "<OVERS>",
+        "display": "<RUNS>/<WICKETS>",
+        "runRate": "<RUN_RATE>"
+      },
+
+      "batting": [
+        {
+          "player": "<PLAYER_NAME>",
+
+          "dismissal": {
+            "type": "<CAUGHT|BOWLED|LBW|RUN_OUT|STUMPED|HIT_WICKET|RETIRED_HURT|RETIRED_OUT|NOT_OUT|UNKNOWN>",
+            "fielder": "<FIELDER_NAME_OR_NULL>",
+            "bowler": "<BOWLER_NAME_OR_NULL>"
+          },
+
+          "runs": "<RUNS>",
+          "balls": "<BALLS>",
+          "fours": "<FOURS>",
+          "sixes": "<SIXES>",
+          "strikeRate": "<STRIKE_RATE>"
+        }
+      ],
+
+      "extras": {
+        "byes": "<BYES>",
+        "legByes": "<LEG_BYES>",
+        "wides": "<WIDES>",
+        "noBalls": "<NO_BALLS>",
+        "penalty": "<PENALTY>",
+        "total": "<TOTAL_EXTRAS>"
+      },
+
+      "bowling": [
+        {
+          "player": "<BOWLER_NAME>",
+          "overs": "<OVERS>",
+          "maidens": "<MAIDENS>",
+          "runs": "<RUNS_CONCEDED>",
+          "wickets": "<WICKETS>",
+          "wides": "<WIDES>",
+          "noBalls": "<NO_BALLS>",
+          "hattricks": "<HATTRICKS>",
+          "dotBalls": "<DOT_BALLS>",
+          "economy": "<ECONOMY>"
+        }
+      ],
+
+      "fallOfWickets": [
+        {
+          "wicketNumber": "<WICKET_NUMBER>",
+          "player": "<PLAYER_NAME>",
+          "score": "<TEAM_SCORE>",
+          "over": "<OVER>"
+        }
+      ]
+    }
+  ],
+
+  "matchSummary": {
+    "firstInnings": "<TEAM_1> <SCORE> (<OVERS> overs)",
+    "secondInnings": "<TEAM_2> <SCORE> (<OVERS> overs)",
+    "winner": "<WINNING_TEAM>",
+    "margin": "<WINNING_MARGIN>"
+  }
+}

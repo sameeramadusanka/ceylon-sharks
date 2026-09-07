@@ -1,0 +1,30 @@
+{
+  "season": {
+    "name": "26_T3_MAY",
+    "team": "Ceylon Sharks",
+    "statisticsType": "FIELDING",
+    "players": [
+      { "rank": 1, "player": "Hasanka Chandrasena", "team": null, "catches": 2, "wicketKeeperCatches": 8, "directRunOuts": 1, "indirectRunOuts": 0, "stumpings": 2, "totalDismissals": 13 },
+      { "rank": 2, "player": "Nuwan Sanjeewa", "team": null, "catches": 6, "wicketKeeperCatches": 0, "directRunOuts": 1, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 7 },
+      { "rank": 3, "player": "Sampath Basnagoda", "team": null, "catches": 5, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 1, "totalDismissals": 6 },
+      { "rank": 4, "player": "Thameera Muthukumarana", "team": null, "catches": 3, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 2, "stumpings": 0, "totalDismissals": 5 },
+      { "rank": 5, "player": "Hasitha De Silva", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 2, "indirectRunOuts": 1, "stumpings": 0, "totalDismissals": 4 },
+      { "rank": 6, "player": "Kasun Sampath", "team": null, "catches": 3, "wicketKeeperCatches": 0, "directRunOuts": 1, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 4 },
+      { "rank": 7, "player": "Isuru Samarakoon", "team": null, "catches": 2, "wicketKeeperCatches": 0, "directRunOuts": 1, "indirectRunOuts": 1, "stumpings": 0, "totalDismissals": 4 },
+      { "rank": 8, "player": "Tharindu Hettiarachchi", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 2, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 3 },
+      { "rank": 9, "player": "Lasitha Lokuge", "team": null, "catches": 3, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 3 },
+      { "rank": 10, "player": "Lahiru Kaluthanthri", "team": null, "catches": 2, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 2 },
+      { "rank": 11, "player": "Sameera Madusanka", "team": null, "catches": 2, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 2 },
+      { "rank": 12, "player": "Sameera Perera", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 1 },
+      { "rank": 13, "player": "Aruna Lakshitha", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 1 },
+      { "rank": 14, "player": "Malinda Mendis", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 1 },
+      { "rank": 15, "player": "Gagith Abeysekara", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 1 },
+      { "rank": 16, "player": "Padmaka Bandara", "team": null, "catches": 1, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 1 },
+      { "rank": 17, "player": "Chamira Thilakarathne", "team": null, "catches": 0, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 0 },
+      { "rank": 18, "player": "Merril Antoney", "team": null, "catches": 0, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 0 },
+      { "rank": 19, "player": "Aruna Perera", "team": null, "catches": 0, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 0 },
+      { "rank": 20, "player": "Menuka Weerasinghe", "team": null, "catches": 0, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 0 },
+      { "rank": 21, "player": "Dilshan Harshana", "team": null, "catches": 0, "wicketKeeperCatches": 0, "directRunOuts": 0, "indirectRunOuts": 0, "stumpings": 0, "totalDismissals": 0 }
+    ]
+  }
+}

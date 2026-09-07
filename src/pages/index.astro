@@ -1,0 +1,81 @@
+---
+import TeamDashboard from '../components/TeamDashboard';
+import '../styles/global.css';
+import team from '../data/team.json';
+import site from '../data/site.json';
+import { readdirSync, readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+
+const publicDirectory = join(process.cwd(), 'public');
+const filesIn = (directory: string): string[] => (readdirSync(directory, { withFileTypes: true }) as import('node:fs').Dirent[]).flatMap((entry) => {
+  const path = join(directory, entry.name);
+  return entry.isDirectory() ? filesIn(path) : [path];
+});
+const playersBySeason = Object.fromEntries(
+  filesIn(join(publicDirectory, 'players'))
+    .map((filePath) => ({ filePath, fileName: basename(filePath) }))
+    .filter(({ fileName }) => /__PLAYERS__\d{4}\.json$/.test(fileName))
+    .map(({ filePath, fileName }) => [fileName.match(/^(.*?)__PLAYERS__\d{4}\.json$/)?.[1] ?? '', readFileSync(filePath, 'utf8')]),
+);
+const bannerImages = (readdirSync(join(publicDirectory, 'banner_images')) as string[])
+  .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
+  .sort()
+  .map((fileName) => `/banner_images/${fileName}`);
+const groundImage = (readdirSync(join(publicDirectory, 'ground_images')) as string[])
+  .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
+  .sort()
+  .map((fileName) => `/ground_images/${fileName}`)[0] ?? '';
+const playerImages = Object.fromEntries(
+  (readdirSync(join(publicDirectory, 'player_images')) as string[])
+    .filter((fileName) => /^(\d+)\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
+    .map((fileName) => [fileName.replace(/\.[^.]+$/, ''), `/player_images/${fileName}`]),
+);
+const seasonResultsDirectory = join(publicDirectory, 'season_results');
+const scoreCardsDirectory = join(publicDirectory, 'score_cards');
+const seasonFiles = filesIn(seasonResultsDirectory)
+  .map((filePath) => ({ filePath, fileName: basename(filePath) }))
+  .filter(({ fileName }) => /__RESULTS__\d{4}\.json$/.test(fileName))
+  .map(({ filePath, fileName }) => {
+    const match = fileName.match(/^(.*?)__(.*?)__RESULTS__(\d{4})\.json$/);
+    if (!match) throw new Error(`Invalid season results filename: ${fileName}`);
+    const [, season, division, year] = match;
+    return { fileName, season, division, year: Number(year), content: readFileSync(filePath, 'utf8') };
+  });
+const seasonStatisticsDirectory = join(publicDirectory, 'season_statistics');
+const seasonStatistics = filesIn(seasonStatisticsDirectory)
+  .map((filePath) => ({ filePath, fileName: basename(filePath) }))
+  .filter(({ fileName }) => /__([A-Z]+)__\d{4}\.json$/.test(fileName))
+  .map(({ filePath, fileName }) => {
+    const match = fileName.match(/^(.*?)__(.*?)__([A-Z]+)__\d{4}\.json$/);
+    if (!match) throw new Error(`Invalid season statistics filename: ${fileName}`);
+    const [, season, division, statisticsType] = match;
+    return { fileName, season, division, statisticsType, content: readFileSync(filePath, 'utf8') };
+  });
+const scoreCards = filesIn(scoreCardsDirectory)
+  .map((filePath) => ({ filePath, fileName: basename(filePath) }))
+  .filter(({ fileName }) => /__MATCH-\d+__\d{4}-\d{2}-\d{2}\.json$/.test(fileName))
+  .map(({ filePath, fileName }) => {
+    const match = fileName.match(/^(.*?)__(.*?)__MATCH-(\d+)__(\d{4}-\d{2}-\d{2})\.json$/);
+    if (!match) throw new Error(`Invalid scorecard filename: ${fileName}`);
+    const [, season, division, matchNumber, date] = match;
+    return { fileName, season, division, matchNumber: Number(matchNumber), date, content: readFileSync(filePath, 'utf8') };
+  });
+
+const title = `${team.name} | ${site.seo.titleSuffix}`;
+const description = site.seo.descriptionTemplate.replace('{team}', team.name);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111314" />
+    <link rel="canonical" href={site.seo.canonicalUrl} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} />
+  </body>
+</html>

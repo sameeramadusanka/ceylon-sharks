@@ -1,0 +1,129 @@
+{
+  "seo": {
+    "titleSuffix": "Built for the Big Moments",
+    "descriptionTemplate": "Follow {team} through matches, squad stories, season performance, records, and the road to the next big moment.",
+    "canonicalUrl": "https://ceylon-sharks.example"
+  },
+  "assets": {
+    "heroImage": "/team-banner.jpeg",
+    "logoImage": "/brand/ceylon-sharks-logo.jpg"
+  },
+  "navigation": [
+    { "label": "Home", "href": "#home" },
+    { "label": "Matches", "href": "#matches" },
+    { "label": "Squad", "href": "#squad" },
+    { "label": "Statistics", "href": "#statistics" },
+    { "label": "Records", "href": "#records" },
+    { "label": "History", "href": "#history" }
+  ],
+  "actions": {
+    "seasonPrefix": "Season",
+    "exploreSeason": "Explore the season",
+    "ourStory": "Our story",
+    "recordBook": "Explore our record book",
+    "madeForMoments": "Made for the big moments"
+  },
+  "hero": {
+    "headlineBefore": "Built for",
+    "headlineEmphasis": "the big",
+    "headlineAfter": "moments.",
+    "descriptionTemplate": "A club with a pulse, a point of view, and no interest in playing small. Welcome to the home of the {nickname}.",
+    "seasonSuffix": "season",
+    "rankLabel": "Rank",
+    "formLabel": "Form",
+    "recordLabels": ["Wins", "Losses", "NR"],
+    "scrollLabel": "Scroll to enter"
+  },
+  "form": ["W", "W", "W", "L", "W", "W", "L", "W"],
+  "sections": {
+    "snapshot": { "label": "01 / The Snapshot", "titleBefore": "A season", "titleEmphasis": "in motion." },
+    "performance": { "label": "02 / Season Performance", "titleBefore": "The numbers", "titleEmphasis": "tell a story." },
+    "matches": { "label": "03 / Match Centre", "titleBefore": "Every game", "titleEmphasis": "has a pulse." },
+    "squad": { "label": "04 / The Squad", "titleBefore": "People who", "titleEmphasis": "change games.", "description": "The full squad. Many different ways to shift the match. Meet the current heartbeat of {team}." },
+    "history": { "label": "05 / Our Story", "titleBefore": "Built from", "titleEmphasis": "the ground up.", "description": "Every club has a beginning. Ours started with one pitch, a handful of believers, and a stubborn idea about how cricket should feel. Two decades later, the idea is still moving." },
+    "records": { "label": "06 / Record Book", "titleBefore": "Leave a mark.", "titleEmphasis": "Make it count.", "description": "The moments that made us. The numbers we still chase." }
+  },
+  "snapshotStats": [
+    { "value": "24", "label": "Matches" },
+    { "value": "75%", "label": "Win Rate", "accent": true },
+    { "value": "218", "label": "Avg Score" },
+    { "value": "176", "label": "Total Wickets" }
+  ],
+  "seasons": [2026, 2025, 2024, 2023],
+  "metrics": [
+    { "key": "FORM", "label": "Form", "values": [72, 84, 66, 42, 88, 76, 49, 92], "axis": [100, 50, 0], "suffix": "" },
+    { "key": "RUNS", "label": "Runs", "values": [184, 218, 176, 164, 246, 202, 169, 228], "axis": [250, 150, 0], "suffix": " runs" },
+    { "key": "WICKETS", "label": "Wickets", "values": [8, 11, 7, 5, 10, 9, 4, 12], "axis": [12, 8, 0], "suffix": "" },
+    { "key": "WIN RATE", "label": "Win Rate", "values": [64, 71, 68, 63, 75, 74, 70, 75], "axis": [100, 50, 0], "suffix": "%" }
+  ],
+  "performanceStats": [
+    { "value": "7", "label": "Best Winning Streak", "accent": true },
+    { "value": "8.4", "label": "Avg Run Rate" },
+    { "value": "246", "label": "Highest Score" },
+    { "value": "7.3", "label": "Wickets / Match" }
+  ],
+  "filters": {
+    "formatLabel": "Format",
+    "resultLabel": "Result",
+    "datasetLabel": "Season / Division",
+    "all": "ALL",
+    "formats": ["ALL", "T20"],
+    "results": ["ALL", "WIN", "LOSS"]
+  },
+  "nextMatch": {
+    "labelTemplate": "Next Match · {league}",
+    "date": "19",
+    "month": "SEP",
+    "time": "12:30",
+    "opponent": "Bedok Ferrets",
+    "opponentSuffix": "CC",
+    "versus": "VS",
+    "venueSuffix": "Home fixture",
+    "formLabel": "Form",
+    "lastMatchesLabel": "Last 5 matches"
+  },
+  "matchLabels": {
+    "matchPrefix": "Match",
+    "winShort": "W",
+    "lossShort": "L",
+    "winBy": "BY",
+    "lossBy": "BY"
+  },
+  "scorecardLabels": {
+    "title": "Scorecard Summary",
+    "view": "View scorecard",
+    "winnerSuffix": "BY",
+    "batting": "Batting",
+    "bowling": "Bowling",
+    "runs": "Runs",
+    "wickets": "Wickets",
+    "player": "Player",
+    "dismissal": "Dismissal",
+    "extras": "Extras",
+    "fallOfWickets": "Fall of wickets"
+  },
+  "playerLabels": {
+    "profile": "Player Profile",
+    "average": "Average",
+    "strikeRate": "Strike Rate",
+    "economy": "Economy",
+    "runs": "Runs",
+    "wickets": "Wickets"
+  },
+  "records": [
+    { "label": "Highest team score", "value": "246", "detail": "vs. North Stars" },
+    { "label": "Longest winning streak", "value": "7", "detail": "matches" },
+    { "label": "Biggest win by runs", "value": "58", "detail": "vs. Harbor Kings" },
+    { "label": "Most career runs", "value": "4,821", "detail": "club record" }
+  ],
+  "footer": {
+    "tagline": "Every run. Every wicket. Every moment.",
+    "copyrightPrefix": "©"
+  },
+  "accessibility": {
+    "homeLabelTemplate": "{team} home",
+    "toggleNavigation": "Toggle navigation",
+    "closeProfile": "Close player profile",
+    "closeScorecard": "Close scorecard"
+  }
+}

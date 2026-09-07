@@ -1,0 +1,97 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-06-13",
+    "teams": {
+      "home": { "name": "Gillies", "shortName": "GIL" },
+      "away": { "name": "Ceylon Sharks", "shortName": "CS" }
+    },
+    "result": {
+      "winner": "Gillies",
+      "resultType": "WON",
+      "margin": { "type": "RUNS", "value": 14 },
+      "summary": "Gillies won by 14 runs"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Gillies",
+      "opponent": "Ceylon Sharks",
+      "score": { "runs": 97, "wickets": 8, "overs": "15", "display": "97/8", "runRate": 6.47 },
+      "batting": [
+        { "player": "Syamjith P.V", "dismissal": { "type": "CAUGHT", "fielder": "Hasanka Chandrasena", "bowler": "Nuwan Sanjeewa" }, "runs": 14, "balls": 12, "fours": 0, "sixes": 2, "strikeRate": 116.67 },
+        { "player": "Libin B", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Gagith Abeysekara" }, "runs": 9, "balls": 11, "fours": 1, "sixes": 0, "strikeRate": 81.82 },
+        { "player": "Diwakar Mohanasundaram", "dismissal": { "type": "CAUGHT", "fielder": "Kasun Sampath", "bowler": "Lahiru Kaluthanthri" }, "runs": 0, "balls": 6, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Deepanraj Raj", "dismissal": { "type": "CAUGHT", "fielder": "Gagith Abeysekara", "bowler": "Lahiru Kaluthanthri" }, "runs": 6, "balls": 11, "fours": 0, "sixes": 0, "strikeRate": 54.55 },
+        { "player": "Samikkan Durai", "dismissal": { "type": "RUN_OUT", "fielder": "Hasitha De Silva", "bowler": "Isuru Samarakoon" }, "runs": 27, "balls": 11, "fours": 0, "sixes": 4, "strikeRate": 245.45 },
+        { "player": "Narasimma Varman", "dismissal": { "type": "CAUGHT", "fielder": "Lasitha Lokuge", "bowler": "Nuwan Sanjeewa" }, "runs": 1, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 33.33 },
+        { "player": "Rajesh Samikannu", "dismissal": { "type": "CAUGHT", "fielder": "Nuwan Sanjeewa", "bowler": "Lahiru Kaluthanthri" }, "runs": 9, "balls": 15, "fours": 0, "sixes": 1, "strikeRate": 60.0 },
+        { "player": "K.S.M 08 (SABARI)", "dismissal": { "type": "STUMPED", "fielder": "Hasanka Chandrasena", "bowler": "Lahiru Kaluthanthri" }, "runs": 15, "balls": 13, "fours": 0, "sixes": 2, "strikeRate": 115.38 },
+        { "player": "Gopi Prabhu", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 2, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 100.0 },
+        { "player": "Sachin Shetty", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 4, "balls": 7, "fours": 0, "sixes": 0, "strikeRate": 57.14 },
+        { "player": "Francis Anand", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 9, "noBalls": 1, "penalty": 0, "total": 10 },
+      "bowling": [
+        { "player": "Gagith Abeysekara", "overs": "3", "maidens": 0, "runs": 8, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 14, "economy": 2.67 },
+        { "player": "Padmaka Bandara", "overs": "3", "maidens": 0, "runs": 19, "wickets": 0, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 6.33 },
+        { "player": "Nuwan Sanjeewa", "overs": "3", "maidens": 0, "runs": 19, "wickets": 2, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 6.33 },
+        { "player": "Lahiru Kaluthanthri", "overs": "3", "maidens": 0, "runs": 22, "wickets": 4, "wides": 1, "noBalls": 1, "hattricks": 0, "dotBalls": 8, "economy": 7.33 },
+        { "player": "Isuru Samarakoon", "overs": "3", "maidens": 0, "runs": 29, "wickets": 0, "wides": 5, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 9.67 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Libin B", "score": 16, "over": "2.4" },
+        { "wicketNumber": 2, "player": "Syamjith P.V", "score": 24, "over": "4.4" },
+        { "wicketNumber": 3, "player": "Diwakar Mohanasundaram", "score": 27, "over": "5.2" },
+        { "wicketNumber": 4, "player": "Deepanraj Raj", "score": 48, "over": "7.4" },
+        { "wicketNumber": 5, "player": "Narasimma Varman", "score": 49, "over": "8.1" },
+        { "wicketNumber": 6, "player": "Samikkan Durai", "score": 70, "over": "9.6" },
+        { "wicketNumber": 7, "player": "Rajesh Samikannu", "score": 88, "over": "13.2" },
+        { "wicketNumber": 8, "player": "K.S.M 08 (SABARI)", "score": 89, "over": "13.4" }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Ceylon Sharks",
+      "opponent": "Gillies",
+      "score": { "runs": 83, "wickets": 5, "overs": "15", "display": "83/5", "runRate": 5.53 },
+      "batting": [
+        { "player": "Hasitha De Silva", "dismissal": { "type": "CAUGHT", "fielder": "Narasimma Varman", "bowler": "Samikkan Durai" }, "runs": 4, "balls": 12, "fours": 0, "sixes": 0, "strikeRate": 33.33 },
+        { "player": "Gagith Abeysekara", "dismissal": { "type": "CAUGHT", "fielder": "Syamjith P.V", "bowler": "Francis Anand" }, "runs": 5, "balls": 13, "fours": 0, "sixes": 0, "strikeRate": 38.46 },
+        { "player": "Lahiru Kaluthanthri", "dismissal": { "type": "CAUGHT", "fielder": "Samikkan Durai", "bowler": "Sachin Shetty" }, "runs": 9, "balls": 12, "fours": 0, "sixes": 1, "strikeRate": 75.0 },
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "CAUGHT", "fielder": "Deepanraj Raj", "bowler": "K.S.M 08 (SABARI)" }, "runs": 13, "balls": 13, "fours": 0, "sixes": 1, "strikeRate": 100.0 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 35, "balls": 23, "fours": 1, "sixes": 4, "strikeRate": 152.17 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "CAUGHT", "fielder": "Deepanraj Raj", "bowler": "K.S.M 08 (SABARI)" }, "runs": 10, "balls": 15, "fours": 0, "sixes": 1, "strikeRate": 66.67 },
+        { "player": "Padmaka Bandara", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 1, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 50.0 },
+        { "player": "Sameera Perera", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Lasitha Lokuge", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Isuru Samarakoon", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 6, "noBalls": 0, "penalty": 0, "total": 6 },
+      "bowling": [
+        { "player": "Rajesh Samikannu", "overs": "3", "maidens": 0, "runs": 18, "wickets": 0, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 12, "economy": 6.0 },
+        { "player": "Samikkan Durai", "overs": "3", "maidens": 0, "runs": 9, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 9, "economy": 3.0 },
+        { "player": "Francis Anand", "overs": "3", "maidens": 0, "runs": 9, "wickets": 1, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 3.0 },
+        { "player": "K.S.M 08 (SABARI)", "overs": "3", "maidens": 0, "runs": 27, "wickets": 2, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 9, "economy": 9.0 },
+        { "player": "Sachin Shetty", "overs": "3", "maidens": 1, "runs": 20, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 13, "economy": 6.67 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasitha De Silva", "score": 11, "over": "3.4" },
+        { "wicketNumber": 2, "player": "Gagith Abeysekara", "score": 11, "over": "4.3" },
+        { "wicketNumber": 3, "player": "Hasanka Chandrasena", "score": 35, "over": "8.1" },
+        { "wicketNumber": 4, "player": "Lahiru Kaluthanthri", "score": 49, "over": "9.1" },
+        { "wicketNumber": 5, "player": "Nuwan Sanjeewa", "score": 82, "over": "14.2" }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Gillies 97/8 (15 overs)",
+    "secondInnings": "Ceylon Sharks 83/5 (15 overs)",
+    "winner": "Gillies",
+    "margin": "14 runs"
+  }
+}

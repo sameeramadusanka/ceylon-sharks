@@ -1,0 +1,30 @@
+{
+  "season": {
+    "name": "26_T3_MAY",
+    "team": "Ceylon Sharks",
+    "statisticsType": "BATTING",
+    "players": [
+      { "rank": 1, "player": "Kasun Sampath", "matches": 11, "innings": 11, "notOuts": 4, "runs": 257, "balls": 151, "average": 36.71, "strikeRate": 170.2, "highestScore": 73, "hundreds": 0, "seventyFives": 0, "fifties": 2, "twentyFives": 2, "ducks": 0, "sixes": 31, "fours": 6 },
+      { "rank": 2, "player": "Hasanka Chandrasena", "matches": 11, "innings": 11, "notOuts": 1, "runs": 180, "balls": 135, "average": 18.0, "strikeRate": 133.33, "highestScore": 79, "hundreds": 0, "seventyFives": 1, "fifties": 1, "twentyFives": 1, "ducks": 1, "sixes": 16, "fours": 8 },
+      { "rank": 3, "player": "Tharindu Hettiarachchi", "matches": 7, "innings": 7, "notOuts": 1, "runs": 172, "balls": 125, "average": 28.67, "strikeRate": 137.6, "highestScore": 65, "hundreds": 0, "seventyFives": 0, "fifties": 1, "twentyFives": 3, "ducks": 2, "sixes": 14, "fours": 12 },
+      { "rank": 4, "player": "Hasitha De Silva", "matches": 9, "innings": 9, "notOuts": 0, "runs": 146, "balls": 118, "average": 16.22, "strikeRate": 123.73, "highestScore": 52, "hundreds": 0, "seventyFives": 0, "fifties": 1, "twentyFives": 1, "ducks": 0, "sixes": 15, "fours": 6 },
+      { "rank": 5, "player": "Nuwan Sanjeewa", "matches": 10, "innings": 9, "notOuts": 0, "runs": 112, "balls": 136, "average": 12.44, "strikeRate": 82.35, "highestScore": 28, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 1, "ducks": 0, "sixes": 8, "fours": 6 },
+      { "rank": 6, "player": "Lahiru Kaluthanthri", "matches": 6, "innings": 6, "notOuts": 1, "runs": 96, "balls": 80, "average": 19.2, "strikeRate": 120.0, "highestScore": 34, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 2, "ducks": 0, "sixes": 10, "fours": 3 },
+      { "rank": 7, "player": "Sameera Perera", "matches": 9, "innings": 6, "notOuts": 0, "runs": 30, "balls": 44, "average": 5.0, "strikeRate": 68.18, "highestScore": 16, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 1, "sixes": 2, "fours": 0 },
+      { "rank": 8, "player": "Isuru Samarakoon", "matches": 6, "innings": 4, "notOuts": 1, "runs": 22, "balls": 28, "average": 7.33, "strikeRate": 78.57, "highestScore": 11, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 2, "fours": 1 },
+      { "rank": 9, "player": "Lasitha Lokuge", "matches": 9, "innings": 4, "notOuts": 2, "runs": 22, "balls": 35, "average": 11.0, "strikeRate": 62.86, "highestScore": 7, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 3 },
+      { "rank": 10, "player": "Padmaka Bandara", "matches": 4, "innings": 2, "notOuts": 1, "runs": 20, "balls": 15, "average": 20.0, "strikeRate": 133.33, "highestScore": 19, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 2, "fours": 1 },
+      { "rank": 11, "player": "Malinda Mendis", "matches": 4, "innings": 4, "notOuts": 1, "runs": 19, "balls": 26, "average": 6.33, "strikeRate": 73.08, "highestScore": 12, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 1, "sixes": 1, "fours": 1 },
+      { "rank": 12, "player": "Thameera Muthukumarana", "matches": 7, "innings": 2, "notOuts": 2, "runs": 7, "balls": 9, "average": null, "strikeRate": 77.78, "highestScore": 7, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 1, "fours": 0 },
+      { "rank": 13, "player": "Sameera Madusanka", "matches": 11, "innings": 7, "notOuts": 2, "runs": 7, "balls": 24, "average": 1.4, "strikeRate": 29.17, "highestScore": 7, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 4, "sixes": 0, "fours": 0 },
+      { "rank": 14, "player": "Sampath Basnagoda", "matches": 5, "innings": 3, "notOuts": 0, "runs": 6, "balls": 10, "average": 2.0, "strikeRate": 60.0, "highestScore": 6, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 2, "sixes": 1, "fours": 0 },
+      { "rank": 15, "player": "Gagith Abeysekara", "matches": 2, "innings": 2, "notOuts": 0, "runs": 6, "balls": 16, "average": 3.0, "strikeRate": 37.5, "highestScore": 5, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 0 },
+      { "rank": 16, "player": "Aruna Perera", "matches": 1, "innings": 1, "notOuts": 1, "runs": 2, "balls": 2, "average": null, "strikeRate": 100.0, "highestScore": 2, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 0 },
+      { "rank": 17, "player": "Dilshan Harshana", "matches": 1, "innings": 0, "notOuts": 0, "runs": 0, "balls": 0, "average": null, "strikeRate": 0.0, "highestScore": 0, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 0 },
+      { "rank": 18, "player": "Aruna Lakshitha", "matches": 1, "innings": 0, "notOuts": 0, "runs": 0, "balls": 0, "average": null, "strikeRate": 0.0, "highestScore": 0, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 0 },
+      { "rank": 19, "player": "Chamira Thilakarathne", "matches": 2, "innings": 0, "notOuts": 0, "runs": 0, "balls": 0, "average": null, "strikeRate": 0.0, "highestScore": 0, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 0, "sixes": 0, "fours": 0 },
+      { "rank": 20, "player": "Merril Antoney", "matches": 4, "innings": 1, "notOuts": 0, "runs": 0, "balls": 0, "average": 0.0, "strikeRate": 0.0, "highestScore": 0, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 1, "sixes": 0, "fours": 0 },
+      { "rank": 21, "player": "Menuka Weerasinghe", "matches": 1, "innings": 1, "notOuts": 0, "runs": 0, "balls": 2, "average": 0.0, "strikeRate": 0.0, "highestScore": 0, "hundreds": 0, "seventyFives": 0, "fifties": 0, "twentyFives": 0, "ducks": 1, "sixes": 0, "fours": 0 }
+    ]
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-05-30",
+    "teams": {
+      "home": { "name": "Indian Bullets", "shortName": "IB" },
+      "away": { "name": "Ceylon Sharks", "shortName": "CS" }
+    },
+    "result": {
+      "winner": "Indian Bullets",
+      "resultType": "WON",
+      "margin": { "type": "RUNS", "value": 60 },
+      "summary": "Indian Bullets won by 60 runs"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Indian Bullets",
+      "opponent": "Ceylon Sharks",
+      "score": { "runs": 123, "wickets": 8, "overs": "15", "display": "123/8", "runRate": 8.2 },
+      "batting": [
+        { "player": "Rohit Tripathi", "dismissal": { "type": "CAUGHT", "fielder": "Hasanka Chandrasena", "bowler": "Thameera Muthukumarana" }, "runs": 1, "balls": 6, "fours": 0, "sixes": 0, "strikeRate": 16.67 },
+        { "player": "Rohit Mathur", "dismissal": { "type": "CAUGHT", "fielder": "Sampath Basnagoda", "bowler": "Sampath Basnagoda" }, "runs": 4, "balls": 6, "fours": 0, "sixes": 0, "strikeRate": 66.67 },
+        { "player": "Anil Pandita", "dismissal": { "type": "CAUGHT", "fielder": "Sampath Basnagoda", "bowler": "Thameera Muthukumarana" }, "runs": 3, "balls": 5, "fours": 0, "sixes": 0, "strikeRate": 60.0 },
+        { "player": "Vipul Sharma", "dismissal": { "type": "CAUGHT", "fielder": "Lasitha Lokuge", "bowler": "Menuka Weerasinghe" }, "runs": 31, "balls": 29, "fours": 1, "sixes": 2, "strikeRate": 106.9 },
+        { "player": "Rajneesh Kaushal", "dismissal": { "type": "STUMPED", "fielder": "Sampath Basnagoda", "bowler": "Thameera Muthukumarana" }, "runs": 10, "balls": 7, "fours": 1, "sixes": 0, "strikeRate": 142.86 },
+        { "player": "Yuvi Rajan", "dismissal": { "type": "CAUGHT", "fielder": "Sampath Basnagoda", "bowler": "Sampath Basnagoda" }, "runs": 23, "balls": 14, "fours": 1, "sixes": 2, "strikeRate": 164.29 },
+        { "player": "Nagesh Kurra", "dismissal": { "type": "RUN_OUT", "fielder": null, "bowler": "Kasun Sampath" }, "runs": 35, "balls": 15, "fours": 2, "sixes": 3, "strikeRate": 233.33 },
+        { "player": "Mohamed Farook", "dismissal": { "type": "CAUGHT", "fielder": "Sameera Madusanka", "bowler": "Nuwan Sanjeewa" }, "runs": 2, "balls": 4, "fours": 0, "sixes": 0, "strikeRate": 50.0 },
+        { "player": "Lenju Pathrose Koshy", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Alam Mohammad Naushad", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 2, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 100.0 },
+        { "player": "SHAKTHIVEL ARAVINDHAN", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 12, "noBalls": 0, "penalty": 0, "total": 12 },
+      "bowling": [
+        { "player": "Sampath Basnagoda", "overs": "3", "maidens": 0, "runs": 9, "wickets": 2, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 3.0 },
+        { "player": "Thameera Muthukumarana", "overs": "3", "maidens": 0, "runs": 10, "wickets": 3, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 3.33 },
+        { "player": "Menuka Weerasinghe", "overs": "3", "maidens": 0, "runs": 43, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 3, "economy": 14.33 },
+        { "player": "Nuwan Sanjeewa", "overs": "3", "maidens": 0, "runs": 20, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 6.67 },
+        { "player": "Kasun Sampath", "overs": "3", "maidens": 0, "runs": 41, "wickets": 0, "wides": 7, "noBalls": 0, "hattricks": 0, "dotBalls": 4, "economy": 13.67 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Rohit Tripathi", "score": 5, "over": "1.3" },
+        { "wicketNumber": 2, "player": "Rohit Mathur", "score": 10, "over": "2.3" },
+        { "wicketNumber": 3, "player": "Anil Pandita", "score": 12, "over": "3.3" },
+        { "wicketNumber": 4, "player": "Rajneesh Kaushal", "score": 24, "over": "5.4" },
+        { "wicketNumber": 5, "player": "Yuvi Rajan", "score": 73, "over": "10.4" },
+        { "wicketNumber": 6, "player": "Vipul Sharma", "score": 81, "over": "11.2" },
+        { "wicketNumber": 7, "player": "Mohamed Farook", "score": 110, "over": "13.5" },
+        { "wicketNumber": 8, "player": "Nagesh Kurra", "score": 120, "over": "14.4" }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Ceylon Sharks",
+      "opponent": "Indian Bullets",
+      "score": { "runs": 63, "wickets": 10, "overs": "11.4", "display": "63/10", "runRate": 5.4 },
+      "batting": [
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "CAUGHT", "fielder": "Alam Mohammad Naushad", "bowler": "SHAKTHIVEL ARAVINDHAN" }, "runs": 9, "balls": 10, "fours": 1, "sixes": 0, "strikeRate": 90.0 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Mohamed Farook" }, "runs": 7, "balls": 15, "fours": 0, "sixes": 0, "strikeRate": 46.67 },
+        { "player": "Sampath Basnagoda", "dismissal": { "type": "CAUGHT", "fielder": "Rohit Tripathi", "bowler": "SHAKTHIVEL ARAVINDHAN" }, "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "CAUGHT", "fielder": "Substitute", "bowler": "Vipul Sharma" }, "runs": 11, "balls": 22, "fours": 0, "sixes": 1, "strikeRate": 50.0 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "CAUGHT", "fielder": "Nagesh Kurra", "bowler": "Lenju Pathrose Koshy" }, "runs": 25, "balls": 13, "fours": 1, "sixes": 3, "strikeRate": 192.31 },
+        { "player": "Lasitha Lokuge", "dismissal": { "type": "RUN_OUT", "fielder": null, "bowler": "Nagesh Kurra" }, "runs": 5, "balls": 7, "fours": 1, "sixes": 0, "strikeRate": 71.43 },
+        { "player": "Thameera Muthukumarana", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Menuka Weerasinghe", "dismissal": { "type": "CAUGHT", "fielder": "Nagesh Kurra", "bowler": "Vipul Sharma" }, "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Tharindu Hettiarachchi", "dismissal": { "type": "RETIRED_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Sameera Perera", "dismissal": { "type": "RETIRED_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Merril Antoney", "dismissal": { "type": "RETIRED_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 5, "noBalls": 1, "penalty": 0, "total": 6 },
+      "bowling": [
+        { "player": "SHAKTHIVEL ARAVINDHAN", "overs": "2", "maidens": 0, "runs": 6, "wickets": 2, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 3.0 },
+        { "player": "Mohamed Farook", "overs": "2", "maidens": 0, "runs": 11, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 5.5 },
+        { "player": "Nagesh Kurra", "overs": "2", "maidens": 0, "runs": 5, "wickets": 0, "wides": 0, "noBalls": 1, "hattricks": 0, "dotBalls": 8, "economy": 2.5 },
+        { "player": "Alam Mohammad Naushad", "overs": "2", "maidens": 0, "runs": 16, "wickets": 0, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 6, "economy": 8.0 },
+        { "player": "Lenju Pathrose Koshy", "overs": "2", "maidens": 0, "runs": 8, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 4.0 },
+        { "player": "Anil Pandita", "overs": "1", "maidens": 0, "runs": 16, "wickets": 0, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 3, "economy": 16.0 },
+        { "player": "Vipul Sharma", "overs": "0.4", "maidens": 0, "runs": 1, "wickets": 2, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 4, "economy": 1.5 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasanka Chandrasena", "score": 16, "over": "2.4" },
+        { "wicketNumber": 2, "player": "Sampath Basnagoda", "score": 16, "over": "2.6" },
+        { "wicketNumber": 3, "player": "Sameera Madusanka", "score": 22, "over": "5.2" },
+        { "wicketNumber": 4, "player": "Kasun Sampath", "score": 54, "over": "9.2" },
+        { "wicketNumber": 5, "player": "Lasitha Lokuge", "score": 62, "over": "10.6" },
+        { "wicketNumber": 6, "player": "Nuwan Sanjeewa", "score": 63, "over": "11.2" },
+        { "wicketNumber": 7, "player": "Menuka Weerasinghe", "score": 63, "over": "11.4" },
+        { "wicketNumber": 8, "player": "Tharindu Hettiarachchi", "score": 63, "over": "11.4" },
+        { "wicketNumber": 9, "player": "Sameera Perera", "score": 63, "over": "11.4" },
+        { "wicketNumber": 10, "player": "Merril Antoney", "score": 63, "over": "11.4" }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Indian Bullets 123/8 (15 overs)",
+    "secondInnings": "Ceylon Sharks 63/10 (11.4 overs)",
+    "winner": "Indian Bullets",
+    "margin": "60 runs"
+  }
+}

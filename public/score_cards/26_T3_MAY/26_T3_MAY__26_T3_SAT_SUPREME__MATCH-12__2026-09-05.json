@@ -1,0 +1,507 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "26_T3_SAT_SUPREME",
+    "matchTitle": "League",
+    "date": "2026-09-05",
+    "teams": {
+      "home": {
+        "name": "Ceylon Sharks",
+        "shortName": "Ceylon Sharks"
+      },
+      "away": {
+        "name": "Cool Blue",
+        "shortName": "Cool Blue"
+      }
+    },
+    "result": {
+      "winner": "Cool Blue",
+      "resultType": "WON",
+      "margin": {
+        "type": "WICKETS",
+        "value": 9
+      },
+      "summary": "Cool Blue won by 9 wickets"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Ceylon Sharks",
+      "opponent": "Cool Blue",
+      "score": {
+        "runs": 92,
+        "wickets": 8,
+        "overs": 15.0,
+        "display": "92/8",
+        "runRate": 6.13
+      },
+      "batting": [
+        {
+          "player": "Nuwan Sanjeewa",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Prakasam R",
+            "bowler": "Simak M"
+          },
+          "runs": 6,
+          "balls": 11,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 54.55
+        },
+        {
+          "player": "Sameera Madusanka",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Vignesh W"
+          },
+          "runs": 0,
+          "balls": 1,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Sandeep S",
+            "bowler": "Manikandan M"
+          },
+          "runs": 31,
+          "balls": 32,
+          "fours": 0,
+          "sixes": 3,
+          "strikeRate": 96.88
+        },
+        {
+          "player": "Sameera Perera",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Prakasam R",
+            "bowler": "Manikandan M"
+          },
+          "runs": 2,
+          "balls": 6,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 33.33
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Manikandan M",
+            "bowler": "Manikandan M"
+          },
+          "runs": 1,
+          "balls": 3,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 33.33
+        },
+        {
+          "player": "Hasanka Chandrasena",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Prakasam R",
+            "bowler": "Murugan M"
+          },
+          "runs": 15,
+          "balls": 8,
+          "fours": 0,
+          "sixes": 2,
+          "strikeRate": 187.5
+        },
+        {
+          "player": "Kasun Sampath",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Harikesaven A",
+            "bowler": "Prakasam R"
+          },
+          "runs": 4,
+          "balls": 7,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 57.14
+        },
+        {
+          "player": "Lasitha Lokuge",
+          "dismissal": null,
+          "runs": 7,
+          "balls": 11,
+          "fours": 1,
+          "sixes": 0,
+          "strikeRate": 63.64
+        },
+        {
+          "player": "Hasitha De Silva",
+          "dismissal": {
+            "type": "RUN_OUT",
+            "fielder": "Ismaeel I",
+            "bowler": "Abdul S"
+          },
+          "runs": 20,
+          "balls": 11,
+          "fours": 0,
+          "sixes": 3,
+          "strikeRate": 181.82
+        },
+        {
+          "player": "Thameera Muthukumarana",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 0,
+        "wides": 6,
+        "noBalls": 0,
+        "penalty": 0,
+        "total": 6
+      },
+      "bowling": [
+        {
+          "player": "Vignesh Wiki",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 14,
+          "wickets": 1,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 10,
+          "economy": 4.67
+        },
+        {
+          "player": "Abdul Shamadhu",
+          "overs": 2.0,
+          "maidens": 0,
+          "runs": 24,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 4,
+          "economy": 12.0
+        },
+        {
+          "player": "Simak Mohammad",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 13,
+          "wickets": 1,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 8,
+          "economy": 4.33
+        },
+        {
+          "player": "Prakasam Raju",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 19,
+          "wickets": 1,
+          "wides": 3,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 12,
+          "economy": 6.33
+        },
+        {
+          "player": "Manikandan Manoharan",
+          "overs": 2.0,
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 3,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 5,
+          "economy": 6.0
+        },
+        {
+          "player": "Murugan Muthumari",
+          "overs": 2.0,
+          "maidens": 0,
+          "runs": 10,
+          "wickets": 1,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 5.0
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Sameera Madusanka",
+          "score": 1,
+          "over": 0.2
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Nuwan Sanjeewa",
+          "score": 17,
+          "over": 3.6
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Sameera Perera",
+          "score": 39,
+          "over": 7.1
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Gagith Abeysekara",
+          "score": 41,
+          "over": 7.5
+        },
+        {
+          "wicketNumber": 5,
+          "player": "Tharindu Hettiarachchi",
+          "score": 50,
+          "over": 9.1
+        },
+        {
+          "wicketNumber": 6,
+          "player": "Hasanka Chandrasena",
+          "score": 60,
+          "over": 10.3
+        },
+        {
+          "wicketNumber": 7,
+          "player": "Kasun Sampath",
+          "score": 67,
+          "over": 12.1
+        },
+        {
+          "wicketNumber": 8,
+          "player": "Hasitha De Silva",
+          "score": 92,
+          "over": 14.6
+        }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Cool Blue",
+      "opponent": "Ceylon Sharks",
+      "score": {
+        "runs": 96,
+        "wickets": 1,
+        "overs": 11.4,
+        "display": "96/1",
+        "runRate": 8.23
+      },
+      "batting": [
+        {
+          "player": "Sandeep Sandy",
+          "dismissal": null,
+          "runs": 62,
+          "balls": 36,
+          "fours": 3,
+          "sixes": 7,
+          "strikeRate": 172.22
+        },
+        {
+          "player": "Prakasam Raju",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Sameera P",
+            "bowler": "Nuwan S"
+          },
+          "runs": 14,
+          "balls": 20,
+          "fours": 2,
+          "sixes": 0,
+          "strikeRate": 70.0
+        },
+        {
+          "player": "J D",
+          "dismissal": null,
+          "runs": 16,
+          "balls": 15,
+          "fours": 0,
+          "sixes": 2,
+          "strikeRate": 106.67
+        },
+        {
+          "player": "Abdul Shamadhu",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Manikandan Manoharan",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Vignesh Wiki",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Simak Mohammad",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Ismaeel Idris",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Harikesaven Anandhan",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Murugan Muthumari",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Milan Lazar",
+          "dismissal": null,
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 1,
+        "wides": 2,
+        "noBalls": 1,
+        "penalty": 0,
+        "total": 4
+      },
+      "bowling": [
+        {
+          "player": "Gagith Abeysekara",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 15,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 5.0
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 24,
+          "wickets": 0,
+          "wides": 1,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 8.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "overs": 3.0,
+          "maidens": 0,
+          "runs": 28,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 10,
+          "economy": 9.33
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "overs": 1.0,
+          "maidens": 0,
+          "runs": 9,
+          "wickets": 1,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 3,
+          "economy": 9.0
+        },
+        {
+          "player": "Thameera Muthukumarana",
+          "overs": 1.4,
+          "maidens": 0,
+          "runs": 19,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 4,
+          "economy": 11.4
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Prakasam Raju",
+          "score": 44,
+          "over": 6.5
+        }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Ceylon Sharks 92/8 (15.0 overs)",
+    "secondInnings": "Cool Blue 96/1 (11.4 overs)",
+    "winner": "Cool Blue",
+    "margin": "9 wickets"
+  }
+}

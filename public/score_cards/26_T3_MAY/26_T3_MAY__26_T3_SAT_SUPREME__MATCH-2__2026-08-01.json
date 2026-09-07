@@ -1,0 +1,78 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-08-01",
+    "teams": { "home": { "name": "XI", "shortName": "XI" }, "away": { "name": "Ceylon Sharks", "shortName": "CS" } },
+    "result": { "winner": "Ceylon Sharks", "resultType": "WON", "margin": { "type": "WICKETS", "value": 6 }, "summary": "Ceylon Sharks won by 6 wickets" }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1, "team": "XI", "opponent": "Ceylon Sharks",
+      "score": { "runs": 134, "wickets": 5, "overs": "15", "display": "134/5", "runRate": 8.93 },
+      "batting": [
+        { "player": "Sandeep Singh Tanwar", "dismissal": { "type": "CAUGHT", "fielder": "Thameera Muthukumarana", "bowler": "Aruna Lakshitha" }, "runs": 1, "balls": 6, "fours": 0, "sixes": 0, "strikeRate": 16.67 },
+        { "player": "Punit Shankar", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 68, "balls": 47, "fours": 1, "sixes": 8, "strikeRate": 144.68 },
+        { "player": "Prashant Sharma", "dismissal": { "type": "CAUGHT", "fielder": "Aruna Lakshitha", "bowler": "Hasitha De Silva" }, "runs": 37, "balls": 25, "fours": 1, "sixes": 4, "strikeRate": 148 },
+        { "player": "Rishabh Dixit", "dismissal": { "type": "CAUGHT", "fielder": "Nuwan Sanjeewa", "bowler": "Hasitha De Silva" }, "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Vikky T", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Malinda Mendis" }, "runs": 2, "balls": 7, "fours": 0, "sixes": 0, "strikeRate": 28.57 },
+        { "player": "Krishnamoorthi Dhevendhiran", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Hasitha De Silva" }, "runs": 6, "balls": 4, "fours": 0, "sixes": 1, "strikeRate": 150 },
+        { "player": "Pawan Dhingra", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 2, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 66.67 },
+        { "player": "Abhishek Shah", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Lokesh Purohit", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Govindhan Marimuthu", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Keshav Kundan", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 15, "noBalls": 3, "penalty": 0, "total": 18 },
+      "bowling": [
+        { "player": "Thameera Muthukumarana", "overs": "3", "maidens": 0, "runs": 17, "wickets": 0, "wides": 4, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 5.67 },
+        { "player": "Aruna Lakshitha", "overs": "2", "maidens": 0, "runs": 27, "wickets": 1, "wides": 2, "noBalls": 3, "hattricks": 0, "dotBalls": 6, "economy": 13.5 },
+        { "player": "Nuwan Sanjeewa", "overs": "3", "maidens": 0, "runs": 39, "wickets": 0, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 5, "economy": 13 },
+        { "player": "Lahiru Kaluthanthri", "overs": "3", "maidens": 0, "runs": 20, "wickets": 0, "wides": 4, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 6.67 },
+        { "player": "Hasitha De Silva", "overs": "3", "maidens": 0, "runs": 24, "wickets": 3, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 8 },
+        { "player": "Malinda Mendis", "overs": "1", "maidens": 0, "runs": 7, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 4, "economy": 7 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Sandeep Singh Tanwar", "score": 6, "over": "1.3" },
+        { "wicketNumber": 2, "player": "Prashant Sharma", "score": 82, "over": "9.2" },
+        { "wicketNumber": 3, "player": "Rishabh Dixit", "score": 82, "over": "9.3" },
+        { "wicketNumber": 4, "player": "Vikky T", "score": 98, "over": "11.5" },
+        { "wicketNumber": 5, "player": "Krishnamoorthi Dhevendhiran", "score": 111, "over": "12.6" }
+      ]
+    },
+    {
+      "inningsNumber": 2, "team": "Ceylon Sharks", "opponent": "XI",
+      "score": { "runs": 135, "wickets": 4, "overs": "13.4", "display": "135/4", "runRate": 9.88 },
+      "batting": [
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "CAUGHT", "fielder": "Keshav Kundan", "bowler": "Rishabh Dixit" }, "runs": 9, "balls": 7, "fours": 2, "sixes": 0, "strikeRate": 128.57 },
+        { "player": "Hasitha De Silva", "dismissal": { "type": "CAUGHT", "fielder": "Lokesh Purohit", "bowler": "Keshav Kundan" }, "runs": 52, "balls": 34, "fours": 0, "sixes": 7, "strikeRate": 152.94 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "CAUGHT", "fielder": "Govindhan Marimuthu", "bowler": "Krishnamoorthi Dhevendhiran" }, "runs": 2, "balls": 7, "fours": 0, "sixes": 0, "strikeRate": 28.57 },
+        { "player": "Lahiru Kaluthanthri", "dismissal": { "type": "RUN_OUT", "fielder": "Prashant Sharma", "bowler": "Abhishek Shah" }, "runs": 34, "balls": 30, "fours": 1, "sixes": 3, "strikeRate": 113.33 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 19, "balls": 5, "fours": 0, "sixes": 3, "strikeRate": 380 },
+        { "player": "Malinda Mendis", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 1, "balls": 1, "fours": 0, "sixes": 0, "strikeRate": 100 },
+        { "player": "Lasitha Lokuge", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Merril Antoney", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Thameera Muthukumarana", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Aruna Lakshitha", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 16, "noBalls": 2, "penalty": 0, "total": 18 },
+      "bowling": [
+        { "player": "Rishabh Dixit", "overs": "3", "maidens": 0, "runs": 11, "wickets": 1, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 12, "economy": 3.67 },
+        { "player": "Prashant Sharma", "overs": "3", "maidens": 0, "runs": 31, "wickets": 0, "wides": 7, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 10.33 },
+        { "player": "Govindhan Marimuthu", "overs": "3", "maidens": 0, "runs": 36, "wickets": 0, "wides": 5, "noBalls": 1, "hattricks": 0, "dotBalls": 9, "economy": 12 },
+        { "player": "Krishnamoorthi Dhevendhiran", "overs": "3", "maidens": 0, "runs": 29, "wickets": 1, "wides": 2, "noBalls": 1, "hattricks": 0, "dotBalls": 10, "economy": 9.67 },
+        { "player": "Punit Shankar", "overs": "1", "maidens": 0, "runs": 20, "wickets": 0, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 2, "economy": 20 },
+        { "player": "Keshav Kundan", "overs": "0.4", "maidens": 0, "runs": 8, "wickets": 1, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 1, "economy": 12 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasanka Chandrasena", "score": 20, "over": "2.3" },
+        { "wicketNumber": 2, "player": "Nuwan Sanjeewa", "score": 29, "over": "4.1" },
+        { "wicketNumber": 3, "player": "Lahiru Kaluthanthri", "score": 113, "over": "11.6" },
+        { "wicketNumber": 4, "player": "Hasitha De Silva", "score": 127, "over": "13.1" }
+      ]
+    }
+  ],
+  "matchSummary": { "firstInnings": "XI 134/5 (15 overs)", "secondInnings": "Ceylon Sharks 135/4 (13.4 overs)", "winner": "Ceylon Sharks", "margin": "6 wickets" }
+}

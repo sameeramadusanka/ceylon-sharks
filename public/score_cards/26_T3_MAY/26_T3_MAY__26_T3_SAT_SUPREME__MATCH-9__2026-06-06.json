@@ -1,0 +1,105 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-06-06",
+    "teams": {
+      "home": { "name": "Ceylon Sharks", "shortName": "CS" },
+      "away": { "name": "Rising Stars", "shortName": "RS" }
+    },
+    "result": {
+      "winner": "Ceylon Sharks",
+      "resultType": "WON",
+      "margin": { "type": "RUNS", "value": 6 },
+      "summary": "Ceylon Sharks won by 6 runs"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Ceylon Sharks",
+      "opponent": "Rising Stars",
+      "score": { "runs": 89, "wickets": 9, "overs": "15", "display": "89/9", "runRate": 5.93 },
+      "batting": [
+        { "player": "Hasitha De Silva", "dismissal": { "type": "CAUGHT", "fielder": "Anbuselvam Pothuvidai", "bowler": "Manoj Rajendran" }, "runs": 37, "balls": 25, "fours": 4, "sixes": 3, "strikeRate": 148.0 },
+        { "player": "Sameera Perera", "dismissal": { "type": "RUN_OUT", "fielder": null, "bowler": "Krishnachandar Narayanasamy" }, "runs": 16, "balls": 21, "fours": 0, "sixes": 1, "strikeRate": 76.19 },
+        { "player": "Tharindu Hettiarachchi", "dismissal": { "type": "CAUGHT", "fielder": "Manijeevan Jeevan", "bowler": "LALITHKUMAR VM" }, "runs": 0, "balls": 4, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "CAUGHT", "fielder": "Anbuselvam Pothuvidai", "bowler": "Mani Maran" }, "runs": 6, "balls": 3, "fours": 0, "sixes": 1, "strikeRate": 200.0 },
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Mani Maran" }, "runs": 2, "balls": 8, "fours": 0, "sixes": 0, "strikeRate": 25.0 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "CAUGHT", "fielder": "Manokaran Parry", "bowler": "Manoj Rajendran" }, "runs": 1, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 33.33 },
+        { "player": "Malinda Mendis", "dismissal": { "type": "CAUGHT", "fielder": "Manokaran Parry", "bowler": "KALIMUTHU MUTHUKARUPPAIAH" }, "runs": 3, "balls": 13, "fours": 0, "sixes": 0, "strikeRate": 23.08 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Sampath Basnagoda", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Manoj Rajendran" }, "runs": 6, "balls": 3, "fours": 0, "sixes": 1, "strikeRate": 200.0 },
+        { "player": "Lasitha Lokuge", "dismissal": { "type": "CAUGHT", "fielder": "Manokaran Parry", "bowler": "Mani Maran" }, "runs": 5, "balls": 8, "fours": 1, "sixes": 0, "strikeRate": 62.5 },
+        { "player": "Thameera Muthukumarana", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 13, "noBalls": 0, "penalty": 0, "total": 13 },
+      "bowling": [
+        { "player": "PRAVEEN KUMAR", "overs": "2", "maidens": 0, "runs": 13, "wickets": 0, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 6.5 },
+        { "player": "KALIMUTHU MUTHUKARUPPAIAH", "overs": "2", "maidens": 1, "runs": 13, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 9, "economy": 6.5 },
+        { "player": "Manokaran Parry", "overs": "2", "maidens": 0, "runs": 9, "wickets": 0, "wides": 0, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 4.5 },
+        { "player": "Manoj Rajendran", "overs": "3", "maidens": 0, "runs": 21, "wickets": 3, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 12, "economy": 7.0 },
+        { "player": "LALITHKUMAR VM", "overs": "2", "maidens": 0, "runs": 13, "wickets": 1, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 6.5 },
+        { "player": "Mani Maran", "overs": "3", "maidens": 0, "runs": 17, "wickets": 3, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 12, "economy": 5.67 },
+        { "player": "MUGILAN SIVAGNANAM", "overs": "1", "maidens": 0, "runs": 3, "wickets": 0, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 5, "economy": 3.0 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasitha De Silva", "score": 51, "over": "6.6" },
+        { "wicketNumber": 2, "player": "Tharindu Hettiarachchi", "score": 52, "over": "7.5" },
+        { "wicketNumber": 3, "player": "Kasun Sampath", "score": 66, "over": "8.4" },
+        { "wicketNumber": 4, "player": "Sameera Perera", "score": 70, "over": "9.6" },
+        { "wicketNumber": 5, "player": "Hasanka Chandrasena", "score": 70, "over": "10.1" },
+        { "wicketNumber": 6, "player": "Malinda Mendis", "score": 77, "over": "12.4" },
+        { "wicketNumber": 7, "player": "Nuwan Sanjeewa", "score": 77, "over": "13.1" },
+        { "wicketNumber": 8, "player": "Sampath Basnagoda", "score": 83, "over": "13.4" },
+        { "wicketNumber": 9, "player": "Lasitha Lokuge", "score": 89, "over": "14.6" }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Rising Stars",
+      "opponent": "Ceylon Sharks",
+      "score": { "runs": 83, "wickets": 10, "overs": "13.3", "display": "83/10", "runRate": 6.15 },
+      "batting": [
+        { "player": "Mani Maran", "dismissal": { "type": "CAUGHT", "fielder": "Sameera Madusanka", "bowler": "Sampath Basnagoda" }, "runs": 0, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Manijeevan Jeevan", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Sampath Basnagoda" }, "runs": 14, "balls": 10, "fours": 1, "sixes": 1, "strikeRate": 140.0 },
+        { "player": "Anbuselvam Pothuvidai", "dismissal": { "type": "CAUGHT", "fielder": "Hasanka Chandrasena", "bowler": "Sampath Basnagoda" }, "runs": 18, "balls": 17, "fours": 1, "sixes": 0, "strikeRate": 105.88 },
+        { "player": "Manoj Rajendran", "dismissal": { "type": "RUN_OUT", "fielder": null, "bowler": "Hasanka Chandrasena" }, "runs": 13, "balls": 15, "fours": 0, "sixes": 1, "strikeRate": 86.67 },
+        { "player": "MUGILAN SIVAGNANAM", "dismissal": { "type": "RUN_OUT", "fielder": null, "bowler": "Tharindu Hettiarachchi" }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "PRAVEEN KUMAR", "dismissal": { "type": "CAUGHT", "fielder": "Hasanka Chandrasena", "bowler": "Nuwan Sanjeewa" }, "runs": 7, "balls": 7, "fours": 0, "sixes": 1, "strikeRate": 100.0 },
+        { "player": "LALITHKUMAR VM", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Tharindu Hettiarachchi" }, "runs": 9, "balls": 13, "fours": 1, "sixes": 0, "strikeRate": 69.23 },
+        { "player": "KALIMUTHU MUTHUKARUPPAIAH", "dismissal": { "type": "CAUGHT", "fielder": "Nuwan Sanjeewa", "bowler": "Nuwan Sanjeewa" }, "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "strikeRate": 0.0 },
+        { "player": "Manokaran Parry", "dismissal": { "type": "CAUGHT", "fielder": "Nuwan Sanjeewa", "bowler": "Hasitha De Silva" }, "runs": 12, "balls": 10, "fours": 1, "sixes": 1, "strikeRate": 120.0 },
+        { "player": "Krishnachandar Narayanasamy", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 2, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 66.67 },
+        { "player": "Balasankar Ravi", "dismissal": { "type": "CAUGHT", "fielder": "Kasun Sampath", "bowler": "Nuwan Sanjeewa" }, "runs": 0, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 0.0 }
+      ],
+      "extras": { "byes": 1, "legByes": 0, "wides": 6, "noBalls": 1, "penalty": 0, "total": 8 },
+      "bowling": [
+        { "player": "Sampath Basnagoda", "overs": "3", "maidens": 0, "runs": 19, "wickets": 3, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 9, "economy": 6.33 },
+        { "player": "Thameera Muthukumarana", "overs": "3", "maidens": 0, "runs": 16, "wickets": 0, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 9, "economy": 5.33 },
+        { "player": "Hasitha De Silva", "overs": "2", "maidens": 0, "runs": 16, "wickets": 1, "wides": 1, "noBalls": 1, "hattricks": 0, "dotBalls": 5, "economy": 8.0 },
+        { "player": "Tharindu Hettiarachchi", "overs": "3", "maidens": 0, "runs": 17, "wickets": 1, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 5.67 },
+        { "player": "Nuwan Sanjeewa", "overs": "2.3", "maidens": 0, "runs": 14, "wickets": 3, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 10, "economy": 5.6 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Mani Maran", "score": 3, "over": "0.4" },
+        { "wicketNumber": 2, "player": "Manijeevan Jeevan", "score": 20, "over": "2.4" },
+        { "wicketNumber": 3, "player": "Anbuselvam Pothuvidai", "score": 51, "over": "6.6" },
+        { "wicketNumber": 4, "player": "MUGILAN SIVAGNANAM", "score": 51, "over": "7.2" },
+        { "wicketNumber": 5, "player": "Manoj Rajendran", "score": 60, "over": "8.2" },
+        { "wicketNumber": 6, "player": "PRAVEEN KUMAR", "score": 61, "over": "8.4" },
+        { "wicketNumber": 7, "player": "KALIMUTHU MUTHUKARUPPAIAH", "score": 61, "over": "8.5" },
+        { "wicketNumber": 8, "player": "Manokaran Parry", "score": 78, "over": "11.2" },
+        { "wicketNumber": 9, "player": "LALITHKUMAR VM", "score": 82, "over": "12.5" },
+        { "wicketNumber": 10, "player": "Balasankar Ravi", "score": 83, "over": "13.3" }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Ceylon Sharks 89/9 (15 overs)",
+    "secondInnings": "Rising Stars 83/10 (13.3 overs)",
+    "winner": "Ceylon Sharks",
+    "margin": "6 runs"
+  }
+}

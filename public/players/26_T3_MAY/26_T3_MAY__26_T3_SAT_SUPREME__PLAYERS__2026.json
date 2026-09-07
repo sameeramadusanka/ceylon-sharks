@@ -1,0 +1,36 @@
+{
+  "season": {
+    "name": "26_T3_MAY",
+    "division": "26_T3_SAT_SUPREME",
+    "year": 2026,
+    "team": "Ceylon Sharks",
+    "captainId": 1257852,
+    "viceCaptainId": 1198221,
+    "players": [
+      { "id": 1080804, "name": "Dilshan Harshana", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1156319, "name": "Sameera Perera", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1198221, "name": "Lasitha Lokuge", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1198223, "name": "Asanka Edirisinghe", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1198224, "name": "Gayan Liyanage", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1257852, "name": "Hasitha De Silva", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 1385806, "name": "Menuka Weerasinghe", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 2790814, "name": "Prasad Thilakarathne", "number": 44, "detail": "26 T3 SAT SUPREME" },
+      { "id": 2791118, "name": "Hasanka Chandrasena", "number": 23, "detail": "26 T3 SAT SUPREME" },
+      { "id": 2888187, "name": "Lahiru Kaluthanthri", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 3190737, "name": "Tharindu Hettiarachchi", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 3421731, "name": "Merril Antoney", "number": 12, "detail": "26 T3 SAT SUPREME" },
+      { "id": 3812196, "name": "Kasun Sampath", "number": 77, "detail": "26 T3 SAT SUPREME" },
+      { "id": 3812435, "name": "Chamira Thilakarathne", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 4056299, "name": "Padmaka Bandara", "number": 14, "detail": "26 T3 SAT SUPREME" },
+      { "id": 4193856, "name": "Nuwan Sanjeewa", "number": 6, "detail": "26 T3 SAT SUPREME" },
+      { "id": 4202974, "name": "Gagith Abeysekara", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 4388523, "name": "Thameera Muthukumarana", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 4592101, "name": "Isuru Samarakoon", "number": 77, "detail": "26 T3 SAT SUPREME" },
+      { "id": 5181194, "name": "Sameera Madusanka", "number": 22, "detail": "26 T3 SAT SUPREME" },
+      { "id": 6439290, "name": "Sampath Basnagoda", "number": 5, "detail": "26 T3 SAT SUPREME" },
+      { "id": 6448758, "name": "Aruna Perera", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 6551512, "name": "Malinda Mendis", "number": 0, "detail": "26 T3 SAT SUPREME" },
+      { "id": 6555959, "name": "Aruna Lakshitha", "number": 0, "detail": "26 T3 SAT SUPREME" }
+    ]
+  }
+}

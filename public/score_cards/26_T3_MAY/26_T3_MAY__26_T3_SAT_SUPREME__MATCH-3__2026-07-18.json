@@ -1,0 +1,81 @@
+{
+  "match": {
+    "id": "26_T3_SAT_SUPREME",
+    "competition": "T3 SAT SUPREME",
+    "matchTitle": "League",
+    "date": "2026-07-18",
+    "teams": { "home": { "name": "Ceylon Sharks", "shortName": "CS" }, "away": { "name": "Tridents", "shortName": "TRI" } },
+    "result": { "winner": "Ceylon Sharks", "resultType": "WON", "margin": { "type": "RUNS", "value": 2 }, "summary": "Ceylon Sharks won by 2 runs" }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1, "team": "Ceylon Sharks", "opponent": "Tridents",
+      "score": { "runs": 152, "wickets": 6, "overs": "13", "display": "152/6", "runRate": 11.69 },
+      "batting": [
+        { "player": "Hasanka Chandrasena", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Abhishek Deshmukh" }, "runs": 16, "balls": 12, "fours": 0, "sixes": 2, "strikeRate": 133.33 },
+        { "player": "Hasitha De Silva", "dismissal": { "type": "CAUGHT", "fielder": "Dinesh Reddy Jammi", "bowler": "Pradeep Kumar Bivanapalli" }, "runs": 8, "balls": 5, "fours": 0, "sixes": 1, "strikeRate": 160 },
+        { "player": "Tharindu Hettiarachchi", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Abhishek Deshmukh" }, "runs": 65, "balls": 36, "fours": 7, "sixes": 5, "strikeRate": 180.56 },
+        { "player": "Isuru Samarakoon", "dismissal": { "type": "CAUGHT", "fielder": "Smeet Nalkande", "bowler": "Deepak KalMady" }, "runs": 1, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 33.33 },
+        { "player": "Nuwan Sanjeewa", "dismissal": { "type": "BOWLED", "fielder": null, "bowler": "Dinesh Reddy Jammi" }, "runs": 28, "balls": 17, "fours": 1, "sixes": 3, "strikeRate": 164.71 },
+        { "player": "Kasun Sampath", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 1, "balls": 2, "fours": 0, "sixes": 0, "strikeRate": 50 },
+        { "player": "Malinda Mendis", "dismissal": { "type": "RUN_OUT", "fielder": "Dinesh Reddy Jammi", "bowler": null }, "runs": 12, "balls": 4, "fours": 1, "sixes": 1, "strikeRate": 300 },
+        { "player": "Lasitha Lokuge", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Merril Antoney", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Thameera Muthukumarana", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Sameera Madusanka", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 20, "noBalls": 1, "penalty": 0, "total": 21 },
+      "bowling": [
+        { "player": "Pradeep Kumar Bivanapalli", "overs": "2", "maidens": 0, "runs": 28, "wickets": 1, "wides": 2, "noBalls": 1, "hattricks": 0, "dotBalls": 4, "economy": 14 },
+        { "player": "Dinesh Venkatasubramanian", "overs": "3", "maidens": 0, "runs": 28, "wickets": 0, "wides": 8, "noBalls": 0, "hattricks": 0, "dotBalls": 11, "economy": 9.33 },
+        { "player": "Abhishek Deshmukh", "overs": "3", "maidens": 0, "runs": 44, "wickets": 2, "wides": 5, "noBalls": 0, "hattricks": 0, "dotBalls": 8, "economy": 14.67 },
+        { "player": "Deepak KalMady", "overs": "3", "maidens": 0, "runs": 28, "wickets": 1, "wides": 4, "noBalls": 0, "hattricks": 0, "dotBalls": 7, "economy": 9.33 },
+        { "player": "Dinesh Reddy Jammi", "overs": "2", "maidens": 0, "runs": 24, "wickets": 1, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 5, "economy": 12 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Hasitha De Silva", "score": 11, "over": "0.5" },
+        { "wicketNumber": 2, "player": "Hasanka Chandrasena", "score": 72, "over": "5.4" },
+        { "wicketNumber": 3, "player": "Isuru Samarakoon", "score": 73, "over": "6.1" },
+        { "wicketNumber": 4, "player": "Tharindu Hettiarachchi", "score": 139, "over": "11.5" },
+        { "wicketNumber": 5, "player": "Nuwan Sanjeewa", "score": 139, "over": "12.1" },
+        { "wicketNumber": 6, "player": "Malinda Mendis", "score": 152, "over": "12.6" }
+      ]
+    },
+    {
+      "inningsNumber": 2, "team": "Tridents", "opponent": "Ceylon Sharks",
+      "score": { "runs": 150, "wickets": 7, "overs": "13", "display": "150/7", "runRate": 11.54 },
+      "batting": [
+        { "player": "Arunkumar Pagalavan", "dismissal": { "type": "CAUGHT", "fielder": "Malinda Mendis", "bowler": "Nuwan Sanjeewa" }, "runs": 54, "balls": 18, "fours": 0, "sixes": 9, "strikeRate": 300 },
+        { "player": "Smeet Nalkande", "dismissal": { "type": "CAUGHT", "fielder": "Isuru Samarakoon", "bowler": "Isuru Samarakoon" }, "runs": 14, "balls": 13, "fours": 0, "sixes": 1, "strikeRate": 107.69 },
+        { "player": "Abhishek Deshmukh", "dismissal": { "type": "CAUGHT", "fielder": "Tharindu Hettiarachchi", "bowler": "Hasitha De Silva" }, "runs": 23, "balls": 14, "fours": 0, "sixes": 3, "strikeRate": 164.29 },
+        { "player": "Mahi Mahendra", "dismissal": { "type": "CAUGHT", "fielder": "Isuru Samarakoon", "bowler": "Hasitha De Silva" }, "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Sandesh Dere", "dismissal": { "type": "RETIRED_HURT", "fielder": null, "bowler": null }, "runs": 13, "balls": 16, "fours": 0, "sixes": 1, "strikeRate": 81.25 },
+        { "player": "Pradeep Kumar Bivanapalli", "dismissal": { "type": "CAUGHT", "fielder": "Nuwan Sanjeewa", "bowler": "Thameera Muthukumarana" }, "runs": 25, "balls": 15, "fours": 1, "sixes": 3, "strikeRate": 166.67 },
+        { "player": "Deepak KalMady", "dismissal": { "type": "CAUGHT", "fielder": "Lasitha Lokuge", "bowler": "Thameera Muthukumarana" }, "runs": 0, "balls": 3, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Mohan Krishna", "dismissal": { "type": "RUN_OUT", "fielder": "Thameera Muthukumarana", "bowler": null }, "runs": 5, "balls": 2, "fours": 1, "sixes": 0, "strikeRate": 250 },
+        { "player": "Dinesh Venkatasubramanian", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Sravan Kakarla", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 },
+        { "player": "Dinesh Reddy Jammi", "dismissal": { "type": "NOT_OUT", "fielder": null, "bowler": null }, "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "strikeRate": 0 }
+      ],
+      "extras": { "byes": 0, "legByes": 0, "wides": 12, "noBalls": 4, "penalty": 0, "total": 16 },
+      "bowling": [
+        { "player": "Thameera Muthukumarana", "overs": "2", "maidens": 0, "runs": 32, "wickets": 2, "wides": 3, "noBalls": 0, "hattricks": 0, "dotBalls": 6, "economy": 16 },
+        { "player": "Isuru Samarakoon", "overs": "2", "maidens": 0, "runs": 35, "wickets": 1, "wides": 3, "noBalls": 2, "hattricks": 0, "dotBalls": 6, "economy": 17.5 },
+        { "player": "Tharindu Hettiarachchi", "overs": "3", "maidens": 0, "runs": 37, "wickets": 0, "wides": 3, "noBalls": 2, "hattricks": 0, "dotBalls": 7, "economy": 12.33 },
+        { "player": "Nuwan Sanjeewa", "overs": "3", "maidens": 0, "runs": 13, "wickets": 1, "wides": 2, "noBalls": 0, "hattricks": 0, "dotBalls": 12, "economy": 4.33 },
+        { "player": "Hasitha De Silva", "overs": "3", "maidens": 0, "runs": 33, "wickets": 2, "wides": 1, "noBalls": 0, "hattricks": 0, "dotBalls": 6, "economy": 11 }
+      ],
+      "fallOfWickets": [
+        { "wicketNumber": 1, "player": "Arunkumar Pagalavan", "score": 62, "over": "3.3" },
+        { "wicketNumber": 2, "player": "Abhishek Deshmukh", "score": 88, "over": "6.3" },
+        { "wicketNumber": 3, "player": "Mahi Mahendra", "score": 88, "over": "6.4" },
+        { "wicketNumber": 4, "player": "Smeet Nalkande", "score": 112, "over": "9.2" },
+        { "wicketNumber": 4, "player": "Sandesh Dere", "score": 144, "over": "11.5" },
+        { "wicketNumber": 5, "player": "Pradeep Kumar Bivanapalli", "score": 144, "over": "12.2" },
+        { "wicketNumber": 6, "player": "Mohan Krishna", "score": 150, "over": "12.5" },
+        { "wicketNumber": 7, "player": "Deepak KalMady", "score": 150, "over": "12.6" }
+      ]
+    }
+  ],
+  "matchSummary": { "firstInnings": "Ceylon Sharks 152/6 (13 overs)", "secondInnings": "Tridents 150/7 (13 overs)", "winner": "Ceylon Sharks", "margin": "2 runs" }
+}
