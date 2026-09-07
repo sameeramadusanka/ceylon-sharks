@@ -8,7 +8,7 @@ import { basename, join } from 'node:path';
 
 const publicDirectory = join(process.cwd(), 'public');
 const basePath = import.meta.env.BASE_URL;
-const publicAsset = (path: string) => `${basePath}${path.replace(/^\/+/, '')}`;
+const publicAsset = (path: string) => `${basePath.replace(/\/$/, '')}/${path.replace(/^\/+/, '')}`;
 const filesIn = (directory: string): string[] => (readdirSync(directory, { withFileTypes: true }) as import('node:fs').Dirent[]).flatMap((entry) => {
   const path = join(directory, entry.name);
   return entry.isDirectory() ? filesIn(path) : [path];
