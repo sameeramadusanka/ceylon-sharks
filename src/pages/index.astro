@@ -19,10 +19,11 @@ const playersBySeason = Object.fromEntries(
     .filter(({ fileName }) => /__PLAYERS__\d{4}\.json$/.test(fileName))
     .map(({ filePath, fileName }) => [fileName.match(/^(.*?)__PLAYERS__\d{4}\.json$/)?.[1] ?? '', readFileSync(filePath, 'utf8')]),
 );
-const bannerImages = (readdirSync(join(publicDirectory, 'banner_images')) as string[])
+const optimizedBannerDirectory = join(publicDirectory, 'banner_images', 'optimized');
+const bannerImages = (readdirSync(optimizedBannerDirectory) as string[])
   .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
   .sort()
-  .map((fileName) => publicAsset(`/banner_images/${fileName}`));
+  .map((fileName) => publicAsset(`/banner_images/optimized/${fileName}`));
 const groundImage = (readdirSync(join(publicDirectory, 'ground_images')) as string[])
   .filter((fileName) => /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName))
   .sort()
