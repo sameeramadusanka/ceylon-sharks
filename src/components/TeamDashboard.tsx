@@ -64,7 +64,9 @@ const assetPath = (path: string) => {
   const value = path.trim();
   if (!value) return '';
   if (value.startsWith('http')) return value;
-  return `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${value.replace(/^\/+/, '').replace(/^assets\//, '')}`;
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+  if (value === basePath || value.startsWith(`${basePath}/`)) return value;
+  return `${basePath}/${value.replace(/^\/+/, '').replace(/^assets\//, '')}`;
 };
 const initials = (name: string) => name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 const statValue = (value: number | null) => value === null ? '-' : String(value);
