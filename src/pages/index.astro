@@ -91,7 +91,7 @@ const upcomingScheduleMatches = filesIn(join(publicDirectory, 'upcoming_schedule
         teamTwo: String(match.teamTwo ?? match.awayTeam ?? ''),
         ground: String(match.ground ?? match.venue ?? ''),
         status: String(match.status ?? 'Scheduled'),
-        result: match.result ?? null,
+        result: match.result == null ? null : typeof match.result === 'string' ? match.result : JSON.stringify(match.result),
       }));
     } catch {
       return [];
