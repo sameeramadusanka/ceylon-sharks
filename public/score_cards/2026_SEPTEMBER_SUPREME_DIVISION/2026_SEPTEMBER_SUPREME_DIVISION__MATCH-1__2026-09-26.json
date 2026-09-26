@@ -1,0 +1,583 @@
+{
+  "match": {
+    "id": "2026_SEPTEMBER_SUPREME_DIVISION",
+    "competition": "2026_SEPTEMBER_SUPREME_DIVISION",
+    "matchTitle": "Ceylon Sharks Vs Gully Boyz",
+    "date": "2026-09-26",
+    "teams": {
+      "home": {
+        "name": "Ceylon Sharks",
+        "shortName": "Ceylon Sharks"
+      },
+      "away": {
+        "name": "Gully Boyz",
+        "shortName": "Gully Boyz"
+      }
+    },
+    "result": {
+      "winner": "Gully Boyz",
+      "resultType": "WON",
+      "margin": {
+        "type": "WICKETS",
+        "value": 4
+      },
+      "summary": "Gully Boyz won by 4 wickets"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Ceylon Sharks",
+      "opponent": "Gully Boyz",
+      "score": {
+        "runs": 84,
+        "wickets": 9,
+        "overs": "15",
+        "display": "84/9",
+        "runRate": 5.6
+      },
+      "batting": [
+        {
+          "player": "Hasitha De Silva",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Lovepreet Singh"
+          },
+          "runs": 3,
+          "balls": 5,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 60.0
+        },
+        {
+          "player": "Hasanka Chandrasena",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Pramod Subbaiah",
+            "bowler": "Gurmesh Goyal"
+          },
+          "runs": 7,
+          "balls": 14,
+          "fours": 1,
+          "sixes": 0,
+          "strikeRate": 50.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Rajinder Singh",
+            "bowler": "Dannysh Walia"
+          },
+          "runs": 11,
+          "balls": 14,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 78.57
+        },
+        {
+          "player": "Sameera Perera",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Rajinder Singh",
+            "bowler": "Satya Sharma"
+          },
+          "runs": 3,
+          "balls": 10,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 30.0
+        },
+        {
+          "player": "Pasindu Chandrasekara",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Lovepreet Singh",
+            "bowler": "Dannysh Walia"
+          },
+          "runs": 16,
+          "balls": 14,
+          "fours": 1,
+          "sixes": 1,
+          "strikeRate": 114.29
+        },
+        {
+          "player": "Chinthaka Rajarathna",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Lovepreet Singh"
+          },
+          "runs": 4,
+          "balls": 11,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 36.36
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Dannysh Walia",
+            "bowler": "Satya Sharma"
+          },
+          "runs": 11,
+          "balls": 6,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 183.33
+        },
+        {
+          "player": "Chamara Jayalath",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Dannysh Walia",
+            "bowler": "Satya Sharma"
+          },
+          "runs": 0,
+          "balls": 1,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Sameera Madusanka",
+          "dismissal": {
+            "type": "RUN_OUT",
+            "fielder": null,
+            "bowler": "Sunil Nair"
+          },
+          "runs": 4,
+          "balls": 9,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 44.44
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 2,
+          "balls": 2,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 100.0
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 15,
+          "balls": 5,
+          "fours": 0,
+          "sixes": 2,
+          "strikeRate": 300.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 0,
+        "wides": 7,
+        "noBalls": 1,
+        "penalty": 0,
+        "total": 8
+      },
+      "bowling": [
+        {
+          "player": "Lovepreet Singh",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 14,
+          "wickets": 2,
+          "wides": 2,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 10,
+          "economy": 4.67
+        },
+        {
+          "player": "Dharmendra Kumar",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 23,
+          "wickets": 0,
+          "wides": 3,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 7.67
+        },
+        {
+          "player": "Gurmesh Goyal",
+          "overs": "3",
+          "maidens": 1,
+          "runs": 15,
+          "wickets": 1,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 10,
+          "economy": 5.0
+        },
+        {
+          "player": "Satya Sharma",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 25,
+          "wickets": 3,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 8.33
+        },
+        {
+          "player": "Dannysh Walia",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 7,
+          "wickets": 2,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 2.33
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Hasitha De Silva",
+          "score": 9,
+          "over": "2.4"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Hasanka Chandrasena",
+          "score": 11,
+          "over": "3.2"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Sameera Perera",
+          "score": 23,
+          "over": "6.1"
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Tharindu Hettiarachchi",
+          "score": 31,
+          "over": "7.6"
+        },
+        {
+          "wicketNumber": 5,
+          "player": "Pasindu Chandrasekara",
+          "score": 43,
+          "over": "9.4"
+        },
+        {
+          "wicketNumber": 6,
+          "player": "Nuwan Sanjeewa",
+          "score": 54,
+          "over": "10.5"
+        },
+        {
+          "wicketNumber": 7,
+          "player": "Chamara Jayalath",
+          "score": 54,
+          "over": "10.6"
+        },
+        {
+          "wicketNumber": 8,
+          "player": "Sameera Madusanka",
+          "score": 64,
+          "over": "13.4"
+        },
+        {
+          "wicketNumber": 9,
+          "player": "Chinthaka Rajarathna",
+          "score": 66,
+          "over": "13.6"
+        }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Gully Boyz",
+      "opponent": "Ceylon Sharks",
+      "score": {
+        "runs": 86,
+        "wickets": 6,
+        "overs": "13",
+        "display": "86/6",
+        "runRate": 6.62
+      },
+      "batting": [
+        {
+          "player": "Pramod Subbaiah",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Sampath Basnagoda"
+          },
+          "runs": 2,
+          "balls": 5,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 40.0
+        },
+        {
+          "player": "Rajinder Singh",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Nuwan Sanjeewa",
+            "bowler": "Sampath Basnagoda"
+          },
+          "runs": 21,
+          "balls": 18,
+          "fours": 1,
+          "sixes": 2,
+          "strikeRate": 116.67
+        },
+        {
+          "player": "Gowtham Jeyabalan",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Chamara Jayalath",
+            "bowler": "Chamara Jayalath"
+          },
+          "runs": 11,
+          "balls": 18,
+          "fours": 2,
+          "sixes": 0,
+          "strikeRate": 61.11
+        },
+        {
+          "player": "Dharmendra Kumar",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Hasanka Chandrasena",
+            "bowler": "Gagith Abeysekara"
+          },
+          "runs": 13,
+          "balls": 13,
+          "fours": 1,
+          "sixes": 1,
+          "strikeRate": 100.0
+        },
+        {
+          "player": "Sunil Nair",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Tharindu Hettiarachchi"
+          },
+          "runs": 3,
+          "balls": 6,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 50.0
+        },
+        {
+          "player": "Charles Lawrence",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 10,
+          "balls": 6,
+          "fours": 1,
+          "sixes": 1,
+          "strikeRate": 166.67
+        },
+        {
+          "player": "Dannysh Walia",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Pasindu Chandrasekara",
+            "bowler": "Chamara Jayalath"
+          },
+          "runs": 7,
+          "balls": 7,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 100.0
+        },
+        {
+          "player": "Gurmesh Goyal",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 8,
+          "balls": 6,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 133.33
+        },
+        {
+          "player": "Satya Sharma",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Lovepreet Singh",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Krishna Verma",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 2,
+        "legByes": 0,
+        "wides": 8,
+        "noBalls": 1,
+        "penalty": 0,
+        "total": 11
+      },
+      "bowling": [
+        {
+          "player": "Gagith Abeysekara",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 17,
+          "wickets": 1,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 12,
+          "economy": 5.67
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 15,
+          "wickets": 2,
+          "wides": 3,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 5.0
+        },
+        {
+          "player": "Chamara Jayalath",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 7,
+          "wickets": 2,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 16,
+          "economy": 2.33
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 30,
+          "wickets": 1,
+          "wides": 1,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 8,
+          "economy": 10.0
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 15,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 2,
+          "economy": 15.0
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Pramod Subbaiah",
+          "score": 4,
+          "over": "1.2"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Gowtham Jeyabalan",
+          "score": 37,
+          "over": "6.1"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Rajinder Singh",
+          "score": 53,
+          "over": "8.2"
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Dharmendra Kumar",
+          "score": 59,
+          "over": "9.5"
+        },
+        {
+          "wicketNumber": 5,
+          "player": "Sunil Nair",
+          "score": 65,
+          "over": "10.1"
+        },
+        {
+          "wicketNumber": 6,
+          "player": "Dannysh Walia",
+          "score": 73,
+          "over": "11.3"
+        }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Ceylon Sharks 84/9 (15 overs)",
+    "secondInnings": "Gully Boyz 86/6 (13 overs)",
+    "winner": "Gully Boyz",
+    "margin": "4 wickets"
+  }
+}

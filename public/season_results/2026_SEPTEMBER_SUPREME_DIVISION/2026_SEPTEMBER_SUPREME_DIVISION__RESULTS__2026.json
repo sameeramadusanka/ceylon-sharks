@@ -1,0 +1,19 @@
+{
+  "season": {
+    "name": "2026_SEPTEMBER_SUPREME_DIVISION",
+    "division": "2026_SEPTEMBER_SUPREME_DIVISION",
+    "year": 2026,
+    "team": "Ceylon Sharks",
+    "matches": [
+      {
+        "id": 1,
+        "format": "League",
+        "date": "2026-09-26",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Gully Boyz",
+        "result": "Gully Boyz won by 4 Wickets",
+        "scoreSummary": "Ceylon Sharks: 84/9(15)Gully Boyz: 86/6(13)"
+      }
+    ]
+  }
+}

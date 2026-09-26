@@ -31,13 +31,13 @@ public/
   brand/
 ```
 
-Season folders use the season identifier from the source filenames. For example, the current season is stored under `26_T3_MAY`, not `2026`:
+Season folders use the season identifier from the source filenames. For example, the current season is stored under `2026_MAY_SUPREME_DIVISION`, not `2026`:
 
 ```text
-public/players/26_T3_MAY/
-public/season_results/26_T3_MAY/
-public/season_statistics/26_T3_MAY/
-public/score_cards/26_T3_MAY/
+public/players/2026_MAY_SUPREME_DIVISION/
+public/season_results/2026_MAY_SUPREME_DIVISION/
+public/season_statistics/2026_MAY_SUPREME_DIVISION/
+public/score_cards/2026_MAY_SUPREME_DIVISION/
 ```
 
 To add another season, create the matching folder under each applicable data directory and add the season's JSON files. The Astro loader discovers nested files recursively.

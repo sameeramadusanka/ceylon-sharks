@@ -56,7 +56,8 @@ type Metric = (typeof site.metrics)[number]['key'];
 type SeasonFile = { fileName: string; season: string; division: string; year: number; content: string };
 type SeasonStatisticsSource = { fileName: string; season: string; division: string; statisticsType: string; content: string };
 type ScoreCardSource = { fileName: string; season: string; division: string; matchNumber: number; date: string; content: string };
-type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[] };
+type UpcomingScheduleMatch = { fileName: string; date: string; time: string; teamOne: string; teamTwo: string; ground: string; status: string; result: string | null };
+type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[]; upcomingScheduleMatches?: UpcomingScheduleMatch[] };
 
 const shortName = (name: string) => name.split(' ').map((part) => part[0]).join('').slice(0, 7).toUpperCase();
 const displayDate = (date: string) => new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(date));
@@ -78,6 +79,31 @@ const oversToDecimal = (overs: string | undefined) => {
   if (!overs) return null;
   const [completedOvers, balls] = overs.split('.').map(Number);
   return Number.isFinite(completedOvers) && Number.isFinite(balls) ? completedOvers + balls / 6 : null;
+};
+const parseScheduleDateTime = (date: string, time: string) => {
+  if (!date) return new Date(0);
+  const [year, month, day] = date.split('-').map(Number);
+  const normalized = time.trim().toLowerCase();
+  const timeMatch = normalized.match(/(\d{1,2}):(\d{2})\s*(am|pm)?/);
+  let hour = 0;
+  let minute = 0;
+  if (timeMatch) {
+    hour = Number(timeMatch[1]);
+    minute = Number(timeMatch[2]);
+    const period = timeMatch[3];
+    if (period === 'pm' && hour < 12) hour += 12;
+    if (period === 'am' && hour === 12) hour = 0;
+  }
+  return new Date(year, (month ?? 1) - 1, day ?? 1, hour, minute);
+};
+const getScheduleMonthDay = (date: string) => {
+  const [year, month, day] = date.split('-').map(Number);
+  if (!year || !month || !day) return { day: '', month: '', year: '' };
+  return {
+    day: String(day),
+    month: new Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(year, month - 1, day)).toUpperCase(),
+    year: String(year),
+  };
 };
 
 function parsePlayers(json: string, statistics: SeasonStatisticsSource[], playerImages: Record<string, string>): Player[] {
@@ -160,7 +186,7 @@ function StatBlock({ value, label, accent = false }: { value: string; label: str
   return <div className={`stat-block${accent ? ' stat-block--accent' : ''}`}><strong>{value}</strong><span>{label}</span></div>;
 }
 
-export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, playerImages, seasonFiles, seasonStatistics, scoreCards }: DashboardProps) {
+export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, playerImages, seasonFiles, seasonStatistics, scoreCards, upcomingScheduleMatches = [] }: DashboardProps) {
   const [bannerImageIndex, setBannerImageIndex] = useState(0);
   const [format, setFormat] = useState(site.filters.all);
   const [metric, setMetric] = useState<Metric>(site.metrics[0].key);
@@ -237,8 +263,14 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const availableFormats = [site.filters.all, ...Array.from(new Set(matches.map((match) => match.format)))];
   const selectedSeason = seasonFiles.find((file) => file.fileName === selectedSeasonFile) ?? seasonFiles[0];
   const seasonScoreCards = scoreCards.filter((scoreCard) => scoreCard.season === selectedSeason?.season && scoreCard.division === selectedSeason?.division);
-  const seasonLabel = selectedSeason?.season ?? '26_T3_MAY';
+  const seasonLabel = selectedSeason?.season ?? '2026_MAY_SUPREME_DIVISION';
   const seasonYear = selectedSeason?.year ?? team.season;
+  const upcomingSchedule = [...upcomingScheduleMatches]
+    .filter((match) => match.date)
+    .sort((firstMatch, secondMatch) => parseScheduleDateTime(firstMatch.date, firstMatch.time).getTime() - parseScheduleDateTime(secondMatch.date, secondMatch.time).getTime());
+  const nextScheduledMatch = upcomingSchedule.find((match) => parseScheduleDateTime(match.date, match.time).getTime() >= Date.now()) ?? upcomingSchedule[0] ?? null;
+  const nextScheduledOpponent = nextScheduledMatch ? (nextScheduledMatch.teamOne === team.name || nextScheduledMatch.teamOne === team.shortName ? nextScheduledMatch.teamTwo : nextScheduledMatch.teamOne) : site.nextMatch.opponent;
+  const nextScheduledDate = nextScheduledMatch ? getScheduleMonthDay(nextScheduledMatch.date) : { day: String(site.nextMatch.date), month: site.nextMatch.month, year: String(seasonYear) };
   const seasonRecord = matches.reduce((record, match) => {
     record[match.result] += 1;
     return record;
@@ -329,7 +361,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
 
       <section className="matches page-width" id="matches">
         <div className="section-heading"><div><SectionLabel>{site.sections.matches.label}</SectionLabel><h2>{site.sections.matches.titleBefore}<br /><em>{site.sections.matches.titleEmphasis}</em></h2></div><div className="match-filters">{seasonFiles.length > 0 && <div className="filter-group dataset-filter" ref={datasetPickerRef}><span>{site.filters.datasetLabel}</span><div className="dataset-picker"><button className="dataset-picker-trigger" type="button" aria-expanded={datasetMenuOpen} aria-haspopup="listbox" onClick={() => setDatasetMenuOpen(!datasetMenuOpen)}><span>{selectedSeason?.season} · {selectedSeason?.division}</span><ChevronDown size={14} /></button>{datasetMenuOpen && <div className="dataset-menu" role="listbox" aria-label={site.filters.datasetLabel}>{seasonFiles.map((file) => <button className={file.fileName === selectedSeasonFile ? 'is-selected' : ''} type="button" role="option" aria-selected={file.fileName === selectedSeasonFile} key={file.fileName} onClick={() => { setSelectedSeasonFile(file.fileName); setDatasetMenuOpen(false); }}><strong>{file.season}</strong><span>{file.division}</span></button>)}</div>}</div></div>}<div className="filter-group"><span>{site.filters.formatLabel}</span>{availableFormats.map((item) => <button className={format === item ? 'is-active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</div><div className="filter-group"><span>{site.filters.resultLabel}</span>{[site.filters.all, 'WIN', 'LOSS', 'NO RESULT'].map((item) => <button className={matchFilter === item ? 'is-active' : ''} onClick={() => setMatchFilter(item)} key={item}>{item}</button>)}</div></div></div>
-        <div className="fixture-feature"><div><span className="match-kicker">{text(site.nextMatch.labelTemplate, { league: team.league })}</span><p className="fixture-date">{site.nextMatch.date} <small>{site.nextMatch.month}</small> {seasonYear} <b>{site.nextMatch.time}</b></p><div className="fixture-teams"><strong>{team.shortName.toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong><span>{site.nextMatch.versus}</span><strong>{site.nextMatch.opponent.toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong></div><p className="fixture-venue">{team.stadium} · {site.nextMatch.venueSuffix}</p></div><div className="fixture-badge"><span>{site.nextMatch.formLabel}</span><div>{recentForm.slice(-5).map((item, index) => <b className={item === 'W' ? 'win' : item === 'L' ? 'loss' : 'no-result'} key={`${item}-${index}`}>{item}</b>)}</div><small>{site.nextMatch.lastMatchesLabel}</small></div></div>
+        <div className="fixture-feature"><div><span className="match-kicker">{text(site.nextMatch.labelTemplate, { league: team.league })}</span><p className="fixture-date">{nextScheduledDate.day} <small>{nextScheduledDate.month}</small> {nextScheduledDate.year} <b>{nextScheduledMatch?.time ?? site.nextMatch.time}</b></p><div className="fixture-teams"><strong>{team.shortName.toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong><span>{site.nextMatch.versus}</span><strong>{(nextScheduledMatch ? nextScheduledOpponent : site.nextMatch.opponent).toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong></div><p className="fixture-venue">{nextScheduledMatch?.ground || team.stadium} · {site.nextMatch.venueSuffix}</p></div><div className="fixture-badge"><span>{site.nextMatch.formLabel}</span><div>{recentForm.slice(-5).map((item, index) => <b className={item === 'W' ? 'win' : item === 'L' ? 'loss' : 'no-result'} key={`${item}-${index}`}>{item}</b>)}</div><small>{site.nextMatch.lastMatchesLabel}</small></div></div>
         <div className="match-list">{filteredMatches.map((match) => { const scoreCardSource = seasonScoreCards.find((scoreCard) => scoreCard.matchNumber === match.id); return <article className={`match-card${scoreCardSource ? ' match-card--interactive' : ''}`} key={match.id} onClick={() => scoreCardSource && setSelectedScoreCard(parseScoreCard(scoreCardSource))} onKeyDown={(event) => { if (scoreCardSource && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelectedScoreCard(parseScoreCard(scoreCardSource)); } }} role={scoreCardSource ? 'button' : undefined} tabIndex={scoreCardSource ? 0 : undefined}><div className="match-meta"><span>{match.format} · {site.matchLabels.matchPrefix} {match.id}</span><span>{match.date}</span></div><div className="match-score"><span>{team.shortName.toUpperCase()}</span><strong>{match.teamScore}</strong></div><div className="match-score"><span>{match.opponent.toUpperCase()}</span><strong>{match.opponentScore}</strong></div><div className={`match-result ${match.result === 'WIN' ? 'match-result--win' : 'match-result--loss'}`}><b>{match.result === 'WIN' ? site.matchLabels.winShort : site.matchLabels.lossShort}</b> {match.result} {match.result === 'WIN' ? site.matchLabels.winBy : site.matchLabels.lossBy} {match.margin}</div>{scoreCardSource && <span className="scorecard-link">{site.scorecardLabels.view} <ArrowUpRight size={13} /></span>}</article>; })}</div>
       </section>
 

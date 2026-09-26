@@ -6,6 +6,6 @@ Use this filename format for detailed scorecard JSON files:
 
 Example:
 
-`26_T3_MAY__26_T3_SAT_SUPREME__MATCH-12__2026-09-05.json`
+`2026_MAY_SUPREME_DIVISION__2026_MAY_SUPREME_DIVISION__MATCH-12__2026-09-05.json`
 
-Store scorecards inside a season subfolder, for example `public/score_cards/26_T3_MAY/`.
+Store scorecards inside a season subfolder, for example `public/score_cards/2026_MAY_SUPREME_DIVISION/`.

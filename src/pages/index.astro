@@ -17,7 +17,15 @@ const playersBySeason = Object.fromEntries(
   filesIn(join(publicDirectory, 'players'))
     .map((filePath) => ({ filePath, fileName: basename(filePath) }))
     .filter(({ fileName }) => /__PLAYERS__\d{4}\.json$/.test(fileName))
-    .map(({ filePath, fileName }) => [fileName.match(/^(.*?)__PLAYERS__\d{4}\.json$/)?.[1] ?? '', readFileSync(filePath, 'utf8')]),
+    .map(({ filePath, fileName }) => {
+      const legacyMatch = fileName.match(/^(.+)__(.+)__PLAYERS__(\d{4})\.json$/);
+      const modernMatch = fileName.match(/^(.+)__PLAYERS__(\d{4})\.json$/);
+      const match = legacyMatch ?? modernMatch;
+      if (!match) return null;
+      const season = match[1];
+      return [season, readFileSync(filePath, 'utf8')];
+    })
+    .filter((entry): entry is [string, string] => entry !== null),
 );
 const optimizedBannerDirectory = join(publicDirectory, 'banner_images', 'optimized');
 const bannerImages = (readdirSync(optimizedBannerDirectory) as string[])
@@ -39,29 +47,55 @@ const seasonFiles = filesIn(seasonResultsDirectory)
   .map((filePath) => ({ filePath, fileName: basename(filePath) }))
   .filter(({ fileName }) => /__RESULTS__\d{4}\.json$/.test(fileName))
   .map(({ filePath, fileName }) => {
-    const match = fileName.match(/^(.*?)__(.*?)__RESULTS__(\d{4})\.json$/);
+    const legacyMatch = fileName.match(/^(.+)__(.+)__RESULTS__(\d{4})\.json$/);
+    const modernMatch = fileName.match(/^(.+)__RESULTS__(\d{4})\.json$/);
+    const match = legacyMatch ?? modernMatch;
     if (!match) throw new Error(`Invalid season results filename: ${fileName}`);
-    const [, season, division, year] = match;
-    return { fileName, season, division, year: Number(year), content: readFileSync(filePath, 'utf8') };
+    const [, season, division, year] = match.length >= 4 ? match : [match[0], match[1], match[1], match[2]];
+    return { fileName, season, division: division ?? season, year: Number(year), content: readFileSync(filePath, 'utf8') };
   });
 const seasonStatisticsDirectory = join(publicDirectory, 'season_statistics');
 const seasonStatistics = filesIn(seasonStatisticsDirectory)
   .map((filePath) => ({ filePath, fileName: basename(filePath) }))
   .filter(({ fileName }) => /__([A-Z]+)__\d{4}\.json$/.test(fileName))
   .map(({ filePath, fileName }) => {
-    const match = fileName.match(/^(.*?)__(.*?)__([A-Z]+)__\d{4}\.json$/);
+    const legacyMatch = fileName.match(/^(.+)__(.+)__([A-Z]+)__(\d{4})\.json$/);
+    const modernMatch = fileName.match(/^(.+)__([A-Z]+)__(\d{4})\.json$/);
+    const match = legacyMatch ?? modernMatch;
     if (!match) throw new Error(`Invalid season statistics filename: ${fileName}`);
-    const [, season, division, statisticsType] = match;
-    return { fileName, season, division, statisticsType, content: readFileSync(filePath, 'utf8') };
+    const [, season, division, statisticsType] = match.length >= 4 ? match : [match[0], match[1], match[1], match[2]];
+    return { fileName, season, division: division ?? season, statisticsType, content: readFileSync(filePath, 'utf8') };
   });
 const scoreCards = filesIn(scoreCardsDirectory)
   .map((filePath) => ({ filePath, fileName: basename(filePath) }))
   .filter(({ fileName }) => /__MATCH-\d+__\d{4}-\d{2}-\d{2}\.json$/.test(fileName))
   .map(({ filePath, fileName }) => {
-    const match = fileName.match(/^(.*?)__(.*?)__MATCH-(\d+)__(\d{4}-\d{2}-\d{2})\.json$/);
+    const legacyMatch = fileName.match(/^(.+)__(.+)__MATCH-(\d+)__(\d{4}-\d{2}-\d{2})\.json$/);
+    const modernMatch = fileName.match(/^(.+)__MATCH-(\d+)__(\d{4}-\d{2}-\d{2})\.json$/);
+    const match = legacyMatch ?? modernMatch;
     if (!match) throw new Error(`Invalid scorecard filename: ${fileName}`);
-    const [, season, division, matchNumber, date] = match;
-    return { fileName, season, division, matchNumber: Number(matchNumber), date, content: readFileSync(filePath, 'utf8') };
+    const [, season, division, matchNumber, date] = match.length >= 5 ? match : [match[0], match[1], match[1], match[2], match[3]];
+    return { fileName, season, division: division ?? season, matchNumber: Number(matchNumber), date, content: readFileSync(filePath, 'utf8') };
+  });
+const upcomingScheduleMatches = filesIn(join(publicDirectory, 'upcoming_schedules'))
+  .map((filePath) => ({ filePath, fileName: basename(filePath) }))
+  .filter(({ fileName }) => /\.json$/.test(fileName))
+  .flatMap(({ filePath, fileName }) => {
+    try {
+      const parsed = JSON.parse(readFileSync(filePath, 'utf8')) as { matches?: Array<Record<string, unknown>> };
+      return (parsed.matches ?? []).map((match) => ({
+        fileName,
+        date: String(match.date ?? ''),
+        time: String(match.time ?? ''),
+        teamOne: String(match.teamOne ?? match.homeTeam ?? ''),
+        teamTwo: String(match.teamTwo ?? match.awayTeam ?? ''),
+        ground: String(match.ground ?? match.venue ?? ''),
+        status: String(match.status ?? 'Scheduled'),
+        result: match.result ?? null,
+      }));
+    } catch {
+      return [];
+    }
   });
 
 const title = `${team.name} | ${site.seo.titleSuffix}`;
@@ -79,6 +113,6 @@ const description = site.seo.descriptionTemplate.replace('{team}', team.name);
     <title>{title}</title>
   </head>
   <body>
-    <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} />
+    <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} upcomingScheduleMatches={upcomingScheduleMatches} />
   </body>
 </html>

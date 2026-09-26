@@ -13,30 +13,30 @@ export type ScoreCard = {
     inningsNumber: number;
     team: string;
     opponent: string;
-    score: { display: string; overs: number; runRate: number };
+    score: { display: string; overs: number; runRate: number | string };
     batting: Array<{
       player: string;
       dismissal: { type: string; fielder: string | null; bowler: string | null } | null;
-      runs: number;
-      balls: number;
-      fours: number;
-      sixes: number;
-      strikeRate: number;
+      runs: number | string;
+      balls: number | string;
+      fours: number | string;
+      sixes: number | string;
+      strikeRate: number | string | null;
     }>;
-    extras: { byes: number; legByes: number; wides: number; noBalls: number; penalty: number; total: number };
+    extras: { byes: number | string; legByes: number | string; wides: number | string; noBalls: number | string; penalty: number | string; total: number | string };
     bowling: Array<{
       player: string;
-      overs: number;
-      maidens: number;
-      runs: number;
-      wickets: number;
-      wides: number;
-      noBalls: number;
-      hattricks: number;
-      dotBalls: number;
-      economy: number;
+      overs: number | string;
+      maidens: number | string;
+      runs: number | string;
+      wickets: number | string;
+      wides: number | string;
+      noBalls: number | string;
+      hattricks: number | string;
+      dotBalls: number | string;
+      economy: number | string | null;
     }>;
-    fallOfWickets: Array<{ wicketNumber: number; player: string; score: number; over: number }>;
+    fallOfWickets: Array<{ wicketNumber: number; player: string; score: number | string; over: number | string }>;
   }>;
   matchSummary: { winner: string; margin: string };
 };
@@ -44,6 +44,11 @@ export type ScoreCard = {
 type ScorecardModalProps = { scoreCard: ScoreCard; onClose: () => void };
 
 const titleCase = (value: string) => value.toLowerCase().replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+const numericValue = (value: number | string | null | undefined) => {
+  const numeric = Number(value ?? 0);
+  return Number.isFinite(numeric) ? numeric : 0;
+};
+const rateText = (value: number | string | null | undefined) => numericValue(value).toFixed(2);
 
 function dismissalText(dismissal: ScoreCard['innings'][number]['batting'][number]['dismissal']) {
   if (!dismissal) return 'not out';
@@ -74,7 +79,7 @@ export default function ScorecardModal({ scoreCard, onClose }: ScorecardModalPro
                 <div className="scorecard-section-heading"><h3>{site.scorecardLabels.batting}</h3><span>{site.scorecardLabels.runs}</span></div>
                 <div className="scorecard-table scorecard-table--batting">
                   <div className="scorecard-table-row scorecard-table-heading"><span>{site.scorecardLabels.player}</span><span>{site.scorecardLabels.dismissal}</span><span>R</span><span>B</span><span>4s</span><span>6s</span><span>SR</span></div>
-                  {innings.batting.map((batter) => <div className="scorecard-table-row" key={batter.player}><span className="scorecard-player-name">{batter.player}</span><span className="scorecard-dismissal">{dismissalText(batter.dismissal)}</span><span>{batter.runs}</span><span>{batter.balls}</span><span>{batter.fours}</span><span>{batter.sixes}</span><span>{batter.strikeRate.toFixed(2)}</span></div>)}
+                  {innings.batting.map((batter) => <div className="scorecard-table-row" key={batter.player}><span className="scorecard-player-name">{batter.player}</span><span className="scorecard-dismissal">{dismissalText(batter.dismissal)}</span><span>{batter.runs}</span><span>{batter.balls}</span><span>{batter.fours}</span><span>{batter.sixes}</span><span>{rateText(batter.strikeRate)}</span></div>)}
                 </div>
                 <div className="scorecard-extras"><span>{site.scorecardLabels.extras}</span><b>{innings.extras.total}</b><small> b {innings.extras.byes} · lb {innings.extras.legByes} · w {innings.extras.wides} · nb {innings.extras.noBalls}</small></div>
               </div>
@@ -82,7 +87,7 @@ export default function ScorecardModal({ scoreCard, onClose }: ScorecardModalPro
                 <div className="scorecard-section-heading"><h3>{site.scorecardLabels.bowling}</h3><span>{site.scorecardLabels.wickets}</span></div>
                 <div className="scorecard-table scorecard-table--bowling">
                   <div className="scorecard-table-row scorecard-table-heading"><span>{site.scorecardLabels.player}</span><span>O</span><span>M</span><span>R</span><span>W</span><span>Wd</span><span>NB</span><span>ECO</span></div>
-                  {innings.bowling.map((bowler) => <div className="scorecard-table-row" key={bowler.player}><span className="scorecard-player-name">{bowler.player}</span><span>{bowler.overs}</span><span>{bowler.maidens}</span><span>{bowler.runs}</span><span>{bowler.wickets}</span><span>{bowler.wides}</span><span>{bowler.noBalls}</span><span>{bowler.economy.toFixed(2)}</span></div>)}
+                  {innings.bowling.map((bowler) => <div className="scorecard-table-row" key={bowler.player}><span className="scorecard-player-name">{bowler.player}</span><span>{bowler.overs}</span><span>{bowler.maidens}</span><span>{bowler.runs}</span><span>{bowler.wickets}</span><span>{bowler.wides}</span><span>{bowler.noBalls}</span><span>{rateText(bowler.economy)}</span></div>)}
                 </div>
               </div>
               <div className="scorecard-section scorecard-fall-of-wickets">

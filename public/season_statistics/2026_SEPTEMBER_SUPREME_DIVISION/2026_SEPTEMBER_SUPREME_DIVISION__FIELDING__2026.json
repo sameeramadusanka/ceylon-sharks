@@ -1,0 +1,130 @@
+{
+  "season": {
+    "name": "2026_T4_SAT_SUPREME",
+    "team": "Ceylon Sharks",
+    "statisticsType": "FIELDING",
+    "players": [
+      {
+        "rank": 1,
+        "player": "Chamara Jayalath",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 2,
+        "player": "Hasanka Chandrasena",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 1,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 3,
+        "player": "Nuwan Sanjeewa",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 4,
+        "player": "Pasindu Chandrasekara",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 5,
+        "player": "Sameera Perera",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 6,
+        "player": "Hasitha De Silva",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 7,
+        "player": "Chinthaka Rajarathna",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 8,
+        "player": "Tharindu Hettiarachchi",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 9,
+        "player": "Gagith Abeysekara",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 10,
+        "player": "Sameera Madusanka",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 11,
+        "player": "Sampath Basnagoda",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      }
+    ]
+  }
+}
