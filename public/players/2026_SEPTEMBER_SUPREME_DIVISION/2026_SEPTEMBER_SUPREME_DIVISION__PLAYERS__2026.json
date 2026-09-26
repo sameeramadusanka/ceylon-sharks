@@ -8,12 +8,6 @@
     "viceCaptainId": 1198221,
     "players": [
       {
-        "id": 1080804,
-        "name": "Dilshan Harshana",
-        "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
         "id": 1156319,
         "name": "Sameera Perera",
         "number": 0,
@@ -38,20 +32,8 @@
         "detail": "26_T4_SAT_SUPREME"
       },
       {
-        "id": 1198225,
-        "name": "Migara Kulasekara",
-        "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
         "id": 1257852,
         "name": "Hasitha De Silva",
-        "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
-        "id": 1388773,
-        "name": "Ashen Sharks",
         "number": 0,
         "detail": "26_T4_SAT_SUPREME"
       },
@@ -68,33 +50,9 @@
         "detail": "26_T4_SAT_SUPREME"
       },
       {
-        "id": 2790814,
-        "name": "Prasad Thilakarathne",
-        "number": 44,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
         "id": 2791118,
         "name": "Hasanka Chandrasena",
         "number": 23,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
-        "id": 2792636,
-        "name": "Ravinath Subasinghe",
-        "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
-        "id": 2888187,
-        "name": "Lahiru Kaluthanthri",
-        "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
-        "id": 2888257,
-        "name": "Mahesh Kavinda",
-        "number": 0,
         "detail": "26_T4_SAT_SUPREME"
       },
       {
@@ -143,12 +101,6 @@
         "id": 4388523,
         "name": "Thameera Muthukumarana",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
-      },
-      {
-        "id": 4592101,
-        "name": "Isuru Samarakoon",
-        "number": 77,
         "detail": "26_T4_SAT_SUPREME"
       },
       {
