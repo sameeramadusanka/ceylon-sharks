@@ -40,7 +40,7 @@
     "performance": { "label": "02 / Season Performance", "titleBefore": "The numbers", "titleEmphasis": "tell a story." },
     "matches": { "label": "03 / Match Centre", "titleBefore": "Every game", "titleEmphasis": "has a pulse." },
     "squad": { "label": "04 / The Squad", "titleBefore": "People who", "titleEmphasis": "change games.", "description": "The full squad. Many different ways to shift the match. Meet the current heartbeat of {team}." },
-    "history": { "label": "05 / Our Story", "titleBefore": "Built from", "titleEmphasis": "the ground up.", "description": "Every club has a beginning. Ours started with one pitch, a handful of believers, and a stubborn idea about how cricket should feel. Two decades later, the idea is still moving." },
+    "history": { "label": "05 / Our Story", "titleBefore": "Built from", "titleEmphasis": "the ground up.", "description": "Every club has a beginning. Ours started with one pitch, a handful of believers, and a stubborn idea about how cricket should feel. Few years later, the idea is still moving." },
     "records": { "label": "06 / Record Book", "titleBefore": "Leave a mark.", "titleEmphasis": "Make it count.", "description": "The moments that made us. The numbers we still chase." }
   },
   "snapshotStats": [

@@ -63,8 +63,14 @@ const seasonStatistics = filesIn(seasonStatisticsDirectory)
     const modernMatch = fileName.match(/^(.+)__([A-Z]+)__(\d{4})\.json$/);
     const match = legacyMatch ?? modernMatch;
     if (!match) throw new Error(`Invalid season statistics filename: ${fileName}`);
-    const [, season, division, statisticsType] = match.length >= 4 ? match : [match[0], match[1], match[1], match[2]];
-    return { fileName, season, division: division ?? season, statisticsType, content: readFileSync(filePath, 'utf8') };
+
+    if (legacyMatch) {
+      const [, season, division, statisticsType] = match;
+      return { fileName, season, division, statisticsType, content: readFileSync(filePath, 'utf8') };
+    }
+
+    const [, season, statisticsType] = match;
+    return { fileName, season, division: season, statisticsType, content: readFileSync(filePath, 'utf8') };
   });
 const scoreCards = filesIn(scoreCardsDirectory)
   .map((filePath) => ({ filePath, fileName: basename(filePath) }))
