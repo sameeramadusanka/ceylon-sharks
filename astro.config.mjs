@@ -3,6 +3,5 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   integrations: [react()],
-  site: 'https://sameeramadusanka.github.io',
-  base: '/ceylon-sharks'
+  site: 'https://www.ceylonsharks.com'
 });
