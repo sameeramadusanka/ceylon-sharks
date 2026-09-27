@@ -118,12 +118,13 @@ const description = site.seo.descriptionTemplate.replace('{team}', team.name);
     <link rel="canonical" href={site.seo.canonicalUrl} />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
-    <script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
       gtag('js', new Date());
-
       gtag('config', 'G-B35J5LJTFY');
     </script>
   </head>
