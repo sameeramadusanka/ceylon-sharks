@@ -44,6 +44,12 @@ export type ScoreCard = {
 type ScorecardModalProps = { scoreCard: ScoreCard; onClose: () => void };
 
 const titleCase = (value: string) => value.toLowerCase().replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+const formatModalDate = (date: string) => {
+  if (!date) return '';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short', year: 'numeric' }).format(parsed);
+};
 const numericValue = (value: number | string | null | undefined) => {
   const numeric = Number(value ?? 0);
   return Number.isFinite(numeric) ? numeric : 0;
@@ -62,7 +68,7 @@ export default function ScorecardModal({ scoreCard, onClose }: ScorecardModalPro
       <div className="scorecard-modal" role="dialog" aria-modal="true" aria-labelledby="scorecard-title" onClick={(event) => event.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label={site.accessibility.closeScorecard}><X size={19} /></button>
         <div className="scorecard-header">
-          <span className="modal-number">{scoreCard.match.competition} · {scoreCard.match.date}</span>
+          <span className="modal-number">{scoreCard.match.competition} · {formatModalDate(scoreCard.match.date)}</span>
           <h2 id="scorecard-title">{site.scorecardLabels.title}</h2>
           <p>{scoreCard.match.teams.home.name.toUpperCase()} <b>VS</b> {scoreCard.match.teams.away.name.toUpperCase()}</p>
           <strong>{scoreCard.matchSummary.winner.toUpperCase()} {site.scorecardLabels.winnerSuffix} {scoreCard.matchSummary.margin.toUpperCase()}</strong>
