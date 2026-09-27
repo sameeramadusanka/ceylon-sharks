@@ -117,6 +117,15 @@ const description = site.seo.descriptionTemplate.replace('{team}', team.name);
     <meta name="theme-color" content="#111314" />
     <link rel="canonical" href={site.seo.canonicalUrl} />
     <title>{title}</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-B35J5LJTFY');
+    </script>
   </head>
   <body>
     <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} upcomingScheduleMatches={upcomingScheduleMatches} />
