@@ -172,7 +172,14 @@ function parseMatches(json: string, teamName: string): Match[] {
 }
 
 function parseScoreCard(source: ScoreCardSource): ScoreCard {
-  return JSON.parse(source.content) as ScoreCard;
+  const parsed = JSON.parse(source.content) as ScoreCard;
+  return {
+    ...parsed,
+    match: {
+      ...parsed.match,
+      date: source.date || parsed.match?.date || '',
+    },
+  };
 }
 
 function text(template: string, values: Record<string, string>) {
