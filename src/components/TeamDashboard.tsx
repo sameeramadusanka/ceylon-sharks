@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ChevronDown, ChevronRight, CircleDot, Menu, Play, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, CircleDot, Menu, Play, X } from 'lucide-react';
 import team from '../data/team.json';
 import fallbackPlayers from '../data/players.json';
 import fallbackMatches from '../data/matches.json';
@@ -57,7 +57,7 @@ type SeasonFile = { fileName: string; season: string; division: string; year: nu
 type SeasonStatisticsSource = { fileName: string; season: string; division: string; statisticsType: string; content: string };
 type ScoreCardSource = { fileName: string; season: string; division: string; matchNumber: number; date: string; content: string };
 type UpcomingScheduleMatch = { fileName: string; date: string; time: string; teamOne: string; teamTwo: string; ground: string; status: string; result: string | null };
-type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[]; upcomingScheduleMatches?: UpcomingScheduleMatch[] };
+type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; historyImages: string[]; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[]; upcomingScheduleMatches?: UpcomingScheduleMatch[] };
 
 const shortName = (name: string) => name.split(' ').map((part) => part[0]).join('').slice(0, 7).toUpperCase();
 const displayDate = (date: string) => new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(date));
@@ -187,8 +187,9 @@ function StatBlock({ value, label, accent = false }: { value: string; label: str
   return <div className={`stat-block${accent ? ' stat-block--accent' : ''}`}><strong>{value}</strong><span>{label}</span></div>;
 }
 
-export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, playerImages, seasonFiles, seasonStatistics, scoreCards, upcomingScheduleMatches = [] }: DashboardProps) {
+export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, historyImages = [], playerImages, seasonFiles, seasonStatistics, scoreCards, upcomingScheduleMatches = [] }: DashboardProps) {
   const [bannerImageIndex, setBannerImageIndex] = useState(0);
+  const [historyImageIndex, setHistoryImageIndex] = useState(0);
   const [format, setFormat] = useState(site.filters.all);
   const [metric, setMetric] = useState<Metric>(site.metrics[0].key);
   const [matchFilter, setMatchFilter] = useState(site.filters.all);
@@ -273,6 +274,8 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const nextScheduledMatch = upcomingSchedule.find((match) => parseScheduleDateTime(match.date, match.time).getTime() >= Date.now()) ?? upcomingSchedule[0] ?? null;
   const nextScheduledOpponent = nextScheduledMatch ? (nextScheduledMatch.teamOne === team.name || nextScheduledMatch.teamOne === team.shortName ? nextScheduledMatch.teamTwo : nextScheduledMatch.teamOne) : site.nextMatch.opponent;
   const nextScheduledDate = nextScheduledMatch ? getScheduleMonthDay(nextScheduledMatch.date) : { day: String(site.nextMatch.date), month: site.nextMatch.month, year: String(seasonYear) };
+  const storyImages = historyImages.length ? historyImages : (groundImage ? [groundImage] : []);
+  const currentHistoryImage = storyImages[historyImageIndex] ?? storyImages[0] ?? groundImage;
   const seasonRecord = matches.reduce((record, match) => {
     record[match.result] += 1;
     return record;
@@ -371,7 +374,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
         <div className="page-width"><div className="section-heading"><div><SectionLabel>{site.sections.squad.label}</SectionLabel><h2>{site.sections.squad.titleBefore}<br /><em>{site.sections.squad.titleEmphasis}</em></h2></div><p className="section-aside">{text(site.sections.squad.description, { team: team.name })}</p></div><div className="player-grid">{players.map((player) => <button className={`player-card${player.leadership ? ` player-card--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice-captain'}` : ''}`} key={player.id} onClick={() => setSelectedPlayer(player)}><div className={`player-photo${player.image ? '' : ' player-photo--empty'}`} style={player.image ? { backgroundImage: `url(${player.image})` } : undefined}>{!player.image && <strong>{initials(player.name)}</strong>}<span>#{String(player.number).padStart(2, '0')}</span><i><ArrowUpRight size={17} /></i></div><div className="player-info"><div><h3>{player.name}</h3><span>{player.role}</span></div><strong className={player.leadership ? `player-leadership player-leadership--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice'}` : undefined}>{player.leadership ?? player.shortRole}</strong></div><div className="player-stat"><span>BAT <b>{player.battingRuns.toLocaleString()}</b></span><span>BOWL <b>{player.bowlingWickets}</b></span><span>FIELD <b>{player.fieldingDismissals}</b></span></div></button>)}</div></div>
       </section>
 
-      <section className="story page-width" id="history"><div className="story-image"><img src={groundImage} alt={team.stadium} className="story-image-media" /><div className="story-caption">{team.stadium}<br /><span>EST. {team.founded} · NORTH STAND</span></div></div><div className="story-copy"><SectionLabel>{site.sections.history.label}</SectionLabel><h2>{site.sections.history.titleBefore}<br /><em>{site.sections.history.titleEmphasis}</em></h2><p>{site.sections.history.description}</p><a className="text-link" href="#records">{site.actions.recordBook} <ArrowUpRight size={16} /></a><div className="timeline-full">{history.map((event) => { const id = `${event.year}-${event.title}`; const isOpen = !!expandedHistory[id]; return <div className={`timeline-item${isOpen ? ' is-open' : ''}`} key={id}><button className="timeline-toggle" type="button" onClick={() => setExpandedHistory((current) => ({ ...current, [id]: !current[id] }))}><b>{event.year}</b><span>{event.title}</span><ChevronDown size={14} className="timeline-chevron" /></button>{isOpen && <div className="timeline-detail"><p>{event.text}</p></div>}</div>; })}</div></div></section>
+      <section className="story page-width" id="history"><div className="story-image-carousel"><div className="story-image"><img src={currentHistoryImage} alt={team.stadium} className="story-image-media" /><div className="story-caption">{team.stadium}<br /><span>EST. {team.founded} · NORTH STAND</span></div></div>{storyImages.length > 1 && <div className="story-carousel-controls"><button type="button" aria-label="Previous history image" onClick={() => setHistoryImageIndex((index) => (index - 1 + storyImages.length) % storyImages.length)}><ChevronLeft size={14} /></button><div className="story-carousel-dots">{storyImages.map((image, index) => <button type="button" key={`${image}-${index}`} className={index === historyImageIndex ? 'is-active' : ''} aria-label={`Show history image ${index + 1}`} onClick={() => setHistoryImageIndex(index)} />)}</div><button type="button" aria-label="Next history image" onClick={() => setHistoryImageIndex((index) => (index + 1) % storyImages.length)}><ChevronRight size={14} /></button></div>}</div><div className="story-copy"><SectionLabel>{site.sections.history.label}</SectionLabel><h2>{site.sections.history.titleBefore}<br /><em>{site.sections.history.titleEmphasis}</em></h2><p>{site.sections.history.description}</p><a className="text-link" href="#records">{site.actions.recordBook} <ArrowUpRight size={16} /></a><div className="timeline-full">{history.map((event) => { const id = `${event.year}-${event.title}`; const isOpen = !!expandedHistory[id]; return <div className={`timeline-item${isOpen ? ' is-open' : ''}`} key={id}><button className="timeline-toggle" type="button" onClick={() => setExpandedHistory((current) => ({ ...current, [id]: !current[id] }))}><b>{event.year}</b><span>{event.title}</span><ChevronDown size={14} className="timeline-chevron" /></button>{isOpen && <div className="timeline-detail"><p>{event.text}</p></div>}</div>; })}</div></div></section>
 
       <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{site.sections.records.label}</SectionLabel><div className="records-layout"><div><span className="records-season-label">{seasonLabel}</span><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2><p>{site.sections.records.description}</p></div><div className="record-list">{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></section>
 
