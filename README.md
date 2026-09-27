@@ -1,136 +1,155 @@
 # Ceylon Sharks Cricket Dashboard
 
-The Ceylon Sharks Cricket Dashboard is a responsive, static cricket team website built with Astro, React, and TypeScript. It presents the team's identity, current season results, squad, player profiles, scorecards, statistics, records, and match information in a broadcast-inspired interface.
+A responsive, static cricket club website built with Astro, React, and TypeScript. The site is designed to showcase the club story, current season, upcoming fixtures, squad, match records, and player statistics in a premium broadcast-style interface.
 
-The site is intentionally data-driven and does not require a backend, database, authentication, or live-score service. Content is stored in local JSON files and images are served from `public/`.
+## Highlights
 
-## Technology
+- Dynamic season switching across multiple datasets
+- Current-season results and statistics from local JSON files
+- Upcoming fixture logic based on the current date and scheduled match time
+- Player cards with modal detail views and season stats
+- Scorecard modal rendering for recent matches
+- Collapsible milestone timeline in the History section
+- Fully static deployment with no backend or database required
 
-- Astro static site generation
-- React and TypeScript for interactive dashboard components
+## Tech Stack
+
+- Astro
+- React
+- TypeScript
 - Lucide React icons
-- Local JSON data and image assets
-- Responsive CSS with season-aware filtering
+- Custom CSS
+- Local static JSON and image assets
 
 ## Project Structure
 
 ```text
 src/
-  components/       React dashboard components
-  data/             Team and site configuration
-  pages/            Astro pages and data loading
-  styles/           Global styles
+  components/
+    TeamDashboard.tsx
+    ScorecardModal.tsx
+  data/
+    history.json
+    matches.json
+    players.json
+    site.json
+    team.json
+  pages/
+    index.astro
+  styles/
+    global.css
+    scorecard.css
 public/
-  players/{season}/
-  season_results/{season}/
-  season_statistics/{season}/
-  score_cards/{season}/
-  player_images/
   banner_images/
-  ground_images/
   brand/
+  ground_images/
+  player_images/
+  players/
+  score_cards/
+  season_results/
+  season_statistics/
+  upcoming_schedules/
 ```
 
-Season folders use the season identifier from the source filenames. For example, the current season is stored under `2026_MAY_SUPREME_DIVISION`, not `2026`:
+## Season Naming and Data Shape
+
+The project supports both legacy and modern season naming conventions, but the active structure uses the division-based format below:
 
 ```text
 public/players/2026_MAY_SUPREME_DIVISION/
 public/season_results/2026_MAY_SUPREME_DIVISION/
 public/season_statistics/2026_MAY_SUPREME_DIVISION/
 public/score_cards/2026_MAY_SUPREME_DIVISION/
+
+public/players/2026_SEPTEMBER_SUPREME_DIVISION/
+public/season_results/2026_SEPTEMBER_SUPREME_DIVISION/
+public/season_statistics/2026_SEPTEMBER_SUPREME_DIVISION/
+public/score_cards/2026_SEPTEMBER_SUPREME_DIVISION/
 ```
 
-To add another season, create the matching folder under each applicable data directory and add the season's JSON files. The Astro loader discovers nested files recursively.
+The app loads season files recursively and normalizes them so the selected dataset updates the dashboard, form, matches, statistics, and rider context without hardcoded season IDs.
 
-## Requirements
+## Data Sources
 
-- Node.js 22.12 or newer
-- npm
+The site reads structured JSON from the `public/` folder:
+
+- `players/*` — player roster information
+- `season_results/*` — match results and season metadata
+- `season_statistics/*` — batting, bowling, and fielding metrics
+- `score_cards/*` — detailed scorecard JSON for each match
+- `upcoming_schedules/*` — future fixture data used for date-aware next match selection
 
 ## Local Development
 
-Install dependencies:
+### Requirements
+
+- Node.js 18+
+- npm
+
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The site is available at `http://localhost:4321/`.
-
-To allow access from another device on the local network:
+### Start the dev server
 
 ```bash
 npm run dev -- --host 0.0.0.0
 ```
 
-## Validation
+The app is available at:
 
-Run the Astro type and component checks:
+```text
+http://localhost:4321/
+```
+
+## Validation and Build
+
+Run code and Astro diagnostics:
 
 ```bash
 npm run check
 ```
 
-Create a production build:
+Generate the production build:
 
 ```bash
 npm run build
 ```
 
-Preview the production build locally:
+Preview the build locally:
 
 ```bash
-npm run preview
+npm run preview -- --host 0.0.0.0
 ```
 
 ## Deployment
 
-This project builds as a static site. The production output is generated in `dist/`.
+This is a static Astro site and can be deployed to any static hosting provider.
 
-1. Install dependencies and run the checks:
-
-   ```bash
-   npm ci
-   npm run check
-   npm run build
-   ```
-
-2. Deploy the contents of `dist/` to a static hosting provider such as Netlify, Vercel, GitHub Pages, or an Nginx web server.
-2. Deploy the contents of `dist/` to a static hosting provider such as Netlify, Vercel, GitHub Pages, or an Nginx web server.
-
-3. Configure the hosting provider to serve `dist/index.html` for the site root. No server-side runtime or database is required.
-
-For a direct static-server deployment, copy the generated output to the web root:
+### Typical static deployment flow
 
 ```bash
-rsync -av --delete dist/ user@server:/var/www/ceylon-sharks/
+npm install
+npm run check
+npm run build
 ```
 
-After changing JSON data, images, or source code, run `npm run check` and `npm run build` again, then redeploy the refreshed `dist/` directory.
+Then publish the generated `dist/` folder to your hosting provider.
 
-### GitHub Pages with GitHub Actions
+## Notes
 
-The repository includes `.github/workflows/deploy.yml`. Every push to `main` runs the checks, builds the Astro site, uploads `dist/`, and deploys it to GitHub Pages.
-
-Enable Pages once in the GitHub repository:
-
-1. Open **Settings > Pages**.
-2. Under **Build and deployment**, choose **GitHub Actions** as the source.
-3. Push to `main` or run the **Deploy Astro site to GitHub Pages** workflow manually from the **Actions** tab.
-
-The site will be available at `https://sameeramadusanka.github.io/ceylon-sharks/` after the workflow completes.
+- The site is intentionally data-driven and does not rely on a backend service.
+- The History section uses a collapsible timeline so milestone entries stay compact on first load and expand for detail.
+- Upcoming match selection uses the current date and scheduled time to highlight the correct fixture.
+- The project has been updated to align May and September season data shapes so scorecards and stats render consistently.
 
 ## Useful Commands
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run check` | Run Astro diagnostics |
-| `npm run build` | Generate the static production site |
-| `npm run preview` | Preview the production build |
+```bash
+npm run dev -- --host 0.0.0.0
+npm run check
+npm run build
+npm run preview -- --host 0.0.0.0
+```
