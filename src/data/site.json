@@ -10,11 +10,11 @@
   },
   "navigation": [
     { "label": "Home", "href": "#home" },
+    { "label": "Statistics", "href": "#statistics" },
     { "label": "Matches", "href": "#matches" },
     { "label": "Squad", "href": "#squad" },
-    { "label": "Statistics", "href": "#statistics" },
-    { "label": "Records", "href": "#records" },
-    { "label": "History", "href": "#history" }
+    { "label": "History", "href": "#history" },
+    { "label": "Records", "href": "#records" }
   ],
   "actions": {
     "seasonPrefix": "Season",
