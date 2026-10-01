@@ -32,6 +32,25 @@ a { color: inherit; text-decoration: none; }
 .record-season-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; color: #72756f; cursor: pointer; flex: 0 0 auto; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 0 0 15px; text-transform: uppercase; }
 .record-season-tabs button.is-active { border-bottom-color: var(--amber); color: var(--amber); }
 @media (max-width: 470px) { .record-season-tabs { gap: 18px; } }
+.story { display: block; padding: 0 0 125px; }
+.story-intro { align-items: start; display: grid; gap: 12%; grid-template-columns: 1fr 1fr; padding-bottom: 64px; padding-top: 125px; }
+.story-description { align-self: end; max-width: 520px; }
+.story-description > p { color: #6d6e68; font-size: 14px; line-height: 1.8; margin: 0; }
+.story-heading { text-align: right; }
+.story-heading .section-label { justify-content: flex-end; }
+.story-heading h2 { font-size: clamp(3rem, 5vw, 5.5rem); margin: 24px 0 0; }
+.story-image-carousel { display: grid; gap: 10px; }
+.story-image { height: clamp(360px, 56vw, 760px); min-height: 0; }
+.story-image-media { object-fit: cover; }
+.timeline-full { margin: 58px auto 0; max-width: 1100px; }
+@media (max-width: 800px) {
+	.story { padding-bottom: 80px; }
+	.story-intro { gap: 32px; grid-template-columns: 1fr; padding-bottom: 44px; padding-top: 80px; }
+	.story-heading { grid-row: 1; }
+	.story-heading .section-label { justify-content: flex-end; }
+	.story-image { height: clamp(300px, 68vw, 520px); }
+	.timeline-full { margin-top: 42px; }
+}
 .player-info { min-height: 78px; padding: 18px 0 16px; }
 .player-stat { flex-wrap: wrap; gap: 10px; padding-top: 15px; }
 .player-stat span { flex: 1 1 28%; min-width: 58px; }
