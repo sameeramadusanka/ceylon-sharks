@@ -37,7 +37,7 @@ a { color: inherit; text-decoration: none; }
 .story-description { align-self: end; max-width: 520px; }
 .story-description > p { color: #6d6e68; font-size: 14px; line-height: 1.8; margin: 0; }
 .story-heading { text-align: left; }
-.story-heading .section-label { justify-content: flex-end; }
+.story-heading .section-label { justify-content: flex-start; }
 .story-heading h2 { font-size: clamp(3rem, 5vw, 5.5rem); margin: 24px 0 0; }
 .story-image-carousel { display: grid; gap: 10px; }
 .story-image { height: clamp(360px, 56vw, 760px); min-height: 0; }
