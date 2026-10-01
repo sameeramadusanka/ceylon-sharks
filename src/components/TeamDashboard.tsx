@@ -368,7 +368,6 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
         <div className="hero-grid" />
         <div className="hero-content page-width">
           <div className="hero-copy">
-            <p className="eyebrow"><CircleDot size={12} /> {team.league} · {seasonLabel}</p>
             <h1>{site.hero.headlineBefore}<br /><em>{site.hero.headlineEmphasis}</em> {site.hero.headlineAfter}</h1>
             <p className="hero-description">{text(site.hero.descriptionTemplate, { nickname: team.nickname })}</p>
             <div className="hero-actions">

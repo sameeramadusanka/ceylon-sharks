@@ -1,15 +1,18 @@
 # Ceylon Sharks Cricket Dashboard
 
-A responsive, static cricket club website built with Astro, React, and TypeScript. The site is designed to showcase the club story, current season, upcoming fixtures, squad, match records, and player statistics in a premium broadcast-style interface.
+A responsive, static cricket club website built with Astro, React, and TypeScript. The site showcases Ceylon Sharks' season performance, matches, squad, club history, and records in a premium broadcast-style interface.
 
 ## Highlights
 
-- Dynamic season switching across multiple datasets
-- Current-season results and statistics from local JSON files
+- Navigation sections in this order: Home, Statistics, Matches, Squad, History, Records
+- Season/division switching for the match centre, results, player roster, and season statistics
+- Current and previous season record-book tabs, calculated from each season's match data
+- Season performance charts and summary metrics derived from the selected results dataset
 - Upcoming fixture logic based on the current date and scheduled match time
-- Player cards with modal detail views and season stats
-- Scorecard modal rendering for recent matches
-- Collapsible milestone timeline in the History section
+- Player cards with modal profile details and batting, bowling, and fielding statistics
+- Interactive scorecard modals for matches with scorecard data
+- History section with a responsive title/description intro, page-width image carousel, and collapsible milestone timeline
+- Responsive mobile navigation, match filters, and accessible tab controls
 - Fully static deployment with no backend or database required
 
 ## Tech Stack
@@ -41,8 +44,10 @@ src/
     scorecard.css
 public/
   banner_images/
+    optimized/
   brand/
   ground_images/
+  history_images/
   player_images/
   players/
   score_cards/
@@ -50,6 +55,8 @@ public/
   season_statistics/
   upcoming_schedules/
 ```
+
+`src/components/TeamDashboard.tsx` renders the interactive dashboard, while `src/data/site.json` contains navigation labels, section copy, and other site configuration. `src/styles/global.css` and `src/styles/scorecard.css` provide the site and scorecard styling.
 
 ## Season Naming and Data Shape
 
@@ -67,7 +74,7 @@ public/season_statistics/2026_SEPTEMBER_SUPREME_DIVISION/
 public/score_cards/2026_SEPTEMBER_SUPREME_DIVISION/
 ```
 
-The app loads season files recursively and normalizes them so the selected dataset updates the dashboard, form, matches, statistics, and rider context without hardcoded season IDs.
+The app loads season files recursively and normalizes them so the selected dataset updates the dashboard, form, matches, player roster, and season statistics without hardcoded season IDs. The Record Book independently selects the two newest available seasons and provides Current season and Previous season tabs, so it remains usable regardless of the season selected in Matches. The History carousel and timeline use the content under `public/history_images/` and `src/data/history.json`, respectively.
 
 ## Data Sources
 
@@ -78,6 +85,10 @@ The site reads structured JSON from the `public/` folder:
 - `season_statistics/*` — batting, bowling, and fielding metrics
 - `score_cards/*` — detailed scorecard JSON for each match
 - `upcoming_schedules/*` — future fixture data used for date-aware next match selection
+- `history_images/*` — images shown by the History carousel
+- `banner_images/optimized/*` — optimized hero-banner carousel images
+- `ground_images/*` — fallback ground image
+- `brand/*` — club branding assets
 
 ## Local Development
 
@@ -141,9 +152,10 @@ Then publish the generated `dist/` folder to your hosting provider.
 ## Notes
 
 - The site is intentionally data-driven and does not rely on a backend service.
-- The History section uses a collapsible timeline so milestone entries stay compact on first load and expand for detail.
+- The History section presents its title and description side by side on wider screens, followed by a page-width image carousel and collapsible, full-width milestone timeline. The layout stacks on smaller screens.
+- The Record Book compares the two most recent season datasets, ordered by year and season month, with separate tabs for each.
 - Upcoming match selection uses the current date and scheduled time to highlight the correct fixture.
-- The project has been updated to align May and September season data shapes so scorecards and stats render consistently.
+- The project includes May and September Supreme Division 2026 data. Add matching season files under the corresponding directories to make additional seasons available.
 
 ## Useful Commands
 
