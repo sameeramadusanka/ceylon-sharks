@@ -28,6 +28,10 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
 .player-grid { gap: 22px; }
 .player-photo { height: 380px; }
+.record-season-tabs { border-bottom: 1px solid var(--dark-line); display: flex; gap: 28px; margin-bottom: 0; overflow-x: auto; }
+.record-season-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; color: #72756f; cursor: pointer; flex: 0 0 auto; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 0 0 15px; text-transform: uppercase; }
+.record-season-tabs button.is-active { border-bottom-color: var(--amber); color: var(--amber); }
+@media (max-width: 470px) { .record-season-tabs { gap: 18px; } }
 .player-info { min-height: 78px; padding: 18px 0 16px; }
 .player-stat { flex-wrap: wrap; gap: 10px; padding-top: 15px; }
 .player-stat span { flex: 1 1 28%; min-width: 58px; }

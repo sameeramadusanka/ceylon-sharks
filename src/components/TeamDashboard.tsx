@@ -171,6 +171,33 @@ function parseMatches(json: string, teamName: string): Match[] {
   }).sort((firstMatch, secondMatch) => new Date(secondMatch.date).getTime() - new Date(firstMatch.date).getTime());
 }
 
+function summarizeSeasonRecords(matches: Match[]) {
+  const performanceMatches = [...matches].reverse();
+  const scoredMatches = matches.map((match) => scoreParts(match.teamScore)).filter((score): score is { runs: number; wickets: number } => score !== null);
+  const highestScore = Math.max(0, ...scoredMatches.map((score) => score.runs));
+  const highestScoreMatch = matches.find((match) => scoreParts(match.teamScore)?.runs === highestScore);
+  const bestWinningStreak = performanceMatches.reduce((streak, match) => {
+    const nextStreak = match.result === 'WIN' ? streak.current + 1 : 0;
+    return { current: nextStreak, best: Math.max(streak.best, nextStreak) };
+  }, { current: 0, best: 0 }).best;
+  const biggestWin = matches
+    .filter((match) => match.result === 'WIN' && match.winByRuns && match.winMarginRuns !== null)
+    .map((match) => ({ match, margin: match.winMarginRuns ?? 0 }))
+    .reduce<{ match: Match | null; margin: number }>((largest, current) => current.margin > largest.margin ? current : largest, { match: null, margin: 0 });
+
+  return [
+    { label: 'Highest team score', value: highestScore ? String(highestScore) : '-', detail: highestScoreMatch ? `vs. ${highestScoreMatch.opponent}` : 'season' },
+    { label: 'Longest winning streak', value: String(bestWinningStreak), detail: 'matches' },
+    { label: 'Biggest win by runs', value: biggestWin.margin ? String(biggestWin.margin) : '-', detail: biggestWin.match ? `vs. ${biggestWin.match.opponent}` : 'season' },
+    { label: 'Total runs scored', value: String(scoredMatches.reduce((total, score) => total + score.runs, 0)), detail: 'season total' },
+  ];
+}
+
+function seasonMonth(season: string) {
+  const month = season.match(/(?:^|_)(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)(?:_|$)/i)?.[1];
+  return month ? new Date(`${month} 1, 2000`).getMonth() : 0;
+}
+
 function parseScoreCard(source: ScoreCardSource): ScoreCard {
   const parsed = JSON.parse(source.content) as ScoreCard;
   return {
@@ -206,6 +233,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const [players, setPlayers] = useState<Player[]>(() => (fallbackPlayers as Player[]).map((player) => ({ ...player, image: '', battingRuns: 0, bowlingWickets: 0, fieldingDismissals: 0, leadership: null })));
   const [matches, setMatches] = useState<Match[]>(() => (fallbackMatches as Match[]).map((match) => ({ ...match, winByRuns: match.result === 'WIN', winMarginRuns: null })));
   const [selectedSeasonFile, setSelectedSeasonFile] = useState(seasonFiles[0]?.fileName ?? '');
+  const [selectedRecordFileName, setSelectedRecordFileName] = useState('');
   const [datasetMenuOpen, setDatasetMenuOpen] = useState(false);
   const datasetPickerRef = useRef<HTMLDivElement>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -281,6 +309,13 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const chartMax = Math.max(...chartValues);
   const availableFormats = [site.filters.all, ...Array.from(new Set(matches.map((match) => match.format)))];
   const selectedSeason = seasonFiles.find((file) => file.fileName === selectedSeasonFile) ?? seasonFiles[0];
+  const recordSeasons = [...seasonFiles]
+    .sort((firstSeason, secondSeason) => firstSeason.year - secondSeason.year || seasonMonth(firstSeason.season) - seasonMonth(secondSeason.season))
+    .slice(-2)
+    .reverse();
+  const selectedRecordSeason = recordSeasons.find((season) => season.fileName === selectedRecordFileName) ?? recordSeasons[0];
+  const selectedRecordMatches = selectedRecordSeason ? parseMatches(selectedRecordSeason.content, team.name) : [];
+  const seasonRecords = summarizeSeasonRecords(selectedRecordMatches);
   const seasonScoreCards = scoreCards.filter((scoreCard) => scoreCard.season === selectedSeason?.season && scoreCard.division === selectedSeason?.division);
   const seasonLabel = formatDisplayName(selectedSeason?.season ?? '2026_MAY_SUPREME_DIVISION');
   const seasonYear = selectedSeason?.year ?? team.season;
@@ -310,18 +345,6 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
     ...stat,
     value: [String(bestWinningStreak), totalOvers ? (scoredMatches.reduce((total, score) => total + score.runs, 0) / totalOvers).toFixed(1) : '-', String(highestScore), matches.length ? (totalWickets / matches.length).toFixed(1) : '-'][index],
   }));
-  const highestScoreMatch = matches.find((match) => scoreParts(match.teamScore)?.runs === highestScore);
-  const biggestWin = matches
-    .filter((match) => match.result === 'WIN' && match.winByRuns && match.winMarginRuns !== null)
-    .map((match) => ({ match, margin: match.winMarginRuns ?? 0 }))
-    .reduce<{ match: Match | null; margin: number }>((largest, current) => current.margin > largest.margin ? current : largest, { match: null, margin: 0 });
-  const seasonRecords = [
-    { label: 'Highest team score', value: highestScore ? String(highestScore) : '-', detail: highestScoreMatch ? `vs. ${highestScoreMatch.opponent}` : 'season' },
-    { label: 'Longest winning streak', value: String(bestWinningStreak), detail: 'matches' },
-    { label: 'Biggest win by runs', value: biggestWin.margin ? String(biggestWin.margin) : '-', detail: biggestWin.match ? `vs. ${biggestWin.match.opponent}` : 'season' },
-    { label: 'Total runs scored', value: String(scoredMatches.reduce((total, score) => total + score.runs, 0)), detail: 'season total' },
-  ];
-
   return (
     <main>
       <header className="site-header">
@@ -391,7 +414,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
 
       <section className="story page-width" id="history"><div className="story-image-carousel"><div className="story-image"><img src={currentHistoryImage} alt={team.stadium} className="story-image-media" /></div>{storyImages.length > 1 && <div className="story-carousel-controls"><div className="story-carousel-dots">{storyImages.map((image, index) => <button type="button" key={`${image}-${index}`} className={index === historyImageIndex ? 'is-active' : ''} aria-label={`Show history image ${index + 1}`} onClick={() => setHistoryImageIndex(index)} />)}</div></div>}</div><div className="story-copy"><SectionLabel>{site.sections.history.label}</SectionLabel><h2>{site.sections.history.titleBefore}<br /><em>{site.sections.history.titleEmphasis}</em></h2><p>{site.sections.history.description}</p><a className="text-link" href="#records">{site.actions.recordBook} <ArrowUpRight size={16} /></a><div className="timeline-full">{history.map((event) => { const id = `${event.year}-${event.title}`; const isOpen = !!expandedHistory[id]; return <div className={`timeline-item${isOpen ? ' is-open' : ''}`} key={id}><button className="timeline-toggle" type="button" onClick={() => setExpandedHistory((current) => ({ ...current, [id]: !current[id] }))}><b>{event.year}</b><span>{event.title}</span><ChevronDown size={14} className="timeline-chevron" /></button>{isOpen && <div className="timeline-detail"><p>{event.text}</p></div>}</div>; })}</div></div></section>
 
-      <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{site.sections.records.label}</SectionLabel><div className="records-layout"><div><span className="records-season-label">{seasonLabel}</span><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2><p>{site.sections.records.description}</p></div><div className="record-list">{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></section>
+      <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{site.sections.records.label}</SectionLabel><div className="records-layout"><div><span className="records-season-label">{formatDisplayName(selectedRecordSeason?.season ?? seasonLabel)}</span><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2><p>{site.sections.records.description}</p></div><div><div className="record-season-tabs" role="tablist" aria-label="Record seasons">{recordSeasons.map((season, index) => { const isSelected = season.fileName === selectedRecordSeason?.fileName; return <button className={isSelected ? 'is-active' : ''} type="button" role="tab" aria-selected={isSelected} aria-controls="season-record-panel" id={`record-season-tab-${index}`} key={season.fileName} onClick={() => setSelectedRecordFileName(season.fileName)}>{index === 0 ? 'Current season' : 'Previous season'}</button>; })}</div><div className="record-list" role="tabpanel" id="season-record-panel" aria-labelledby={`record-season-tab-${recordSeasons.findIndex((season) => season.fileName === selectedRecordSeason?.fileName)}`} key={selectedRecordSeason?.fileName}>{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></div></section>
 
   <footer className="site-footer"><div className="page-width"><div className="footer-brand"><img className="brand-mark" src={assetPath(site.assets.logoImage)} alt={`${team.name} logo`} /><div><strong>{team.name.toUpperCase()}</strong><p>{site.footer.tagline}</p></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} CEYLON SHARKS</span><span>{site.actions.madeForMoments} <ArrowUpRight size={14} /></span></div></div></footer>
 
