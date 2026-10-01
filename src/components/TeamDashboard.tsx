@@ -414,13 +414,13 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
 
       <section className="story" id="history">
         <div className="story-intro page-width">
-          <div className="story-description">
-            <p>{site.sections.history.description}</p>
-            <a className="text-link" href="#records">{site.actions.recordBook} <ArrowUpRight size={16} /></a>
-          </div>
           <div className="story-heading">
             <SectionLabel>{site.sections.history.label}</SectionLabel>
             <h2>{site.sections.history.titleBefore}<br /><em>{site.sections.history.titleEmphasis}</em></h2>
+          </div>
+          <div className="story-description">
+            <p>{site.sections.history.description}</p>
+            <a className="text-link" href="#records">{site.actions.recordBook} <ArrowUpRight size={16} /></a>
           </div>
         </div>
         <div className="story-carousel-width page-width">
