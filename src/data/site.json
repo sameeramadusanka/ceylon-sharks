@@ -92,7 +92,7 @@
   "scorecardLabels": {
     "title": "Scorecard Summary",
     "view": "View scorecard",
-    "winnerSuffix": "BY",
+    "winnerSuffix": "WON BY",
     "batting": "Batting",
     "bowling": "Bowling",
     "runs": "Runs",
