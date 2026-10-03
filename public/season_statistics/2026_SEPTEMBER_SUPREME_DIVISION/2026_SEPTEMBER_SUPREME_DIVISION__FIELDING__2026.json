@@ -6,29 +6,29 @@
     "players": [
       {
         "rank": 1,
-        "player": "Chamara Jayalath",
+        "player": "Pasindu Chandrasekara",
         "team": null,
-        "catches": 1,
+        "catches": 2,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 1
+        "totalDismissals": 2
       },
       {
         "rank": 2,
-        "player": "Hasanka Chandrasena",
+        "player": "Malinda Mendis",
         "team": null,
         "catches": 0,
-        "wicketKeeperCatches": 1,
-        "directRunOuts": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 1,
         "indirectRunOuts": 0,
         "stumpings": 0,
         "totalDismissals": 1
       },
       {
         "rank": 3,
-        "player": "Nuwan Sanjeewa",
+        "player": "Sameera Perera",
         "team": null,
         "catches": 1,
         "wicketKeeperCatches": 0,
@@ -39,7 +39,7 @@
       },
       {
         "rank": 4,
-        "player": "Pasindu Chandrasekara",
+        "player": "Hasitha De Silva",
         "team": null,
         "catches": 1,
         "wicketKeeperCatches": 0,
@@ -50,28 +50,61 @@
       },
       {
         "rank": 5,
-        "player": "Sameera Perera",
+        "player": "Chamara Jayalath",
         "team": null,
-        "catches": 0,
+        "catches": 1,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 0
+        "totalDismissals": 1
       },
       {
         "rank": 6,
-        "player": "Hasitha De Silva",
+        "player": "Hasanka Chandrasena",
         "team": null,
-        "catches": 0,
+        "catches": 1,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 0
+        "totalDismissals": 1
       },
       {
         "rank": 7,
+        "player": "Nuwan Sanjeewa",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 1,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 8,
+        "player": "Thameera Muthukumarana",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 9,
+        "player": "Lasitha Lokuge",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 1
+      },
+      {
+        "rank": 10,
         "player": "Chinthaka Rajarathna",
         "team": null,
         "catches": 0,
@@ -82,7 +115,7 @@
         "totalDismissals": 0
       },
       {
-        "rank": 8,
+        "rank": 11,
         "player": "Tharindu Hettiarachchi",
         "team": null,
         "catches": 0,
@@ -93,7 +126,18 @@
         "totalDismissals": 0
       },
       {
-        "rank": 9,
+        "rank": 12,
+        "player": "Kasun Sampath",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 0
+      },
+      {
+        "rank": 13,
         "player": "Gagith Abeysekara",
         "team": null,
         "catches": 0,
@@ -104,7 +148,7 @@
         "totalDismissals": 0
       },
       {
-        "rank": 10,
+        "rank": 14,
         "player": "Sameera Madusanka",
         "team": null,
         "catches": 0,
@@ -115,7 +159,7 @@
         "totalDismissals": 0
       },
       {
-        "rank": 11,
+        "rank": 15,
         "player": "Sampath Basnagoda",
         "team": null,
         "catches": 0,

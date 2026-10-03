@@ -13,6 +13,15 @@
         "teamTwo": "Gully Boyz",
         "result": "Gully Boyz won by 4 Wickets",
         "scoreSummary": "Ceylon Sharks: 84/9(15)Gully Boyz: 86/6(13)"
+      },
+      {
+        "id": 2,
+        "format": "League",
+        "date": "2026-10-03",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Gillies",
+        "result": "Ceylon Sharks won by 3 Wickets",
+        "scoreSummary": "Ceylon Sharks: 95/7(15)Gillies: 93/8(15)"
       }
     ]
   }
