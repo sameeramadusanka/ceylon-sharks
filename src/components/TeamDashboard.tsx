@@ -108,7 +108,7 @@ const getScheduleMonthDay = (date: string) => {
 };
 
 function parsePlayers(json: string, statistics: SeasonStatisticsSource[], playerImages: Record<string, string>): Player[] {
-  const data = JSON.parse(json) as { season: { captainId?: number; viceCaptainId?: number; viceCaptainID?: number; players: Array<{ id: number; name: string; number: number; detail: string; image?: string }> } };
+  const data = JSON.parse(json) as { season: { players: Array<{ id: number; name: string; number: number; detail: string; role?: string; image?: string }> } };
   const statsByType = new Map(statistics.map((source) => [source.statisticsType, JSON.parse(source.content) as { season: { players: Array<Record<string, number | string | null>> } }]));
   const batting = statsByType.get('BATTING')?.season.players ?? [];
   const bowling = statsByType.get('BOWLING')?.season.players ?? [];
@@ -119,7 +119,8 @@ function parsePlayers(json: string, statistics: SeasonStatisticsSource[], player
       const bowlingStats = bowling.find((stat) => stat.player === player.name);
       const fieldingStats = fielding.find((stat) => stat.player === player.name);
       const numberValue = (stats: Record<string, number | string | null> | undefined, key: string) => typeof stats?.[key] === 'number' ? stats[key] as number : null;
-      const playerLeadership: Player['leadership'] = player.id === data.season.captainId ? 'CAPTAIN' : player.id === (data.season.viceCaptainId ?? data.season.viceCaptainID) ? 'VICE CAPTAIN' : null;
+      const normalizedRole = (player.role ?? '').trim().toLowerCase().replace(/[-_]/g, ' ');
+      const playerLeadership: Player['leadership'] = normalizedRole === 'captain' ? 'CAPTAIN' : normalizedRole === 'vice captain' ? 'VICE CAPTAIN' : null;
       return {
         battingRuns: numberValue(battingStats, 'runs') ?? 0,
         battingAverage: numberValue(battingStats, 'average'),
@@ -142,8 +143,8 @@ function parsePlayers(json: string, statistics: SeasonStatisticsSource[], player
     id: player.id,
     name: player.name,
     number: player.number,
-    role: 'PLAYER',
-    shortRole: 'PLAYER',
+    role: (player.role ?? 'PLAYER').toUpperCase(),
+    shortRole: (player.role ?? 'PLAYER').toUpperCase(),
     image: assetPath(player.image ?? playerImages[String(player.id)] ?? ''),
     runs: 0,
     average: '-',

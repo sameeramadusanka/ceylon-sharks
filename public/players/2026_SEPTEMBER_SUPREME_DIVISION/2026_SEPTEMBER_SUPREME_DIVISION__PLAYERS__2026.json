@@ -11,133 +11,155 @@
         "id": 1156319,
         "name": "Sameera Perera",
         "number": 18,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 1198221,
         "name": "Lasitha Lokuge",
         "number": 99,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Vice Captain"
       },
       {
         "id": 1198223,
         "name": "Asanka Edirisinghe",
         "number": 11,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 1198224,
         "name": "Gayan Liyanage",
         "number": 67,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Bowler"
       },
       {
         "id": 1257852,
         "name": "Hasitha De Silva",
         "number": 15,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Captain"
       },
       {
         "id": 2699280,
         "name": "Chinthaka Rajarathna",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 2785049,
         "name": "Chamara Jayalath",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 2791118,
         "name": "Hasanka Chandrasena",
         "number": 89,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 3190737,
         "name": "Tharindu Hettiarachchi",
         "number": 7,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 3421731,
         "name": "Merril Antoney",
         "number": 12,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 3812196,
         "name": "Kasun Sampath",
         "number": 69,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 3812435,
         "name": "Chamira Thilakarathne",
         "number": 88,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Bowler"
       },
       {
         "id": 4056299,
         "name": "Padmaka Bandara",
         "number": 14,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 4193856,
         "name": "Nuwan Sanjeewa",
         "number": 9,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 4202974,
         "name": "Gagith Abeysekara",
         "number": 13,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 4388523,
         "name": "Thameera Muthukumarana",
         "number": 6,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Bowler"
       },
       {
         "id": 5181194,
         "name": "Sameera Madusanka",
         "number": 22,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 6439290,
         "name": "Sampath Basnagoda",
         "number": 5,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Bowler"
       },
       {
         "id": 6448758,
         "name": "Aruna Perera",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Batter"
       },
       {
         "id": 6551512,
         "name": "Malinda Mendis",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 6555959,
         "name": "Aruna Lakshitha",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       },
       {
         "id": 7067653,
         "name": "Pasindu Chandrasekara",
         "number": 0,
-        "detail": "26_T4_SAT_SUPREME"
+        "detail": "26_T4_SAT_SUPREME",
+        "role": "Allrounder"
       }
     ]
   }
