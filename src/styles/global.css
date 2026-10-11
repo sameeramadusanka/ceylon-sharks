@@ -80,8 +80,6 @@ a { color: inherit; text-decoration: none; }
 	.modal-content h2 { font-size: 42px; }
 	.modal-detail-grid { grid-template-columns: repeat(2, 1fr); }
 }
-.player-card--captain .player-photo { box-shadow: inset 0 0 0 3px var(--orange); }
-.player-card--vice-captain .player-photo { box-shadow: inset 0 0 0 3px var(--amber); }
 .player-info strong.player-leadership { color: var(--paper); }
 .player-info strong.player-leadership--captain { background: var(--orange); color: var(--paper); }
 .player-info strong.player-leadership--vice { background: var(--amber); color: var(--paper); }
