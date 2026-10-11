@@ -6,6 +6,39 @@
     "players": [
       {
         "rank": 1,
+        "player": "Hasanka Chandrasena",
+        "team": null,
+        "catches": 0,
+        "wicketKeeperCatches": 5,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 5
+      },
+      {
+        "rank": 2,
+        "player": "Chamara Jayalath",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 1,
+        "indirectRunOuts": 1,
+        "stumpings": 0,
+        "totalDismissals": 3
+      },
+      {
+        "rank": 3,
+        "player": "Kasun Sampath",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 2
+      },
+      {
+        "rank": 4,
         "player": "Pasindu Chandrasekara",
         "team": null,
         "catches": 2,
@@ -16,7 +49,18 @@
         "totalDismissals": 2
       },
       {
-        "rank": 2,
+        "rank": 5,
+        "player": "Nuwan Sanjeewa",
+        "team": null,
+        "catches": 1,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 1,
+        "stumpings": 0,
+        "totalDismissals": 2
+      },
+      {
+        "rank": 6,
         "player": "Malinda Mendis",
         "team": null,
         "catches": 0,
@@ -27,7 +71,7 @@
         "totalDismissals": 1
       },
       {
-        "rank": 3,
+        "rank": 7,
         "player": "Sameera Perera",
         "team": null,
         "catches": 1,
@@ -38,7 +82,7 @@
         "totalDismissals": 1
       },
       {
-        "rank": 4,
+        "rank": 8,
         "player": "Hasitha De Silva",
         "team": null,
         "catches": 1,
@@ -49,52 +93,8 @@
         "totalDismissals": 1
       },
       {
-        "rank": 5,
-        "player": "Chamara Jayalath",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
-        "rank": 6,
-        "player": "Hasanka Chandrasena",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
-        "rank": 7,
-        "player": "Nuwan Sanjeewa",
-        "team": null,
-        "catches": 0,
-        "wicketKeeperCatches": 1,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
-        "rank": 8,
-        "player": "Thameera Muthukumarana",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
         "rank": 9,
-        "player": "Lasitha Lokuge",
+        "player": "Tharindu Hettiarachchi",
         "team": null,
         "catches": 1,
         "wicketKeeperCatches": 0,
@@ -105,29 +105,29 @@
       },
       {
         "rank": 10,
-        "player": "Chinthaka Rajarathna",
+        "player": "Thameera Muthukumarana",
         "team": null,
-        "catches": 0,
+        "catches": 1,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 0
+        "totalDismissals": 1
       },
       {
         "rank": 11,
-        "player": "Tharindu Hettiarachchi",
+        "player": "Lasitha Lokuge",
         "team": null,
-        "catches": 0,
+        "catches": 1,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 0
+        "totalDismissals": 1
       },
       {
         "rank": 12,
-        "player": "Kasun Sampath",
+        "player": "Chinthaka Rajarathna",
         "team": null,
         "catches": 0,
         "wicketKeeperCatches": 0,

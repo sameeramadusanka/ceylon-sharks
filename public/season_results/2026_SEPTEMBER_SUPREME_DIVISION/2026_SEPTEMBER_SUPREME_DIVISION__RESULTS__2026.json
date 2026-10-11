@@ -22,6 +22,15 @@
         "teamTwo": "Gillies",
         "result": "Ceylon Sharks won by 3 Wickets",
         "scoreSummary": "Ceylon Sharks: 95/7(15)Gillies: 93/8(15)"
+      },
+      {
+        "id": 3,
+        "format": "League",
+        "date": "2026-10-10",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Bedok Ferrets",
+        "result": "Ceylon Sharks won by 45 Runs",
+        "scoreSummary": "Ceylon Sharks: 132/8(15)Bedok Ferrets: 87/10(14.3)"
       }
     ]
   }
