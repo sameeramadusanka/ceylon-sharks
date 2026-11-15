@@ -1,3 +1,4 @@
+
 {
   "season": {
     "name": "2026_T4_SAT_SUPREME",
@@ -8,12 +9,12 @@
         "rank": 1,
         "player": "Hasanka Chandrasena",
         "team": null,
-        "catches": 0,
-        "wicketKeeperCatches": 5,
+        "catches": 1,
+        "wicketKeeperCatches": 8,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 5
+        "totalDismissals": 9
       },
       {
         "rank": 2,
@@ -24,22 +25,22 @@
         "directRunOuts": 1,
         "indirectRunOuts": 1,
         "stumpings": 0,
-        "totalDismissals": 3
+        "totalDismissals": 4
       },
       {
         "rank": 3,
-        "player": "Kasun Sampath",
+        "player": "Pasindu Chandrasekara",
         "team": null,
-        "catches": 2,
+        "catches": 4,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 2
+        "totalDismissals": 4
       },
       {
         "rank": 4,
-        "player": "Pasindu Chandrasekara",
+        "player": "Sameera Perera",
         "team": null,
         "catches": 2,
         "wicketKeeperCatches": 0,
@@ -50,6 +51,28 @@
       },
       {
         "rank": 5,
+        "player": "Tharindu Hettiarachchi",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 2
+      },
+      {
+        "rank": 6,
+        "player": "Kasun Sampath",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 2
+      },
+      {
+        "rank": 7,
         "player": "Nuwan Sanjeewa",
         "team": null,
         "catches": 1,
@@ -60,7 +83,7 @@
         "totalDismissals": 2
       },
       {
-        "rank": 6,
+        "rank": 8,
         "player": "Malinda Mendis",
         "team": null,
         "catches": 0,
@@ -71,30 +94,8 @@
         "totalDismissals": 1
       },
       {
-        "rank": 7,
-        "player": "Sameera Perera",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
-        "rank": 8,
-        "player": "Hasitha De Silva",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 1
-      },
-      {
         "rank": 9,
-        "player": "Tharindu Hettiarachchi",
+        "player": "Hasitha De Silva",
         "team": null,
         "catches": 1,
         "wicketKeeperCatches": 0,
@@ -118,12 +119,12 @@
         "rank": 11,
         "player": "Lasitha Lokuge",
         "team": null,
-        "catches": 1,
+        "catches": 0,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 1
+        "totalDismissals": 0
       },
       {
         "rank": 12,

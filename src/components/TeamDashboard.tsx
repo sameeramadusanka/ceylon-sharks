@@ -233,7 +233,13 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const [expandedHistory, setExpandedHistory] = useState<Record<string, boolean>>({});
   const [players, setPlayers] = useState<Player[]>(() => (fallbackPlayers as Player[]).map((player) => ({ ...player, image: '', battingRuns: 0, bowlingWickets: 0, fieldingDismissals: 0, leadership: null })));
   const [matches, setMatches] = useState<Match[]>(() => (fallbackMatches as Match[]).map((match) => ({ ...match, winByRuns: match.result === 'WIN', winMarginRuns: null })));
-  const [selectedSeasonFile, setSelectedSeasonFile] = useState(seasonFiles[0]?.fileName ?? '');
+  const [selectedSeasonFile, setSelectedSeasonFile] = useState(() =>
+    [...seasonFiles]
+      .filter((file) => /(?:^|_)SEPTEMBER(?:_|$)/i.test(file.season))
+      .sort((firstSeason, secondSeason) => secondSeason.year - firstSeason.year)[0]?.fileName
+      ?? seasonFiles[0]?.fileName
+      ?? '',
+  );
   const [selectedRecordFileName, setSelectedRecordFileName] = useState('');
   const [datasetMenuOpen, setDatasetMenuOpen] = useState(false);
   const datasetPickerRef = useRef<HTMLDivElement>(null);

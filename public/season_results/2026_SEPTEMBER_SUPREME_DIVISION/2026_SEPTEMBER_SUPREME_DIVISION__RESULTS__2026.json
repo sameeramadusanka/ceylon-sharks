@@ -31,6 +31,33 @@
         "teamTwo": "Bedok Ferrets",
         "result": "Ceylon Sharks won by 45 Runs",
         "scoreSummary": "Ceylon Sharks: 132/8(15)Bedok Ferrets: 87/10(14.3)"
+      },
+      {
+        "id": 4,
+        "format": "League",
+        "date": "2026-10-17",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Indian Bullets",
+        "result": "Abandoned",
+        "scoreSummary": "Indian Bullets: 0/0(0)"
+      },
+      {
+        "id": 5,
+        "format": "League",
+        "date": "2026-11-07",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Team One",
+        "result": "Ceylon Sharks won by 3 Wickets",
+        "scoreSummary": "Ceylon Sharks: 116/7(13.2)Team One: 114/4(15)"
+      },
+      {
+        "id": 6,
+        "format": "League",
+        "date": "2026-11-14",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Singa Smashers",
+        "result": "Ceylon Sharks won by 127 Runs",
+        "scoreSummary": "Ceylon Sharks: 199/3(15)Singa Smashers: 72/7(12.1)"
       }
     ]
   }
