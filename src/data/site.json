@@ -6,7 +6,7 @@
   },
   "assets": {
     "heroImage": "/team-banner.jpeg",
-    "logoImage": "/brand/ceylon-sharks-logo.jpg"
+    "logoImage": "/brand/ceylon-sharks-logo.png"
   },
   "navigation": [
     { "label": "Home", "href": "#home" },
