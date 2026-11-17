@@ -383,7 +383,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
             </div>
           </div>
           <div className="hero-scoreboard">
-            <div className="scoreboard-top"><span>{seasonLabel}</span><span>{site.hero.rankLabel.toUpperCase()} <b>#{String(team.rank).padStart(2, '0')}</b></span></div>
+            <div className="scoreboard-top"><span>{seasonLabel}</span></div>
             <div className="scoreboard-record"><strong>{String(seasonRecord.WIN).padStart(2, '0')}</strong><span>{site.hero.recordLabels[0]}</span><i>—</i><strong>{String(seasonRecord.LOSS).padStart(2, '0')}</strong><span>{site.hero.recordLabels[1]}</span><i>—</i><strong>{String(seasonRecord['NO RESULT']).padStart(2, '0')}</strong><span>{site.hero.recordLabels[2]}</span></div>
             <div className="scoreboard-footer"><span>{site.hero.formLabel.toUpperCase()}</span><div className="form-dots">{recentForm.map((item, index) => <b className={item === 'W' ? 'win' : item === 'L' ? 'loss' : 'no-result'} key={`${item}-${index}`}>{item}</b>)}</div></div>
           </div>
