@@ -10,7 +10,7 @@ a { color: inherit; text-decoration: none; }
 .page-width { width: min(1180px, calc(100% - 80px)); margin: 0 auto; }
 .site-header { align-items: center; background: rgba(17, 19, 20, .82); color: var(--paper); display: flex; height: 76px; justify-content: space-between; left: 0; padding: 0 40px; position: fixed; right: 0; top: 0; z-index: 10; backdrop-filter: blur(18px); }
 .brand { align-items: center; display: flex; gap: 10px; letter-spacing: .04em; }
-.brand-mark { background: var(--amber); display: block; height: 32px; object-fit: cover; object-position: center; width: 32px; }
+.brand-mark { background: transparent; display: block; height: 32px; object-fit: contain; object-position: center; width: 32px; }
 .brand b, .brand small { display: block; }.brand b { font-family: var(--serif); font-size: 14px; line-height: 1; }.brand small { color: #a8aaa4; font-family: var(--mono); font-size: 8px; letter-spacing: .12em; margin-top: 4px; }
 .main-nav { display: flex; gap: clamp(18px, 3vw, 42px); margin-left: auto; margin-right: 48px; }.main-nav a { color: #a8aaa4; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; transition: color .2s; }.main-nav a:hover { color: var(--amber); }
 .header-cta, .button { align-items: center; display: inline-flex; font-family: var(--mono); font-size: 10px; gap: 12px; letter-spacing: .08em; text-transform: uppercase; }.header-cta { color: var(--amber); }.mobile-menu { background: none; border: 0; color: var(--paper); display: none; }
