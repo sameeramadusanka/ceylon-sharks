@@ -64,7 +64,7 @@ a { color: inherit; text-decoration: none; }
 .player-stat { flex-wrap: wrap; gap: 10px; padding-top: 15px; }
 .player-stat span { flex: 1 1 28%; min-width: 58px; }
 .player-stat span:last-child { margin-left: 0; }
-.player-modal { max-width: 980px; }
+.player-modal { grid-template-columns: 1.2fr .8fr; max-width: 980px; }
 .modal-photo { min-height: 560px; }
 .modal-content { padding: 56px 50px; }
 .modal-detail-sections { gap: 30px; }
@@ -82,6 +82,7 @@ a { color: inherit; text-decoration: none; }
 }
 .player-info strong.player-leadership { color: var(--paper); }
 .player-info strong.player-leadership--captain { background: var(--orange); color: var(--paper); }
+@media (min-width: 801px) { .hero-scoreboard { align-self: flex-start; margin-top: 32px; } }
 .player-info strong.player-leadership--vice { background: var(--amber); color: var(--paper); }
 .hero-image { background-image: linear-gradient(90deg, rgba(17, 19, 20, .92) 0%, rgba(17, 19, 20, .68) 44%, rgba(17, 19, 20, .1)), var(--hero-image); background-position: center top; }
 .dataset-filter { align-items: baseline; gap: 16px; }
