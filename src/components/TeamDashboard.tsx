@@ -152,7 +152,8 @@ function parsePlayers(json: string, statistics: SeasonStatisticsSource[], player
     detail: player.detail,
   })).sort((firstPlayer, secondPlayer) => {
     const leadershipRank = (player: Player) => player.leadership === 'CAPTAIN' ? 0 : player.leadership === 'VICE CAPTAIN' ? 1 : 2;
-    return leadershipRank(firstPlayer) - leadershipRank(secondPlayer);
+    return leadershipRank(firstPlayer) - leadershipRank(secondPlayer)
+      || firstPlayer.name.localeCompare(secondPlayer.name, undefined, { sensitivity: 'base' });
   });
 }
 
