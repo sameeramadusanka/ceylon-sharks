@@ -1274,15 +1274,55 @@ phase) - just not both at once pre-deploy, by design.
 ### Phase 6 -- Production validation
 
 -   [ ] Configure SES production sending and verified sender domain.
--   [ ] Configure production API URL and CORS.
--   [ ] Configure GitHub Actions OIDC for backend deployment.
--   [ ] Test with a small authorised group.
--   [ ] Verify all emails and deadlines.
--   [ ] Run independence acceptance tests.
--   [ ] Document support and recovery procedures.
+    **Deliberately deferred** - staying in SES sandbox for now per
+    project decision. Revisit before inviting the full squad for real;
+    see `backend/docs/operations.md` for what sandbox mode means
+    operationally in the meantime.
+-   [x] Configure production API URL and CORS. CORS has been locked to
+    `https://www.ceylonsharks.com` since Phase 1 (confirmed working -
+    and confirmed *blocking* `localhost` - in Phase 5 live testing).
+    The "production API URL" is still the default API Gateway invoke
+    URL per the Phase 0 decision to defer a custom domain; no change
+    needed unless that decision changes.
+-   [x] Configure GitHub Actions OIDC for backend deployment. IAM OIDC
+    provider for `token.actions.githubusercontent.com` plus a deploy
+    role (`ceylon-sharks-availability-deploy`) trusted only for
+    `repo:sameeramadusanka/ceylon-sharks:*` (any ref in this repo, no
+    other repo can assume it), with a permissions policy scoped by
+    resource-name prefix per service (Lambda/DynamoDB/Logs/Scheduler/
+    CloudFormation stack/SAM's S3 bucket) plus an `iam:PassRole`
+    condition restricting which service the passed role can be used by.
+    `apigateway:*` and `cloudformation:ValidateTemplate` are necessarily
+    unscoped (those APIs don't support resource-level ARN scoping for
+    creation/validation calls). `.github/workflows/deploy-availability.yml`
+    triggers on push to `main` touching `backend/**`/`infrastructure/**`,
+    or manual `workflow_dispatch` from any branch; runs backend lint/
+    typecheck/test, `sam build`, `sam deploy`, then a post-deploy health
+    check. **Requires three GitHub repo secrets added manually** (no
+    `gh` CLI in this environment) before the workflow can run:
+    `AVAILABILITY_SES_FROM_EMAIL`, `AVAILABILITY_CAPTAIN_EMAIL`,
+    `AVAILABILITY_VICE_CAPTAIN_EMAIL` - Settings → Secrets and
+    variables → Actions → New repository secret.
+-   [ ] Test with a small authorised group. Not started - needs a
+    decision on which real teammates to add (each must individually
+    verify their email while SES stays in sandbox; see
+    `backend/docs/operations.md`).
+-   [x] Verify all emails and deadlines. Invitation, submission, and
+    captain/vice-captain notification emails were verified live in
+    Phase 3. Reminder and closure emails are unit-tested but not yet
+    live-verified against the deployed stack (noted already in Phase 4).
+-   [x] Run independence acceptance tests. All six pass - see the
+    results recorded in that section above, including the real gap
+    this phase caught and fixed (`deploy.yml` missing a path filter).
+-   [x] Document support and recovery procedures.
+    `backend/docs/operations.md`.
 
-**Deliverable:** MVP deployed without changing the existing website's
-hosting model.
+**Deliverable: mostly met.** MVP deployed without changing the existing
+website's hosting model - confirmed by the independence acceptance
+tests. Two items remain deliberately open: SES production access (held
+back on purpose) and testing with a small group of real teammates
+beyond the two already-verified test addresses (needs your input on
+who).
 
 ------------------------------------------------------------------------
 
