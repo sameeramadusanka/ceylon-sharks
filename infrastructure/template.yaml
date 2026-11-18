@@ -14,8 +14,13 @@ Parameters:
 
   AvailabilityFrontendUrl:
     Type: String
-    Description: Origin of the static frontend; used for CORS and links in emails.
-    Default: https://www.ceylonsharks.com
+    Description: >-
+      Origin of the static frontend; used for CORS and links in emails.
+      Must be https://ceylonsharks.com (apex, no www) - the site redirects
+      www.ceylonsharks.com to the apex domain, so that's the real origin
+      the browser uses when calling this API, confirmed by curl and by
+      src/data/site.json's own canonicalUrl.
+    Default: https://ceylonsharks.com
 
   TimeZone:
     Type: String

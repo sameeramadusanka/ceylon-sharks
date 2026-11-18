@@ -31,7 +31,7 @@ const CONFIG = {
   matchAvailabilityTable: 'MatchAvailability',
   scheduledActionsTable: 'ScheduledActions',
   githubMatchDataBaseUrl: 'https://raw.githubusercontent.com/sameeramadusanka/ceylon-sharks/main',
-  availabilityFrontendUrl: 'https://www.ceylonsharks.com',
+  availabilityFrontendUrl: 'https://ceylonsharks.com',
   sesFromEmail: 'noreply@ceylonsharks.com',
   captainEmail: 'captain@example.com',
   viceCaptainEmail: 'vice@example.com',

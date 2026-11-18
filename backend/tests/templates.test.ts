@@ -8,7 +8,7 @@ describe('invitationEmail', () => {
     matchDate: '2026-11-28',
     competition: 'League',
     deadline: '26 Nov 2026 23:59',
-    magicLink: 'https://www.ceylonsharks.com/availability/respond?token=abc123',
+    magicLink: 'https://ceylonsharks.com/availability/respond?token=abc123',
   };
 
   it('includes the magic link and key match details', () => {
@@ -72,7 +72,7 @@ describe('reminderEmail', () => {
     matchDate: '2026-11-28',
     competition: 'League',
     deadline: '26 Nov 2026 23:59',
-    magicLink: 'https://www.ceylonsharks.com/availability/respond?token=fresh-token',
+    magicLink: 'https://ceylonsharks.com/availability/respond?token=fresh-token',
   };
 
   it('includes the magic link and reads as a reminder, not a first invitation', () => {

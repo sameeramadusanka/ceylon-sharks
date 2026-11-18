@@ -1021,8 +1021,12 @@ or creating AWS resources before understanding the existing repository.
     requires no GitHub token/secret. Always read from `main` so the
     backend sees the same data the live site was built from.
 -   [x] Identify the existing website origin and desired API domain.
-    Website origin is `https://www.ceylonsharks.com`. **Decision: use
-    the default API Gateway invoke URL for MVP** (no custom domain yet);
+    Website origin is `https://ceylonsharks.com` (apex, no `www` - the
+    site redirects `www` to apex; the original Phase 0 note here said
+    `www.ceylonsharks.com`, which was wrong and wasn't caught until a
+    real production invitation link failed in Phase 6 - see the Phase 6
+    section below). **Decision: use the default API Gateway invoke URL
+    for MVP** (no custom domain yet);
     a custom `api.ceylonsharks.com`-style domain can be added later
     without changing the Lambda/API code, only the
     `PUBLIC_AVAILABILITY_API_BASE_URL` value and a Route 53/ACM mapping.
@@ -1261,9 +1265,9 @@ in `Asia/Singapore` regardless of viewer timezone, and the full loading
 responses matching the real API's shape. The real deployed API itself
 was exercised too, from the dev server's `localhost` origin - which
 correctly failed with a CORS error, since `AvailabilityHttpApi`'s CORS
-is locked to `https://www.ceylonsharks.com` and nothing else. That's
-confirmation the independence boundary holds, not a bug; the real
-API/UI combination together can only be verified after this ships to
+is locked to a specific origin and nothing else. That's confirmation
+the independence boundary holds, not a bug; the real API/UI
+combination together can only be verified after this ships to
 the real origin.
 
 **Deliverable: met.** Mobile-friendly (verified at 420px viewport)
@@ -1278,12 +1282,25 @@ phase) - just not both at once pre-deploy, by design.
     project decision. Revisit before inviting the full squad for real;
     see `backend/docs/operations.md` for what sandbox mode means
     operationally in the meantime.
--   [x] Configure production API URL and CORS. CORS has been locked to
-    `https://www.ceylonsharks.com` since Phase 1 (confirmed working -
-    and confirmed *blocking* `localhost` - in Phase 5 live testing).
-    The "production API URL" is still the default API Gateway invoke
-    URL per the Phase 0 decision to defer a custom domain; no change
-    needed unless that decision changes.
+-   [x] Configure production API URL and CORS, **after fixing a real
+    bug found via an actual production invitation link**: CORS was
+    deployed locked to `https://www.ceylonsharks.com`, which passed
+    every test up to this point (including Phase 5's `curl`-based CORS
+    checks and the "blocks `localhost`" check) only because those tests
+    explicitly set the `Origin` header to the `www` value rather than
+    following a real browser redirect. The site actually redirects
+    `www.ceylonsharks.com` → `https://ceylonsharks.com` (apex) - matching
+    `src/data/site.json`'s own `canonicalUrl`, which nobody cross-checked
+    against the CORS config until a real click-through from an actual
+    sent invitation email failed with "Unable to reach the availability
+    service." Fixed: `AvailabilityFrontendUrl` is `https://ceylonsharks.com`
+    in both `template.yaml`'s Default and the explicit
+    `--parameter-overrides` in `deploy-availability.yml` (CloudFormation
+    doesn't apply a changed Default to an already-existing stack unless
+    the parameter is passed explicitly - the Default-only fix silently
+    did nothing on the first redeploy attempt). The "production API URL"
+    is still the default API Gateway invoke URL per the Phase 0 decision
+    to defer a custom domain; no change needed there.
 -   [x] Configure GitHub Actions OIDC for backend deployment. IAM OIDC
     provider for `token.actions.githubusercontent.com` plus a deploy
     role (`ceylon-sharks-availability-deploy`) trusted only for
