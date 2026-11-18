@@ -15,3 +15,18 @@ resolve_s3 = true
 #       SesFromEmail=noreply@ceylonsharks.com \
 #       CaptainEmail=captain@example.com \
 #       ViceCaptainEmail=vicecaptain@example.com
+
+# Separate environment for CI (.github/workflows/deploy-availability.yml),
+# selected with --config-env ci. Uses an explicit s3_bucket/s3_prefix instead
+# of resolve_s3: resolve_s3 also re-verifies/updates its own separate
+# "aws-sam-cli-managed-default" bootstrap stack on every deploy, which the
+# GitHub Actions deploy role deliberately has no CloudFormation permissions
+# for outside the ceylon-sharks-availability stack. SAM CLI also refuses to
+# mix resolve_s3 (from config) with an explicit --s3-bucket flag, hence a
+# fully separate environment rather than just overriding one parameter.
+[ci.deploy.parameters]
+stack_name = "ceylon-sharks-availability"
+region = "ap-southeast-1"
+capabilities = "CAPABILITY_IAM"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-3vzyjmkty784"
+s3_prefix = "ceylon-sharks-availability"
