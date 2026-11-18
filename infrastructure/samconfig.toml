@@ -1,0 +1,17 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "ceylon-sharks-availability"
+region = "ap-southeast-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+# SesFromEmail, CaptainEmail and ViceCaptainEmail have no default in template.yaml
+# and are intentionally NOT set here, so a real email address is never committed
+# to this public repository. Supply them on the command line instead, e.g.:
+#
+#   sam deploy \
+#     --parameter-overrides \
+#       SesFromEmail=noreply@ceylonsharks.com \
+#       CaptainEmail=captain@example.com \
+#       ViceCaptainEmail=vicecaptain@example.com

@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+.aws-sam/
 
 # Local environment files
 .env
