@@ -944,6 +944,38 @@ deploying AWS resources.
 
 The MVP is not complete until all six independence tests pass.
 
+**Results (Phase 6, run against the current repo state):**
+
+1.  **Pass.** `astro build` (`output: "static"`) makes zero network
+    calls - the only thing that talks to the availability API is the
+    client-side `AvailabilityResponse` island, which runs in the
+    browser after the static build is already done. The build has
+    succeeded this entire session without the availability API ever
+    being reachable from the build environment.
+2.  **Pass.** `.github/workflows/deploy.yml` has no AWS step, no
+    `aws-actions/*` action, and references no AWS credentials or
+    secrets - unchanged except for the `paths-ignore` fix below.
+3.  **Pass, verified live.** Built and served the production bundle,
+    drove it with headless Chromium, and recorded every network
+    request while visiting the homepage and each section
+    (matches/squad/statistics/history/records): zero requests to
+    `execute-api`/`amazonaws.com`. The same listener was confirmed to
+    actually work by checking it *does* catch a request on
+    `/availability/respond` - so "none" above reflects the pages, not
+    a broken check.
+4.  **Pass.** `grep` for `availabilityApi` across `src/` matches only
+    `src/services/availabilityApi.ts` itself and the
+    `src/pages/availability/`/`src/components/availability/` files
+    that are supposed to use it - confirmed again in this phase.
+5.  **Pass, after a fix.** `deploy.yml` previously had no `paths`
+    filter at all, so a backend-only push to `main` *would* have
+    triggered a full Pages rebuild - a real gap this acceptance test
+    caught. Fixed by adding `paths-ignore: [backend/**,
+    infrastructure/**, ceylon-sharks-availability-mvp.md]`.
+6.  **Pass.** `deploy.yml` contains no reference to `infrastructure/`,
+    `backend/`, SAM, or any AWS resource - a frontend-only change
+    cannot reach AWS through this workflow.
+
 ------------------------------------------------------------------------
 
 ## 15. Observability and operational safeguards

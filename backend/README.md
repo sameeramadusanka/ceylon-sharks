@@ -7,7 +7,10 @@ build never depends on this project.
 
 See `docs/existing-match-data-mapping.md` for how the real match data in
 this repository maps onto the backend's internal model, and the Phase 0
-section of the plan doc for the decisions behind it.
+section of the plan doc for the decisions behind it. See
+`docs/operations.md` for the support/recovery runbook (logs, manually
+triggering the coordinator, pausing the schedule, rolling back a
+deploy, common troubleshooting).
 
 ## Local development
 
