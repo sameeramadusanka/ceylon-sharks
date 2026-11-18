@@ -1200,14 +1200,44 @@ point or a deliberate manual trigger, same as the Phase 3 live test.
 
 ### Phase 5 -- Frontend integration
 
--   [ ] Add the dedicated availability response page.
--   [ ] Add the availability API client.
--   [ ] Implement loading, error, expired and closed states.
--   [ ] Implement the response form.
--   [ ] Implement confirmation and update experience.
--   [ ] Confirm no existing pages depend on the API.
+-   [x] Add the dedicated availability response page.
+    (`src/pages/availability/respond.astro` - its own `<head>`, no
+    `global.css`, no Google Analytics snippet, `Referrer-Policy: no-referrer`
+    and `robots: noindex, nofollow`.)
+-   [x] Add the availability API client.
+    (`src/services/availabilityApi.ts` - `PUBLIC_AVAILABILITY_API_BASE_URL`
+    with a default pointing at the deployed stack; typed in `src/env.d.ts`.)
+-   [x] Implement loading, error, expired and closed states.
+    (`src/components/availability/AvailabilityResponse.tsx` - one state
+    machine; "expired"/"closed" render as the same error UI with the
+    backend's own message text, which is already specific per case.)
+-   [x] Implement the response form. (Available/Unavailable/Maybe toggle,
+    optional comment capped at 500 chars to match the backend's limit.)
+-   [x] Implement confirmation and update experience. (A "Change my
+    response" action returns to the form, pre-filled with what was just
+    submitted, without a page reload or re-validating the token.)
+-   [x] Confirm no existing pages depend on the API. Verified: `grep` for
+    `availabilityApi` outside `src/pages/availability/` and
+    `src/components/availability/` returns nothing; `npm run build`
+    output is unchanged for every existing route.
 
-**Deliverable:** Mobile-friendly passwordless availability form.
+Live-verified in a real browser (headless Chromium, since no browser
+automation tool was connected in-session): token is correctly stripped
+from the visible URL via `history.replaceState`, the deadline renders
+in `Asia/Singapore` regardless of viewer timezone, and the full loading
+→ form → submit → confirmed → edit-again flow works against mocked
+responses matching the real API's shape. The real deployed API itself
+was exercised too, from the dev server's `localhost` origin - which
+correctly failed with a CORS error, since `AvailabilityHttpApi`'s CORS
+is locked to `https://www.ceylonsharks.com` and nothing else. That's
+confirmation the independence boundary holds, not a bug; the real
+API/UI combination together can only be verified after this ships to
+the real origin.
+
+**Deliverable: met.** Mobile-friendly (verified at 420px viewport)
+passwordless availability form, code-complete and verified against both
+a real backend (API layer, Phase 3) and a real browser (UI layer, this
+phase) - just not both at once pre-deploy, by design.
 
 ### Phase 6 -- Production validation
 

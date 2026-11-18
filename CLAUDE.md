@@ -18,9 +18,13 @@ There is no test suite and no lint/format script configured. `npm run check` is 
 
 This is a fully static Astro + React + TypeScript site (**Ceylon Sharks Cricket Dashboard**) with no backend, database, or API — all content is local JSON and static images baked in at build time.
 
-### Single-page, data-driven-at-build-time
+### Main site: single-page, data-driven-at-build-time
 
-`src/pages/index.astro` is the only page. In its frontmatter it walks `public/` recursively with `readdirSync`/`readFileSync` (Node `fs`, build-time only) to discover season data purely from **filename convention** — there is no manifest file listing which seasons/files exist. It then passes everything as props into one React island, `TeamDashboard`, rendered with `client:load` (the entire UI is one hydrated component, not multiple islands).
+`src/pages/index.astro` is the main site's only page. In its frontmatter it walks `public/` recursively with `readdirSync`/`readFileSync` (Node `fs`, build-time only) to discover season data purely from **filename convention** — there is no manifest file listing which seasons/files exist. It then passes everything as props into one React island, `TeamDashboard`, rendered with `client:load` (the entire UI is one hydrated component, not multiple islands).
+
+### Availability feature: a second, independent page
+
+`src/pages/availability/respond.astro` is a separate page for the match-availability feature described in `ceylon-sharks-availability-mvp.md` (implementation under `backend/`, deployed independently to AWS — see that doc and `backend/README.md`). It renders its own `AvailabilityResponse` React island (`src/components/availability/`), calls the backend via `src/services/availabilityApi.ts`, and has its own stylesheet (`src/styles/availability.css`) and its own `<head>` — it does **not** import `global.css` or the Google Analytics snippet from `index.astro`. `src/env.d.ts` types the `PUBLIC_AVAILABILITY_API_BASE_URL` env var (not a secret; falls back to the deployed stack's API Gateway URL if unset). No other page or component may import from `services/availabilityApi.ts` — that boundary is the whole point of the independence design in the plan doc.
 
 ### Filename conventions (critical — breaks silently if not followed)
 

@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap');
+
+:root {
+  --av-ink: #111314;
+  --av-paper: #f8f9f7;
+  --av-amber: #ff5310;
+  --av-muted: #6d6e68;
+  --av-line: rgba(17, 19, 20, 0.14);
+  --av-sans: 'Manrope', sans-serif;
+  --av-serif: 'Space Grotesk', sans-serif;
+  --av-mono: 'DM Mono', monospace;
+}
+
+.av-page * {
+  box-sizing: border-box;
+}
+
+.av-page {
+  background: var(--av-ink);
+  color: var(--av-paper);
+  font-family: var(--av-sans);
+  min-height: 100vh;
+  padding: 48px 20px;
+}
+
+.av-card {
+  background: #1a1c1d;
+  border: 1px solid rgba(248, 249, 247, 0.12);
+  border-radius: 4px;
+  margin: 0 auto;
+  max-width: 480px;
+  padding: 36px 28px;
+}
+
+.av-brand {
+  color: var(--av-amber);
+  font-family: var(--av-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  margin: 0 0 24px;
+  text-transform: uppercase;
+}
+
+.av-title {
+  font-family: var(--av-serif);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.av-subtitle {
+  color: #a8aaa4;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.av-match {
+  border-top: 1px solid rgba(248, 249, 247, 0.14);
+  border-bottom: 1px solid rgba(248, 249, 247, 0.14);
+  margin: 0 0 24px;
+  padding: 18px 0;
+}
+
+.av-match dt {
+  color: #777870;
+  font-family: var(--av-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.av-match dd {
+  font-size: 15px;
+  margin: 2px 0 12px;
+}
+
+.av-match dd:last-child {
+  margin-bottom: 0;
+}
+
+.av-group {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.av-choice {
+  background: transparent;
+  border: 1px solid rgba(248, 249, 247, 0.3);
+  border-radius: 4px;
+  color: var(--av-paper);
+  cursor: pointer;
+  flex: 1;
+  font-family: var(--av-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 12px 8px;
+  text-transform: uppercase;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.av-choice:hover {
+  border-color: var(--av-amber);
+}
+
+.av-choice[aria-pressed='true'] {
+  background: var(--av-amber);
+  border-color: var(--av-amber);
+  color: var(--av-ink);
+}
+
+.av-field {
+  display: block;
+  margin: 0 0 24px;
+}
+
+.av-field label {
+  color: #a8aaa4;
+  display: block;
+  font-family: var(--av-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.av-field textarea {
+  background: #0f1011;
+  border: 1px solid rgba(248, 249, 247, 0.2);
+  border-radius: 4px;
+  color: var(--av-paper);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  resize: vertical;
+  width: 100%;
+}
+
+.av-field textarea:focus,
+.av-choice:focus-visible,
+.av-button:focus-visible {
+  outline: 2px solid var(--av-amber);
+  outline-offset: 2px;
+}
+
+.av-button {
+  background: var(--av-amber);
+  border: 0;
+  border-radius: 4px;
+  color: var(--av-ink);
+  cursor: pointer;
+  font-family: var(--av-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 14px 18px;
+  text-transform: uppercase;
+  transition: opacity 0.15s;
+  width: 100%;
+}
+
+.av-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.av-link-button {
+  background: none;
+  border: 0;
+  color: var(--av-amber);
+  cursor: pointer;
+  font-family: var(--av-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin-top: 18px;
+  text-decoration: underline;
+  text-transform: uppercase;
+}
+
+.av-note {
+  color: var(--av-muted);
+  color: #a8aaa4;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 16px 0 0;
+}
+
+.av-error {
+  background: rgba(255, 83, 16, 0.12);
+  border: 1px solid rgba(255, 83, 16, 0.4);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 14px 16px;
+}
+
+.av-status {
+  color: #a8aaa4;
+  font-family: var(--av-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.av-confirm-badge {
+  color: var(--av-amber);
+  font-family: var(--av-serif);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+@media (max-width: 480px) {
+  .av-page {
+    padding: 28px 16px;
+  }
+
+  .av-card {
+    padding: 28px 20px;
+  }
+
+  .av-group {
+    flex-direction: column;
+  }
+}
