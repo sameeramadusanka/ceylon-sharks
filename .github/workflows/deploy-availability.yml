@@ -73,7 +73,16 @@ jobs:
       - name: SAM deploy
         working-directory: infrastructure
         run: |
+          # Explicit --s3-bucket instead of samconfig.toml's resolve_s3=true:
+          # --resolve-s3 also re-verifies/updates its own separate
+          # "aws-sam-cli-managed-default" bootstrap stack on every run, which
+          # this deploy role deliberately has no CloudFormation permissions
+          # for (it's scoped only to the ceylon-sharks-availability stack).
+          # The bucket itself already exists and is already in this role's
+          # scoped S3 permissions.
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset \
+            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-3vzyjmkty784 \
+            --s3-prefix ceylon-sharks-availability \
             --parameter-overrides \
               SesFromEmail="${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}" \
               CaptainEmail="${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}" \
