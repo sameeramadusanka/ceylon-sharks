@@ -1119,11 +1119,21 @@ can't be enumerated as a resource ARN in advance. Fixed by scoping with
 a `ses:FromAddress` condition and `Resource: '*'` instead (see
 `infrastructure/template.yaml`).
 
-**Operational note:** the stack is now live, including the daily
-EventBridge schedule. `TeamMembers` currently contains only the one
-test player seeded for this test - until real players are seeded (or
-the test entry is removed), the coordinator will keep sending that test
-address real invitations for every genuinely upcoming match.
+**Operational note:** the test `TeamMembers` entry has been removed and
+the `CoordinatorFunctionDailySchedule` EventBridge schedule has been
+manually **disabled** (`aws scheduler update-schedule ... --state
+DISABLED`) - this was done directly via the AWS CLI, not through
+`template.yaml`, so it is not tracked in source control and will not be
+reverted by a future `sam deploy` of unrelated changes.
+
+This matters because of a real gap: with zero active `TeamMembers`,
+`sendInvitations` trivially "succeeds" (loops over nothing, no
+failures), so the coordinator would mark a due match's INVITATION
+action `COMPLETED` with nobody actually invited - and since only
+`FAILED` actions are retryable, that match could never get real
+invitations sent later even after real players are seeded. Re-enable
+the schedule only after `TeamMembers` has real, active rows (Phase 6),
+or fix this gap first if testing further before then.
 
 ### Phase 4 -- Reminders and final summary
 
