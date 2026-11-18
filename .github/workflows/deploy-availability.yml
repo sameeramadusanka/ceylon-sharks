@@ -1,0 +1,81 @@
+name: Deploy availability backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'infrastructure/**'
+      - '.github/workflows/deploy-availability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: availability-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Lint
+        working-directory: backend
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: backend
+        run: npm run typecheck
+
+      - name: Test
+        working-directory: backend
+        run: npm test
+
+      - name: Build
+        working-directory: backend
+        run: npm run build
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::037207781401:role/ceylon-sharks-availability-deploy
+          aws-region: ap-southeast-1
+
+      - name: Setup AWS SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: SAM build
+        working-directory: infrastructure
+        run: sam build
+
+      - name: SAM deploy
+        working-directory: infrastructure
+        run: |
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              SesFromEmail="${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}" \
+              CaptainEmail="${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}" \
+              ViceCaptainEmail="${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
+
+      - name: Health check
+        run: |
+          API_URL=$(aws cloudformation describe-stacks --region ap-southeast-1 \
+            --stack-name ceylon-sharks-availability \
+            --query 'Stacks[0].Outputs[?OutputKey==`AvailabilityApiUrl`].OutputValue' --output text)
+          curl -sf "${API_URL}/availability/health" | tee /dev/stderr | grep -q '"status":"ok"'

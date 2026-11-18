@@ -1,0 +1,304 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Ceylon Sharks match-availability backend (independent of the GitHub Pages
+  frontend). Phase 1 foundation: DynamoDB tables, HTTP API, Lambda functions
+  (health + stubs), EventBridge-scheduled coordinator, least-privilege IAM.
+  Business logic for validate/submit/coordinator lands in later phases.
+
+Parameters:
+  GithubMatchDataBaseUrl:
+    Type: String
+    Description: Public raw-GitHub base URL the coordinator fetches published match JSON from.
+    Default: https://raw.githubusercontent.com/sameeramadusanka/ceylon-sharks/main
+
+  AvailabilityFrontendUrl:
+    Type: String
+    Description: Origin of the static frontend; used for CORS and links in emails.
+    Default: https://www.ceylonsharks.com
+
+  TimeZone:
+    Type: String
+    Description: IANA timezone used for all calendar-day scheduling decisions.
+    Default: Asia/Singapore
+
+  InvitationDaysBefore:
+    Type: Number
+    Default: 5
+
+  ReminderDaysBefore:
+    Type: Number
+    Default: 3
+
+  ClosureDaysBefore:
+    Type: Number
+    Default: 2
+
+  ClosureLocalTime:
+    Type: String
+    Description: Local time (HH:MM, TimeZone) at which availability closes on the closure day.
+    Default: '23:59'
+
+  SesFromEmail:
+    Type: String
+    Description: Verified SES sender identity. Not defaulted so a real address is never committed to this public repo.
+    NoEcho: true
+
+  CaptainEmail:
+    Type: String
+    Description: Captain's notification email address. Not defaulted; supply at deploy time.
+    NoEcho: true
+
+  ViceCaptainEmail:
+    Type: String
+    Description: Vice-captain's notification email address. Not defaulted; supply at deploy time.
+    NoEcho: true
+
+Globals:
+  Function:
+    Runtime: nodejs24.x
+    Architectures: [arm64]
+    Timeout: 10
+    MemorySize: 256
+    Environment:
+      Variables:
+        TEAM_MEMBERS_TABLE: !Ref TeamMembersTable
+        MATCH_AVAILABILITY_TABLE: !Ref MatchAvailabilityTable
+        SCHEDULED_ACTIONS_TABLE: !Ref ScheduledActionsTable
+        GITHUB_MATCH_DATA_BASE_URL: !Ref GithubMatchDataBaseUrl
+        AVAILABILITY_FRONTEND_URL: !Ref AvailabilityFrontendUrl
+        SES_FROM_EMAIL: !Ref SesFromEmail
+        CAPTAIN_EMAIL: !Ref CaptainEmail
+        VICE_CAPTAIN_EMAIL: !Ref ViceCaptainEmail
+        TIME_ZONE: !Ref TimeZone
+        INVITATION_DAYS_BEFORE: !Ref InvitationDaysBefore
+        REMINDER_DAYS_BEFORE: !Ref ReminderDaysBefore
+        CLOSURE_DAYS_BEFORE: !Ref ClosureDaysBefore
+        CLOSURE_LOCAL_TIME: !Ref ClosureLocalTime
+
+Resources:
+  # ---------------------------------------------------------------------
+  # DynamoDB
+  # ---------------------------------------------------------------------
+  TeamMembersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+
+  MatchAvailabilityTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: matchId
+          AttributeType: S
+        - AttributeName: playerEmail
+          AttributeType: S
+        - AttributeName: tokenHash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: matchId
+          KeyType: HASH
+        - AttributeName: playerEmail
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: TokenLookupIndex
+          KeySchema:
+            - AttributeName: tokenHash
+              KeyType: HASH
+            - AttributeName: matchId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  ScheduledActionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: actionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: actionId
+          KeyType: HASH
+
+  # ---------------------------------------------------------------------
+  # HTTP API
+  # ---------------------------------------------------------------------
+  AvailabilityHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AvailabilityFrontendUrl
+        AllowMethods: [GET, POST, OPTIONS]
+        AllowHeaders: [content-type]
+
+  # ---------------------------------------------------------------------
+  # Log groups (created first so Lambda's default retention never applies)
+  # ---------------------------------------------------------------------
+  HealthLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-health
+      RetentionInDays: 30
+
+  ValidateLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-validate
+      RetentionInDays: 30
+
+  SubmitLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-submit
+      RetentionInDays: 30
+
+  CoordinatorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-coordinator
+      RetentionInDays: 30
+
+  # ---------------------------------------------------------------------
+  # Lambda functions
+  # ---------------------------------------------------------------------
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-health
+      CodeUri: ../backend
+      Handler: src/handlers/health.handler
+      LoggingConfig:
+        LogGroup: !Ref HealthLogGroup
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /availability/health
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/health.ts]
+        Target: es2022
+
+  ValidateAvailabilityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-validate
+      CodeUri: ../backend
+      Handler: src/handlers/validateAvailability.handler
+      LoggingConfig:
+        LogGroup: !Ref ValidateLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MatchAvailabilityTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /availability/validate
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/validateAvailability.ts]
+        Target: es2022
+
+  SubmitAvailabilityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-submit
+      CodeUri: ../backend
+      Handler: src/handlers/submitAvailability.handler
+      LoggingConfig:
+        LogGroup: !Ref SubmitLogGroup
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MatchAvailabilityTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /availability/submit
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/submitAvailability.ts]
+        Target: es2022
+
+  CoordinatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-coordinator
+      CodeUri: ../backend
+      Handler: src/handlers/coordinator.handler
+      Timeout: 60
+      LoggingConfig:
+        LogGroup: !Ref CoordinatorLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref TeamMembersTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MatchAvailabilityTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledActionsTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+      Events:
+        DailySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 8 * * ? *)
+            ScheduleExpressionTimezone: !Ref TimeZone
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/coordinator.ts]
+        Target: es2022
+
+Outputs:
+  AvailabilityApiUrl:
+    Description: Base URL for the availability HTTP API. Feed into the frontend's PUBLIC_AVAILABILITY_API_BASE_URL.
+    Value: !Sub https://${AvailabilityHttpApi}.execute-api.${AWS::Region}.amazonaws.com
+
+  TeamMembersTableName:
+    Value: !Ref TeamMembersTable
+
+  MatchAvailabilityTableName:
+    Value: !Ref MatchAvailabilityTable
+
+  ScheduledActionsTableName:
+    Value: !Ref ScheduledActionsTable

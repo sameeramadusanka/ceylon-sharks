@@ -3,6 +3,13 @@ name: Deploy Astro site to GitHub Pages
 on:
   push:
     branches: [main]
+    # Backend/infrastructure-only changes deploy independently via
+    # deploy-availability.yml and must not trigger a Pages rebuild
+    # (see ceylon-sharks-availability-mvp.md section 4.1).
+    paths-ignore:
+      - 'backend/**'
+      - 'infrastructure/**'
+      - 'ceylon-sharks-availability-mvp.md'
   workflow_dispatch:
 
 permissions:

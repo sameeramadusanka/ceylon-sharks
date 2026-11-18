@@ -1,36 +1,37 @@
 # Ceylon Sharks Cricket Dashboard
 
-A responsive, static cricket club website built with Astro, React, and TypeScript. The site showcases Ceylon Sharks' season performance, matches, squad, club history, and records in a premium broadcast-style interface.
+A responsive, statically generated cricket club website built with Astro, React, and TypeScript. It presents Ceylon Sharks' season results, squad, statistics, history, and records in a broadcast-inspired interface.
 
-## Highlights
+## Features
 
-- Navigation sections in this order: Home, Statistics, Matches, Squad, History, Records
-- Season/division switching for the match centre, results, player roster, and season statistics
-- Current and previous season record-book tabs, calculated from each season's match data
-- Season performance charts and summary metrics derived from the selected results dataset
-- Upcoming fixture logic based on the current date and scheduled match time
-- Player cards with modal profile details and batting, bowling, and fielding statistics
-- Interactive scorecard modals for matches with scorecard data
-- History section with a responsive title/description intro, page-width image carousel, and collapsible milestone timeline
-- Responsive mobile navigation, match filters, and accessible tab controls
-- Fully static deployment with no backend or database required
+- Home, Statistics, Matches, Squad, History, and Records sections
+- Season and division selection for match results, player roster, and statistics; the newest available September season is selected by default when present
+- Season performance metrics and charts derived from the selected results
+- Match filtering by format and result, with scorecard details where scorecard data is available
+- Upcoming fixture selection based on schedule dates and times
+- Player profile dialogs with batting, bowling, and fielding statistics
+- Captain and vice-captain cards kept first, followed by the remaining players alphabetically by name
+- Record Book tabs for the two newest available seasons
+- Responsive navigation, match filters, history image carousel, and collapsible history timeline
+- Facebook link in the footer
+- Favicon and Open Graph/Twitter social preview metadata using images in `public/brand/`
+- Static output with no backend or database
 
 ## Tech Stack
 
-- Astro
-- React
-- TypeScript
+- Astro with the React integration
+- React and TypeScript
 - Lucide React icons
 - Custom CSS
-- Local static JSON and image assets
+- Local JSON and image assets
 
 ## Project Structure
 
 ```text
 src/
   components/
-    TeamDashboard.tsx
     ScorecardModal.tsx
+    TeamDashboard.tsx
   data/
     history.json
     matches.json
@@ -43,8 +44,7 @@ src/
     global.css
     scorecard.css
 public/
-  banner_images/
-    optimized/
+  banner_images/optimized/
   brand/
   ground_images/
   history_images/
@@ -56,11 +56,11 @@ public/
   upcoming_schedules/
 ```
 
-`src/components/TeamDashboard.tsx` renders the interactive dashboard, while `src/data/site.json` contains navigation labels, section copy, and other site configuration. `src/styles/global.css` and `src/styles/scorecard.css` provide the site and scorecard styling.
+`src/components/TeamDashboard.tsx` contains the interactive dashboard. `src/pages/index.astro` loads the local data and defines document and social metadata. Site text and shared settings are in `src/data/site.json`; team details are in `src/data/team.json`. Global styles are in `src/styles/global.css`, with scorecard-specific styles in `src/styles/scorecard.css`.
 
-## Season Naming and Data Shape
+## Season Data
 
-The project supports both legacy and modern season naming conventions, but the active structure uses the division-based format below:
+Season data is read recursively from `public/`. The active naming convention includes the season and division, for example:
 
 ```text
 public/players/2026_MAY_SUPREME_DIVISION/
@@ -74,62 +74,57 @@ public/season_statistics/2026_SEPTEMBER_SUPREME_DIVISION/
 public/score_cards/2026_SEPTEMBER_SUPREME_DIVISION/
 ```
 
-The app loads season files recursively and normalizes them so the selected dataset updates the dashboard, form, matches, player roster, and season statistics without hardcoded season IDs. The Record Book independently selects the two newest available seasons and provides Current season and Previous season tabs, so it remains usable regardless of the season selected in Matches. The History carousel and timeline use the content under `public/history_images/` and `src/data/history.json`, respectively.
+The Matches season selector updates the results, roster, and season statistics together. It defaults to the newest available September season, falling back to the first available season if no September season exists. The Record Book selects its two newest seasons independently, ordered by year and season month.
 
-## Data Sources
+When adding a season, provide matching results, player, and statistics files using the conventions and JSON shapes already present. Scorecards and upcoming schedules are optional; add them under their corresponding directories when available.
 
-The site reads structured JSON from the `public/` folder:
+## Data and Brand Assets
 
-- `players/*` — player roster information
-- `season_results/*` — match results and season metadata
-- `season_statistics/*` — batting, bowling, and fielding metrics
-- `score_cards/*` — detailed scorecard JSON for each match
-- `upcoming_schedules/*` — future fixture data used for date-aware next match selection
-- `history_images/*` — images shown by the History carousel
-- `banner_images/optimized/*` — optimized hero-banner carousel images
-- `ground_images/*` — fallback ground image
-- `brand/*` — club branding assets
+- `public/players/` — season rosters
+- `public/season_results/` — season match results
+- `public/season_statistics/` — batting, bowling, and fielding statistics
+- `public/score_cards/` — detailed match scorecards
+- `public/upcoming_schedules/` — scheduled fixtures
+- `public/history_images/` — images for the History carousel
+- `public/banner_images/optimized/` — hero banner images
+- `public/ground_images/` — fallback ground image
+- `public/player_images/` — player photos
+- `public/brand/favicon.png` — browser favicon
+- `public/brand/Open-graph-image.png` — Open Graph and Twitter share image
+
+History timeline copy is maintained in `src/data/history.json`. Other static fallback data is in `src/data/`.
 
 ## Local Development
 
-### Requirements
-
-- Node.js 18+
-- npm
-
-### Install dependencies
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-### Start the dev server
+Start the development server:
 
 ```bash
 npm run dev -- --host 0.0.0.0
 ```
 
-The app is available at:
-
-```text
-http://localhost:4321/
-```
+Open `http://localhost:4321/` in a browser.
 
 ## Validation and Build
 
-Run code and Astro diagnostics:
+Run Astro and TypeScript diagnostics:
 
 ```bash
 npm run check
 ```
 
-Generate the production build:
+Build the static site into `dist/`:
 
 ```bash
 npm run build
 ```
 
-Preview the build locally:
+Preview the production build locally:
 
 ```bash
 npm run preview -- --host 0.0.0.0
@@ -137,31 +132,6 @@ npm run preview -- --host 0.0.0.0
 
 ## Deployment
 
-This is a static Astro site and can be deployed to any static hosting provider.
+The site is deployed to GitHub Pages by `.github/workflows/deploy.yml` when changes are pushed to the `main` branch, or when the workflow is manually triggered. The workflow installs dependencies, runs `npm run check` and `npm run build`, then publishes `dist/`.
 
-### Typical static deployment flow
-
-```bash
-npm install
-npm run check
-npm run build
-```
-
-Then publish the generated `dist/` folder to your hosting provider.
-
-## Notes
-
-- The site is intentionally data-driven and does not rely on a backend service.
-- The History section presents its title and description side by side on wider screens, followed by a page-width image carousel and collapsible, full-width milestone timeline. The layout stacks on smaller screens.
-- The Record Book compares the two most recent season datasets, ordered by year and season month, with separate tabs for each.
-- Upcoming match selection uses the current date and scheduled time to highlight the correct fixture.
-- The project includes May and September Supreme Division 2026 data. Add matching season files under the corresponding directories to make additional seasons available.
-
-## Useful Commands
-
-```bash
-npm run dev -- --host 0.0.0.0
-npm run check
-npm run build
-npm run preview -- --host 0.0.0.0
-```
+To deploy manually to another static host, publish the contents of `dist/` after a successful production build.
