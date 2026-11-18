@@ -51,12 +51,34 @@ file) at deploy time.
 After deploying, the `AvailabilityApiUrl` stack output is the value to
 use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
 
-## What exists so far (Phase 1 — foundation)
+## What exists so far
+
+**Phase 1 — foundation:**
 
 - DynamoDB tables (`TeamMembers`, `MatchAvailability` + `TokenLookupIndex`
   GSI, `ScheduledActions`), HTTP API, and least-privilege IAM per function.
 - `GET /availability/health` — returns `{ status, timestamp, configPresent }`,
   no secret values. Useful for confirming a deploy wired up correctly.
-- `GET /availability/validate`, `POST /availability/submit`, and the daily
-  EventBridge-scheduled coordinator are **stubs only** (`501`/log-and-return)
-  — their real logic lands in Phases 2-4 of the plan doc.
+- `GET /availability/validate` and `POST /availability/submit` are
+  **stubs only** (`501`/log-and-return) — their real logic lands in
+  Phase 3.
+
+**Phase 2 — match integration and scheduler:**
+
+- `src/providers/githubMatchProvider.ts` fetches and validates the real
+  published schedule JSON (see `docs/existing-match-data-mapping.md`)
+  and maps it to an internal `Match` model.
+- `src/time.ts` computes Singapore-calendar-day differences and the
+  closure deadline instant with Luxon.
+- `src/dueActions.ts` is a pure function deciding which of
+  INVITATION/REMINDER/CLOSURE are due for a match right now, including
+  late catch-up and cancelled/postponed handling.
+- `src/repositories/scheduledActionsRepository.ts` claims actions with a
+  conditional DynamoDB write so duplicate coordinator runs never
+  duplicate a send, while a genuinely `FAILED` action can be retried.
+- `src/handlers/coordinator.ts` wires all of the above together and
+  runs daily via the `ScheduleV2` event in `infrastructure/template.yaml`.
+  `src/notifications.ts`'s `sendInvitations`/`sendReminders`/
+  `closeAndSendSummary` are still **log-only stubs** — no real email is
+  sent yet. Phase 3/4 replace their bodies with real SES sends without
+  changing the claim/complete bookkeeping around them.

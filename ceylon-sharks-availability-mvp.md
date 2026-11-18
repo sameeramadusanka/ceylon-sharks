@@ -1026,15 +1026,44 @@ or creating AWS resources before understanding the existing repository.
 
 ### Phase 2 -- Match integration and scheduler
 
--   [ ] Implement GitHub match-data provider using actual schemas.
--   [ ] Implement Singapore calendar date utilities.
--   [ ] Implement match synchronisation.
--   [ ] Implement scheduled-action idempotency.
--   [ ] Implement daily EventBridge-triggered coordinator.
--   [ ] Add catch-up handling and cancelled-match handling.
+-   [x] Implement GitHub match-data provider using actual schemas.
+    (`backend/src/providers/githubMatchProvider.ts` — discovers schedule
+    files via the public GitHub Contents API, validates each with zod,
+    maps to the internal `Match` model, skips cancelled/postponed/
+    completed and anything with an unrecognised status.)
+-   [x] Implement Singapore calendar date utilities.
+    (`backend/src/time.ts` — Luxon-based `calendarDaysUntil` and
+    `closureDeadline`, tested around local midnight explicitly.)
+-   [x] Implement match synchronisation. **Note:** there is no dedicated
+    Matches table in the DynamoDB design (section 6 only defines
+    `TeamMembers`, `MatchAvailability`, `ScheduledActions`), so
+    "synchronisation" does not persist a separate match copy — the
+    published GitHub feed is re-fetched fresh on every coordinator run
+    and is the only source of truth for match metadata. The
+    `matchRepository.upsert(match)` call in the section 10 pseudocode is
+    illustrative only; no such repository or table exists.
+-   [x] Implement scheduled-action idempotency.
+    (`backend/src/repositories/scheduledActionsRepository.ts` — a
+    conditional `UpdateCommand` claims `attribute_not_exists(actionId)`
+    OR a previously `FAILED` action, so duplicate runs never duplicate a
+    completed/in-flight send, but a genuinely failed one can be retried.)
+-   [x] Implement daily EventBridge-triggered coordinator.
+    (`backend/src/handlers/coordinator.ts`, deployed via the `ScheduleV2`
+    event source already in `infrastructure/template.yaml`.)
+-   [x] Add catch-up handling and cancelled-match handling.
+    (`backend/src/dueActions.ts` — pure, unit-tested decision function
+    covering on-time triggers, late invitation catch-up before the
+    deadline, no reminder without an invitation and no reminder catch-up,
+    late closure catch-up, and nothing once the match date has passed.
+    Cancelled/postponed matches never reach this logic since the provider
+    excludes them already.)
 
 **Deliverable:** Scheduler can identify matches due for invitation,
-reminder and closure without sending real emails in test mode.
+reminder and closure without sending real emails in test mode. Met:
+`sendInvitations`/`sendReminders`/`closeAndSendSummary`
+(`backend/src/notifications.ts`) are still log-only stubs; Phase 3/4
+replace their bodies with real SES sends without changing the
+claim/complete bookkeeping around them.
 
 ### Phase 3 -- Invitations and player response
 
