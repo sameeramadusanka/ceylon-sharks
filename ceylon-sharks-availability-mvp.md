@@ -1120,20 +1120,30 @@ a `ses:FromAddress` condition and `Resource: '*'` instead (see
 `infrastructure/template.yaml`).
 
 **Operational note:** the test `TeamMembers` entry has been removed and
-the `CoordinatorFunctionDailySchedule` EventBridge schedule has been
-manually **disabled** (`aws scheduler update-schedule ... --state
-DISABLED`) - this was done directly via the AWS CLI, not through
-`template.yaml`, so it is not tracked in source control and will not be
-reverted by a future `sam deploy` of unrelated changes.
+replaced with the real 20-player September Supreme Division roster
+(`public/players/2026_SEPTEMBER_SUPREME_DIVISION/...PLAYERS__2026.json`),
+seeded via `npm run seed:team-members` from a local, gitignored
+`backend/seed-data/team-members.json` (never committed - see
+`.gitignore`). Two rows use real, SES-verified addresses for live
+testing: the captain (Hasitha De Silva) uses
+`madusanka234sameera@gmail.com`, and the roster's own "Sameera
+Madusanka" row uses `sameera234madusanka@gmail.com`. The vice-captain
+and the other 17 players currently have placeholder `@example.com`
+addresses (IANA-reserved, never deliverable) pending real player
+emails.
 
-This matters because of a real gap: with zero active `TeamMembers`,
-`sendInvitations` trivially "succeeds" (loops over nothing, no
-failures), so the coordinator would mark a due match's INVITATION
-action `COMPLETED` with nobody actually invited - and since only
-`FAILED` actions are retryable, that match could never get real
-invitations sent later even after real players are seeded. Re-enable
-the schedule only after `TeamMembers` has real, active rows (Phase 6),
-or fix this gap first if testing further before then.
+The `CoordinatorFunctionDailySchedule` EventBridge schedule was
+manually disabled and has since been **re-enabled** (both via the AWS
+CLI, not through `template.yaml` - this state is not tracked in source
+control and will not be touched by an unrelated `sam deploy`). With
+placeholder emails still in the table, every day the coordinator will
+successfully invite the 2 real addresses but fail on the 18 dummy
+ones - per-match idempotency means the 2 real invitations won't
+duplicate once sent, but the match's INVITATION action stays `FAILED`
+(not `COMPLETED`) and keeps retrying the dummy sends daily until real
+emails replace them, which is noisy in CloudWatch but not otherwise
+harmful. Replace the placeholder emails with real ones before this
+matters for an actual match.
 
 ### Phase 4 -- Reminders and final summary
 
