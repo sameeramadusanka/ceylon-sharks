@@ -17,7 +17,7 @@ const ENV = {
   MATCH_AVAILABILITY_TABLE: 'MatchAvailability',
   SCHEDULED_ACTIONS_TABLE: 'ScheduledActions',
   GITHUB_MATCH_DATA_BASE_URL: 'https://raw.githubusercontent.com/sameeramadusanka/ceylon-sharks/main',
-  AVAILABILITY_FRONTEND_URL: 'https://www.ceylonsharks.com',
+  AVAILABILITY_FRONTEND_URL: 'https://ceylonsharks.com',
   SES_FROM_EMAIL: 'noreply@ceylonsharks.com',
   CAPTAIN_EMAIL: 'captain@example.com',
   VICE_CAPTAIN_EMAIL: 'vice@example.com',

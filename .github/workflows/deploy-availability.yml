@@ -80,8 +80,17 @@ jobs:
           # "aws-sam-cli-managed-default" bootstrap stack that resolve_s3
           # would also try to touch, and SAM CLI refuses to mix resolve_s3
           # from config with an explicit --s3-bucket flag anyway).
+          # AvailabilityFrontendUrl is passed explicitly even though it
+          # matches the template's Default: CloudFormation only applies a
+          # new Default on first stack creation - an update that omits a
+          # parameter reuses the stack's existing value instead, so the
+          # Default alone silently doesn't fix a misconfigured value on an
+          # already-deployed stack. Must be https://ceylonsharks.com (apex,
+          # no www) - the site redirects www to apex, so that's the real
+          # origin the browser uses, which is what CORS has to match.
           sam deploy --config-env ci --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
+              AvailabilityFrontendUrl="https://ceylonsharks.com" \
               SesFromEmail="${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}" \
               CaptainEmail="${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}" \
               ViceCaptainEmail="${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
