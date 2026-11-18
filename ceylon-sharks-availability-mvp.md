@@ -1103,11 +1103,27 @@ per-recipient delivery-status/outbox tracking described in section 10.
 That finer-grained tracking is explicit Phase 4 scope
 ("Implement per-recipient email delivery tracking").
 
-**Deliverable:** A test player can receive an invitation and
-submit/update availability. Code-complete and unit-tested; the actual
-live end-to-end send/respond test against the deployed stack happens
-once `sam deploy` is run (see Phase 6 note on confirming before any
-real deploy/send).
+**Deliverable: met, verified live.** Deployed to AWS
+(`ceylon-sharks-availability` stack, `ap-southeast-1`) and tested
+end-to-end against a real upcoming match: the coordinator sent a real
+invitation email, `validate`/`submit` were called with the real token,
+the response was persisted and then updated (`submittedAt` preserved,
+`updatedAt` refreshed, confirmed via a direct DynamoDB read), and both
+the invitation and two captain/vice-captain notification emails were
+received.
+
+One real bug was caught and fixed during this test: the original IAM
+policy scoped `ses:SendEmail` to a resource ARN for the From address,
+but SES's authorization check also covers the recipient side, which
+can't be enumerated as a resource ARN in advance. Fixed by scoping with
+a `ses:FromAddress` condition and `Resource: '*'` instead (see
+`infrastructure/template.yaml`).
+
+**Operational note:** the stack is now live, including the daily
+EventBridge schedule. `TeamMembers` currently contains only the one
+test player seeded for this test - until real players are seeded (or
+the test entry is removed), the coordinator will keep sending that test
+address real invitations for every genuinely upcoming match.
 
 ### Phase 4 -- Reminders and final summary
 
