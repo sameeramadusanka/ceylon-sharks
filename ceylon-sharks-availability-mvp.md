@@ -1067,17 +1067,47 @@ claim/complete bookkeeping around them.
 
 ### Phase 3 -- Invitations and player response
 
--   [ ] Seed authorised team members.
--   [ ] Implement secure magic-link generation and hashing.
--   [ ] Implement invitation email template and SES integration.
--   [ ] Implement token validation endpoint.
--   [ ] Implement availability submission endpoint.
--   [ ] Implement response update behaviour.
--   [ ] Enforce token expiry and match deadline.
--   [ ] Add captain and vice-captain notification emails.
+-   [x] Seed authorised team members.
+    (`backend/scripts/seed-team-members.ts` + `npm run seed:team-members`;
+    only a fake `backend/seed-data/team-members.example.json` is
+    committed, the real file is gitignored.)
+-   [x] Implement secure magic-link generation and hashing.
+    (`backend/src/token.ts` - `randomBytes(32)` base64url + sha256, only
+    the hash is ever persisted.)
+-   [x] Implement invitation email template and SES integration.
+    (`backend/src/email/templates.ts` + `sesClient.ts`;
+    `notifications.ts`'s `sendInvitations` now really sends via SESv2,
+    paced at ~1 req/sec to stay under this account's confirmed sandbox
+    `MaxSendRate`.)
+-   [x] Implement token validation endpoint.
+    (`backend/src/handlers/validateAvailability.ts` - real
+    implementation, replacing the Phase 1 stub.)
+-   [x] Implement availability submission endpoint.
+    (`backend/src/handlers/submitAvailability.ts` - real implementation.)
+-   [x] Implement response update behaviour.
+    (`matchAvailabilityRepository.updateAvailability` preserves the
+    original `submittedAt` via `if_not_exists` on repeat submissions.)
+-   [x] Enforce token expiry and match deadline.
+    (`tokenExpiry` is set to the closure deadline instant at invitation
+    time; both endpoints return `410` once it has passed.)
+-   [x] Add captain and vice-captain notification emails.
+    (Sent from `submitAvailability.ts` after the DB write succeeds; a
+    notification-send failure is logged but never fails the player's
+    submission.)
+
+**Simplification vs. the full Phase 4 design:** per-player idempotency
+for `sendInvitations` is coarse for now - a player is skipped on retry
+if a `MatchAvailability` record already exists for them (written only
+after their email send succeeds), rather than the fully granular
+per-recipient delivery-status/outbox tracking described in section 10.
+That finer-grained tracking is explicit Phase 4 scope
+("Implement per-recipient email delivery tracking").
 
 **Deliverable:** A test player can receive an invitation and
-submit/update availability.
+submit/update availability. Code-complete and unit-tested; the actual
+live end-to-end send/respond test against the deployed stack happens
+once `sam deploy` is run (see Phase 6 note on confirming before any
+real deploy/send).
 
 ### Phase 4 -- Reminders and final summary
 

@@ -59,9 +59,8 @@ use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
   GSI, `ScheduledActions`), HTTP API, and least-privilege IAM per function.
 - `GET /availability/health` — returns `{ status, timestamp, configPresent }`,
   no secret values. Useful for confirming a deploy wired up correctly.
-- `GET /availability/validate` and `POST /availability/submit` are
-  **stubs only** (`501`/log-and-return) — their real logic lands in
-  Phase 3.
+- `GET /availability/validate` and `POST /availability/submit` were
+  stubs in Phase 1; both are now real (see Phase 3 below).
 
 **Phase 2 — match integration and scheduler:**
 
@@ -78,7 +77,38 @@ use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
   duplicate a send, while a genuinely `FAILED` action can be retried.
 - `src/handlers/coordinator.ts` wires all of the above together and
   runs daily via the `ScheduleV2` event in `infrastructure/template.yaml`.
-  `src/notifications.ts`'s `sendInvitations`/`sendReminders`/
-  `closeAndSendSummary` are still **log-only stubs** — no real email is
-  sent yet. Phase 3/4 replace their bodies with real SES sends without
-  changing the claim/complete bookkeeping around them.
+
+**Phase 3 — invitations and player response:**
+
+- `src/token.ts` generates magic-link tokens (`randomBytes(32)` + sha256);
+  only the hash is ever persisted.
+- `src/repositories/matchAvailabilityRepository.ts` and
+  `teamMembersRepository.ts` wrap the two tables' reads/writes, including
+  the token-hash lookup via `TokenLookupIndex` and the `if_not_exists`
+  update that preserves the original `submittedAt` across response edits.
+- `src/email/templates.ts` + `sesClient.ts` build and send the invitation
+  and captain/vice-captain-notification emails via SESv2, HTML-escaping
+  all player-controlled text (name, comments).
+- `src/notifications.ts`'s `sendInvitations` is now real: lists active
+  team members, skips anyone who already has an invitation record for
+  the match (coarse per-player idempotency - see the plan doc's Phase 3
+  note on the fuller Phase 4 design), and paces sends at ~1/sec to match
+  this account's confirmed SES sandbox rate limit.
+  `sendReminders`/`closeAndSendSummary` remain log-only stubs - that's
+  explicit Phase 4 scope.
+- `src/handlers/validateAvailability.ts` and `submitAvailability.ts` are
+  now real, replacing the Phase 1 stubs: token hash lookup, expiry/
+  deadline enforcement (`401`/`410`), identity always derived from the
+  token record (never from the request body), and a captain/vice-captain
+  notification sent only after the DB write succeeds (a notification
+  failure never fails the player's submission).
+- `scripts/seed-team-members.ts` (`npm run seed:team-members`) seeds
+  `TeamMembers` from a local JSON file. Only
+  `seed-data/team-members.example.json` (fake data) is committed - the
+  real file is gitignored.
+
+**Not yet done:** an actual live send/respond test against a deployed
+stack. Everything above is code-complete and unit-tested, but running
+`sam deploy` provisions real AWS resources and, once a match is due,
+sends a real email - do that deliberately, not as a side effect of a
+docs/code update.

@@ -16,3 +16,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 project_plan.md
+
+# Real team-member data (contains real player email addresses) - only the
+# .example.json fixture is committed.
+backend/seed-data/team-members.json

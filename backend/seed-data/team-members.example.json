@@ -1,0 +1,20 @@
+[
+  {
+    "email": "captain@example.com",
+    "name": "Alex Morgan",
+    "role": "CAPTAIN",
+    "isActive": true
+  },
+  {
+    "email": "vice-captain@example.com",
+    "name": "Jordan Lee",
+    "role": "VICE_CAPTAIN",
+    "isActive": true
+  },
+  {
+    "email": "player@example.com",
+    "name": "Sam Rivera",
+    "role": "PLAYER",
+    "isActive": true
+  }
+]
