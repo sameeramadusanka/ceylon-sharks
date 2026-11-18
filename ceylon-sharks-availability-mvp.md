@@ -1310,6 +1310,25 @@ phase) - just not both at once pre-deploy, by design.
     `AVAILABILITY_SES_FROM_EMAIL`, `AVAILABILITY_CAPTAIN_EMAIL`,
     `AVAILABILITY_VICE_CAPTAIN_EMAIL` - Settings → Secrets and
     variables → Actions → New repository secret.
+
+    **Verified end-to-end in real CI**, not just locally - the first
+    live runs surfaced three more gaps beyond the `sub`-claim fix above
+    (a tightly-scoped deploy role has none of the broad permissions a
+    personal admin-user account has, so none of these showed up during
+    local `sam deploy` testing): esbuild not on `PATH` for SAM's staged
+    per-function build (fixed with an explicit global install step);
+    `resolve_s3=true` conflicting with an explicit `--s3-bucket` flag
+    (fixed with a separate `sam deploy --config-env ci` environment in
+    `samconfig.toml`); and a missing `cloudformation:CreateChangeSet`
+    permission on the AWS-owned `Serverless-2016-10-31` transform
+    resource, required by every SAM template regardless of stack (fixed
+    and committed to `infrastructure/github-oidc-deploy-role/`, which
+    now tracks this role's actual policies in the repo instead of only
+    existing as ad hoc AWS CLI state). All four are documented in
+    `backend/docs/operations.md`'s troubleshooting table. A subsequent
+    real push-to-`main` run completed successfully end-to-end:
+    lint/typecheck/test → `sam build` → `sam deploy` → health check,
+    entirely via GitHub Actions with no manual `sam deploy` involved.
 -   [ ] Test with a small authorised group. Not started - needs a
     decision on which real teammates to add (each must individually
     verify their email while SES stays in sandbox; see
