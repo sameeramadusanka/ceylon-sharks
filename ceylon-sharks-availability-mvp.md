@@ -1147,15 +1147,56 @@ matters for an actual match.
 
 ### Phase 4 -- Reminders and final summary
 
--   [ ] Implement reminder recipient selection.
--   [ ] Implement per-recipient email delivery tracking.
--   [ ] Implement two-day closure.
--   [ ] Implement final summary email.
--   [ ] Implement retry and partial-failure recovery.
--   [ ] Test duplicate scheduler invocations.
+-   [x] Implement reminder recipient selection.
+    (`sendReminders` in `backend/src/notifications.ts` queries all
+    `MatchAvailability` rows for the match and reminds only those still
+    `NOT_SUBMITTED`.)
+-   [x] Implement per-recipient email delivery tracking. **Simplification
+    kept from Phase 3's note:** rather than a separate outbox table, each
+    player's own row carries the delivery signal -
+    `reminderSentAt` is only stamped after that player's send succeeds, so
+    a retry naturally skips already-reminded players without resending to
+    them, the same pattern `sendInvitations` already uses.
+-   [x] Implement two-day closure. (`closeAndSendSummary`, invoked by the
+    coordinator when `daysUntilMatch` reaches `closureDaysBefore` - no
+    extra "closed" flag was needed since `validateAvailability`/
+    `submitAvailability` already reject anything past `tokenExpiry`.)
+-   [x] Implement final summary email. (`finalSummaryEmail` in
+    `backend/src/email/templates.ts` - counts and names grouped by
+    AVAILABLE/UNAVAILABLE/MAYBE/NOT_SUBMITTED, generated fresh from
+    DynamoDB on every call, never cached.)
+-   [x] Implement retry and partial-failure recovery. Reuses the
+    existing claim/FAILED-is-retryable mechanism from Phase 2
+    (`scheduledActionsRepository`) at the action level, plus the
+    per-recipient `reminderSentAt`/invitation-record-exists checks at the
+    player level - a retried `sendReminders` or `sendInvitations` call
+    only ever targets players who didn't already succeed.
+-   [x] Test duplicate scheduler invocations. Unit-tested explicitly: a
+    second `sendReminders` call after a partial failure reminds only the
+    player who didn't get one the first time; `closeAndSendSummary` is
+    re-tested to confirm it always reflects the latest DynamoDB state
+    rather than a cached count.
 
-**Deliverable:** Full five-day, three-day and two-day workflow works in
-a simulated environment.
+**Known limitation kept as a reasonable Phase 4 simplification, not a
+Phase 5 blocker:** reminder emails cannot literally reuse the original
+invitation link, because only the token *hash* is ever persisted (by
+design, per section 7) - the raw token from the first send is gone.
+Every reminder therefore mints a fresh token and overwrites the stored
+hash, which the plan doc explicitly allows ("If a new token is
+generated, invalidate the previous token hash"). The practical effect:
+once a reminder goes out, the *original* invitation link stops working
+and only the reminder's link is valid - acceptable since a player who
+already responded wouldn't be reminded anyway, and the plan doc never
+requires both links to stay simultaneously valid.
+
+**Deliverable: met.** The full five-day/three-day/two-day workflow is
+code-complete and unit-tested (fetch → due-action decision → claim →
+send/notify → complete/retry, including duplicate-invocation safety at
+both the action and per-recipient level). Not yet re-verified live
+against the deployed stack for the reminder/closure paths specifically
+(Phase 3's live test only exercised the invitation catch-up path) -
+that requires either waiting for a real match to reach its 3-day/2-day
+point or a deliberate manual trigger, same as the Phase 3 live test.
 
 ### Phase 5 -- Frontend integration
 

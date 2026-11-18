@@ -119,4 +119,31 @@ describe('coordinator handler', () => {
     expect(sendInvitationsMock).not.toHaveBeenCalled();
     expect(ddbMock.commandCalls(UpdateCommand)).toHaveLength(0);
   });
+
+  it('routes a due REMINDER action to sendReminders once already invited', async () => {
+    calendarDaysUntilMock.mockReturnValue(3);
+    ddbMock.on(GetCommand).callsFake((input: { Key: { actionId: string } }) =>
+      input.Key.actionId === 'INVITATION#match-1' ? { Item: { status: 'COMPLETED' } } : {},
+    );
+    ddbMock.on(UpdateCommand).resolves({});
+
+    await invoke();
+
+    expect(sendRemindersMock).toHaveBeenCalledTimes(1);
+    expect(sendInvitationsMock).not.toHaveBeenCalled();
+    expect(closeAndSendSummaryMock).not.toHaveBeenCalled();
+  });
+
+  it('routes a due CLOSURE action to closeAndSendSummary once already invited', async () => {
+    calendarDaysUntilMock.mockReturnValue(2);
+    ddbMock.on(GetCommand).callsFake((input: { Key: { actionId: string } }) =>
+      input.Key.actionId === 'INVITATION#match-1' ? { Item: { status: 'COMPLETED' } } : {},
+    );
+    ddbMock.on(UpdateCommand).resolves({});
+
+    await invoke();
+
+    expect(closeAndSendSummaryMock).toHaveBeenCalledTimes(1);
+    expect(sendRemindersMock).not.toHaveBeenCalled();
+  });
 });

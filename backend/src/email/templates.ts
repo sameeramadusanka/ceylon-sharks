@@ -7,6 +7,16 @@ export interface InvitationEmailParams {
   magicLink: string;
 }
 
+export interface FinalSummaryParams {
+  opponent: string;
+  matchDate: string;
+  totalInvited: number;
+  available: string[];
+  unavailable: string[];
+  maybe: string[];
+  noResponse: string[];
+}
+
 export interface CaptainNotificationParams {
   playerName: string;
   opponent: string;
@@ -49,6 +59,61 @@ export function invitationEmail(params: InvitationEmailParams): EmailBody {
     <p><a href="${params.magicLink}">Respond to this invitation</a></p>
     <p>Please respond by ${escapeHtml(params.deadline)}. You can revisit this link anytime before the deadline to update your response.</p>
     <p>- Ceylon Sharks</p>
+  `.trim();
+
+  return { subject, text, html };
+}
+
+export function reminderEmail(params: InvitationEmailParams): EmailBody {
+  const subject = 'Reminder: Ceylon Sharks match availability';
+
+  const text = [
+    `Hi ${params.playerName},`,
+    '',
+    `This is a reminder to confirm your availability for the upcoming match against ${params.opponent} (${params.competition}) on ${params.matchDate}. We haven't heard from you yet.`,
+    '',
+    `Respond here: ${params.magicLink}`,
+    '',
+    `Please respond by ${params.deadline}. You can revisit this link anytime before the deadline to update your response.`,
+    '',
+    '- Ceylon Sharks',
+  ].join('\n');
+
+  const html = `
+    <p>Hi ${escapeHtml(params.playerName)},</p>
+    <p>This is a reminder to confirm your availability for the upcoming match against <strong>${escapeHtml(params.opponent)}</strong> (${escapeHtml(params.competition)}) on ${escapeHtml(params.matchDate)}. We haven't heard from you yet.</p>
+    <p><a href="${params.magicLink}">Respond to this invitation</a></p>
+    <p>Please respond by ${escapeHtml(params.deadline)}. You can revisit this link anytime before the deadline to update your response.</p>
+    <p>- Ceylon Sharks</p>
+  `.trim();
+
+  return { subject, text, html };
+}
+
+export function finalSummaryEmail(params: FinalSummaryParams): EmailBody {
+  const subject = `Ceylon Sharks availability summary – vs ${params.opponent} (${params.matchDate})`;
+
+  const textSection = (label: string, names: string[]) => `${label} (${names.length}): ${names.length ? names.join(', ') : 'none'}`;
+  const htmlSection = (label: string, names: string[]) =>
+    `<p><strong>${label} (${names.length}):</strong> ${names.length ? names.map(escapeHtml).join(', ') : 'none'}</p>`;
+
+  const text = [
+    `Availability summary for the match vs ${params.opponent} on ${params.matchDate}.`,
+    `Total invited: ${params.totalInvited}`,
+    '',
+    textSection('Available', params.available),
+    textSection('Unavailable', params.unavailable),
+    textSection('Maybe', params.maybe),
+    textSection('No response', params.noResponse),
+  ].join('\n');
+
+  const html = `
+    <p>Availability summary for the match vs ${escapeHtml(params.opponent)} on ${escapeHtml(params.matchDate)}.</p>
+    <p>Total invited: ${params.totalInvited}</p>
+    ${htmlSection('Available', params.available)}
+    ${htmlSection('Unavailable', params.unavailable)}
+    ${htmlSection('Maybe', params.maybe)}
+    ${htmlSection('No response', params.noResponse)}
   `.trim();
 
   return { subject, text, html };

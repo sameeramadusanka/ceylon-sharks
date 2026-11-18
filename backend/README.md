@@ -89,13 +89,10 @@ use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
 - `src/email/templates.ts` + `sesClient.ts` build and send the invitation
   and captain/vice-captain-notification emails via SESv2, HTML-escaping
   all player-controlled text (name, comments).
-- `src/notifications.ts`'s `sendInvitations` is now real: lists active
-  team members, skips anyone who already has an invitation record for
-  the match (coarse per-player idempotency - see the plan doc's Phase 3
-  note on the fuller Phase 4 design), and paces sends at ~1/sec to match
+- `src/notifications.ts`'s `sendInvitations` is real: lists active team
+  members, skips anyone who already has an invitation record for the
+  match (per-player idempotency), and paces sends at ~1/sec to match
   this account's confirmed SES sandbox rate limit.
-  `sendReminders`/`closeAndSendSummary` remain log-only stubs - that's
-  explicit Phase 4 scope.
 - `src/handlers/validateAvailability.ts` and `submitAvailability.ts` are
   now real, replacing the Phase 1 stubs: token hash lookup, expiry/
   deadline enforcement (`401`/`410`), identity always derived from the
@@ -107,8 +104,32 @@ use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
   `seed-data/team-members.example.json` (fake data) is committed - the
   real file is gitignored.
 
-**Not yet done:** an actual live send/respond test against a deployed
-stack. Everything above is code-complete and unit-tested, but running
-`sam deploy` provisions real AWS resources and, once a match is due,
-sends a real email - do that deliberately, not as a side effect of a
-docs/code update.
+Live-verified: deployed to the `ceylon-sharks-availability` stack and
+tested end-to-end against a real upcoming match - invitation sent,
+validate/submit called with the real token, response persisted then
+updated, captain/vice-captain notifications received.
+
+**Phase 4 — reminders and final summary:**
+
+- `src/notifications.ts`'s `sendReminders` is real: reminds only
+  players who are still `NOT_SUBMITTED` and haven't already been
+  reminded (`reminderSentAt` is the per-player delivery marker, same
+  pattern as `sendInvitations`'s invitation-record check). Since only
+  the token *hash* is ever persisted, a reminder cannot resend the
+  original link - it mints a fresh token and overwrites the stored
+  hash (explicitly allowed by the plan doc), so the original invitation
+  link stops working once a reminder goes out.
+- `closeAndSendSummary` is real: groups every `MatchAvailability` row
+  for the match by availability and emails one consolidated summary to
+  the captain and vice-captain, generated fresh from DynamoDB on every
+  call (including a retry) rather than cached.
+- Retry/duplicate-invocation safety is unit-tested at both the
+  action level (existing `FAILED`-is-retryable mechanism from Phase 2)
+  and the per-recipient level (a retried `sendReminders` only targets
+  players who didn't already get one).
+
+**Not yet done:** a live test of the reminder/closure paths
+specifically against the deployed stack (Phase 3's live test only
+exercised the invitation catch-up path). That needs either a real match
+reaching its 3-day/2-day point or a deliberate manual trigger - do that
+on purpose, not as a side effect of a docs/code update.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { captainNotificationEmail, invitationEmail } from '../src/email/templates.js';
+import { captainNotificationEmail, finalSummaryEmail, invitationEmail, reminderEmail } from '../src/email/templates.js';
 
 describe('invitationEmail', () => {
   const params = {
@@ -62,5 +62,59 @@ describe('captainNotificationEmail', () => {
     });
     expect(html).not.toContain('<img src=x');
     expect(html).toContain('&lt;img');
+  });
+});
+
+describe('reminderEmail', () => {
+  const params = {
+    playerName: 'Sam Rivera',
+    opponent: 'Cool Stars',
+    matchDate: '2026-11-28',
+    competition: 'League',
+    deadline: '26 Nov 2026 23:59',
+    magicLink: 'https://www.ceylonsharks.com/availability/respond?token=fresh-token',
+  };
+
+  it('includes the magic link and reads as a reminder, not a first invitation', () => {
+    const { subject, text } = reminderEmail(params);
+    expect(subject.toLowerCase()).toContain('reminder');
+    expect(text).toContain(params.magicLink);
+  });
+
+  it('escapes HTML-unsafe player names', () => {
+    const { html } = reminderEmail({ ...params, playerName: '<b>x</b>' });
+    expect(html).not.toContain('<b>x</b>');
+  });
+});
+
+describe('finalSummaryEmail', () => {
+  it('lists counts and names per availability group', () => {
+    const { text } = finalSummaryEmail({
+      opponent: 'Cool Stars',
+      matchDate: '2026-11-28',
+      totalInvited: 4,
+      available: ['Sam Rivera', 'Alex Morgan'],
+      unavailable: ['Jordan Lee'],
+      maybe: [],
+      noResponse: ['Taylor Kim'],
+    });
+    expect(text).toContain('Available (2): Sam Rivera, Alex Morgan');
+    expect(text).toContain('Unavailable (1): Jordan Lee');
+    expect(text).toContain('Maybe (0): none');
+    expect(text).toContain('No response (1): Taylor Kim');
+  });
+
+  it('escapes player names in the HTML body', () => {
+    const { html } = finalSummaryEmail({
+      opponent: 'Cool Stars',
+      matchDate: '2026-11-28',
+      totalInvited: 1,
+      available: ['<script>x</script>'],
+      unavailable: [],
+      maybe: [],
+      noResponse: [],
+    });
+    expect(html).not.toContain('<script>x</script>');
+    expect(html).toContain('&lt;script&gt;');
   });
 });

@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createInvitation, findByTokenHash, getInvitation, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
+import { createInvitation, findByTokenHash, getInvitation, listByMatch, markReminderSent, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
 
 const TABLE = 'MatchAvailability';
 const ddbMock = mockClient(DynamoDBDocumentClient);
@@ -78,5 +78,42 @@ describe('updateAvailability', () => {
     await updateAvailability(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1', 'player@example.com', 'UNAVAILABLE', undefined, '2026-11-20T00:00:00.000Z');
     const call = ddbMock.commandCalls(UpdateCommand)[0].args[0].input;
     expect(call.ExpressionAttributeValues?.[':comments']).toBe('');
+  });
+});
+
+describe('listByMatch', () => {
+  it('queries by matchId and returns all rows', async () => {
+    ddbMock.on(QueryCommand).resolves({ Items: [RECORD, { ...RECORD, playerEmail: 'other@example.com' }] });
+    const records = await listByMatch(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1');
+    expect(records).toHaveLength(2);
+    const call = ddbMock.commandCalls(QueryCommand)[0].args[0].input;
+    expect(call.KeyConditionExpression).toBe('matchId = :matchId');
+    expect(call.IndexName).toBeUndefined();
+  });
+
+  it('pages through LastEvaluatedKey', async () => {
+    ddbMock
+      .on(QueryCommand)
+      .resolvesOnce({ Items: [RECORD], LastEvaluatedKey: { matchId: 'match-1', playerEmail: 'player@example.com' } })
+      .resolvesOnce({ Items: [{ ...RECORD, playerEmail: 'other@example.com' }] });
+    const records = await listByMatch(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1');
+    expect(records).toHaveLength(2);
+  });
+
+  it('returns an empty array when there are no rows', async () => {
+    ddbMock.on(QueryCommand).resolves({});
+    const records = await listByMatch(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1');
+    expect(records).toEqual([]);
+  });
+});
+
+describe('markReminderSent', () => {
+  it('overwrites tokenHash and stamps reminderSentAt', async () => {
+    ddbMock.on(UpdateCommand).resolves({});
+    await markReminderSent(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1', 'player@example.com', 'new-hash', '2026-11-20T00:00:00.000Z');
+    const call = ddbMock.commandCalls(UpdateCommand)[0].args[0].input;
+    expect(call.Key).toEqual({ matchId: 'match-1', playerEmail: 'player@example.com' });
+    expect(call.ExpressionAttributeValues?.[':tokenHash']).toBe('new-hash');
+    expect(call.ExpressionAttributeValues?.[':reminderSentAt']).toBe('2026-11-20T00:00:00.000Z');
   });
 });

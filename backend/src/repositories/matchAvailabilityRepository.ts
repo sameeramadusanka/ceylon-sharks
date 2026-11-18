@@ -49,6 +49,51 @@ export async function findByTokenHash(docClient: DynamoDBDocumentClient, tableNa
   return (result.Items?.[0] as InvitationRecord | undefined) ?? null;
 }
 
+/** All MatchAvailability rows for a match - used by reminders and the closure summary. */
+export async function listByMatch(docClient: DynamoDBDocumentClient, tableName: string, matchId: string): Promise<InvitationRecord[]> {
+  const records: InvitationRecord[] = [];
+  let exclusiveStartKey: Record<string, unknown> | undefined;
+
+  do {
+    const result = await docClient.send(
+      new QueryCommand({
+        TableName: tableName,
+        KeyConditionExpression: 'matchId = :matchId',
+        ExpressionAttributeValues: { ':matchId': matchId },
+        ExclusiveStartKey: exclusiveStartKey,
+      }),
+    );
+    records.push(...((result.Items as InvitationRecord[] | undefined) ?? []));
+    exclusiveStartKey = result.LastEvaluatedKey;
+  } while (exclusiveStartKey);
+
+  return records;
+}
+
+/**
+ * Only the token hash is ever persisted (section 7), so a reminder cannot
+ * resend the original link - it must mint a fresh token and overwrite the
+ * stored hash, which the plan doc explicitly allows ("If a new token is
+ * generated, invalidate the previous token hash").
+ */
+export async function markReminderSent(
+  docClient: DynamoDBDocumentClient,
+  tableName: string,
+  matchId: string,
+  playerEmail: string,
+  tokenHash: string,
+  reminderSentAt: string,
+): Promise<void> {
+  await docClient.send(
+    new UpdateCommand({
+      TableName: tableName,
+      Key: { matchId, playerEmail },
+      UpdateExpression: 'SET tokenHash = :tokenHash, reminderSentAt = :reminderSentAt',
+      ExpressionAttributeValues: { ':tokenHash': tokenHash, ':reminderSentAt': reminderSentAt },
+    }),
+  );
+}
+
 /** Preserves the original submittedAt on repeat updates (section 8.2 step 7 of the plan doc). */
 export async function updateAvailability(
   docClient: DynamoDBDocumentClient,
