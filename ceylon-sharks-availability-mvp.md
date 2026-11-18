@@ -1287,8 +1287,15 @@ phase) - just not both at once pre-deploy, by design.
 -   [x] Configure GitHub Actions OIDC for backend deployment. IAM OIDC
     provider for `token.actions.githubusercontent.com` plus a deploy
     role (`ceylon-sharks-availability-deploy`) trusted only for
-    `repo:sameeramadusanka/ceylon-sharks:*` (any ref in this repo, no
-    other repo can assume it), with a permissions policy scoped by
+    `repo:sameeramadusanka*/ceylon-sharks*:*` (any ref in this repo, no
+    other repo can assume it - the wildcards after the owner/repo name
+    are required because GitHub's `sub` claim includes immutable
+    numeric IDs, e.g. `repo:sameeramadusanka@30517747/ceylon-sharks@1359877297:ref:...`,
+    not just `repo:sameeramadusanka/ceylon-sharks:...`; the first deploy
+    attempt failed with `Not authorized to perform
+    sts:AssumeRoleWithWebIdentity` until this was corrected - see
+    `backend/docs/operations.md`'s troubleshooting table), with a
+    permissions policy scoped by
     resource-name prefix per service (Lambda/DynamoDB/Logs/Scheduler/
     CloudFormation stack/SAM's S3 bucket) plus an `iam:PassRole`
     condition restricting which service the passed role can be used by.
