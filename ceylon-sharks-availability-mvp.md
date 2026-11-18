@@ -981,14 +981,28 @@ or creating AWS resources before understanding the existing repository.
     decided — see section 5 above. Competition is not a field in the
     source data; `matchType`/`series`/`division` are the closest
     equivalents and should be mapped accordingly.)
--   [ ] Identify the public URL from which the backend can fetch the
-    match data. (Candidate: raw GitHub content URL for
-    `public/upcoming_schedules/*.json` on the `main` branch, or the
-    published `ceylonsharks.com` site — needs a final decision.)
--   [ ] Identify the existing website origin and desired API domain.
-    (Website origin is `https://www.ceylonsharks.com`; API domain not
-    yet chosen.)
--   [ ] Confirm the AWS region and SES production access.
+-   [x] Identify the public URL from which the backend can fetch the
+    match data. **Decision: raw GitHub content**, e.g.
+    `https://raw.githubusercontent.com/sameeramadusanka/ceylon-sharks/main/public/upcoming_schedules/<file>.json`.
+    The repository is confirmed public (verified by fetching
+    `package.json` via raw.githubusercontent.com with no auth), so this
+    requires no GitHub token/secret. Always read from `main` so the
+    backend sees the same data the live site was built from.
+-   [x] Identify the existing website origin and desired API domain.
+    Website origin is `https://www.ceylonsharks.com`. **Decision: use
+    the default API Gateway invoke URL for MVP** (no custom domain yet);
+    a custom `api.ceylonsharks.com`-style domain can be added later
+    without changing the Lambda/API code, only the
+    `PUBLIC_AVAILABILITY_API_BASE_URL` value and a Route 53/ACM mapping.
+-   [x] Confirm the AWS region and SES production access. **Decision:
+    `ap-southeast-1`.** SES is currently in **sandbox mode** in this
+    account/region — only verified email addresses can send/receive
+    until production access is requested. This is acceptable for
+    Phase 1-5 development/testing (verify captain, vice-captain, and a
+    few test player addresses individually), but requesting SES
+    production access in `ap-southeast-1` is a hard prerequisite for
+    Phase 6 (sending real invitations to the full squad) and should be
+    requested early since AWS review can take some time.
 -   [x] Record the existing frontend build and deployment commands.
     (See `CLAUDE.md`.)
 -   [x] Write a short mapping document before implementing the adapter.
