@@ -56,7 +56,7 @@ Parameters:
 
 Globals:
   Function:
-    Runtime: nodejs20.x
+    Runtime: nodejs24.x
     Architectures: [arm64]
     Timeout: 10
     MemorySize: 256
@@ -178,7 +178,6 @@ Resources:
   # ---------------------------------------------------------------------
   HealthFunction:
     Type: AWS::Serverless::Function
-    DependsOn: HealthLogGroup
     Properties:
       FunctionName: !Sub ${AWS::StackName}-health
       CodeUri: ../backend
@@ -200,7 +199,6 @@ Resources:
 
   ValidateAvailabilityFunction:
     Type: AWS::Serverless::Function
-    DependsOn: ValidateLogGroup
     Properties:
       FunctionName: !Sub ${AWS::StackName}-validate
       CodeUri: ../backend
@@ -225,7 +223,6 @@ Resources:
 
   SubmitAvailabilityFunction:
     Type: AWS::Serverless::Function
-    DependsOn: SubmitLogGroup
     Properties:
       FunctionName: !Sub ${AWS::StackName}-submit
       CodeUri: ../backend
@@ -254,7 +251,6 @@ Resources:
 
   CoordinatorFunction:
     Type: AWS::Serverless::Function
-    DependsOn: CoordinatorLogGroup
     Properties:
       FunctionName: !Sub ${AWS::StackName}-coordinator
       CodeUri: ../backend
