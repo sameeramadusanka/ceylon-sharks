@@ -110,6 +110,8 @@ const upcomingScheduleMatches = filesIn(join(publicDirectory, 'upcoming_schedule
 
 const title = `${team.name} | ${site.seo.titleSuffix}`;
 const description = site.seo.descriptionTemplate.replace('{team}', team.name);
+const faviconUrl = publicAsset('/brand/favicon.png');
+const openGraphImageUrl = new URL(publicAsset('/brand/Open-graph-image.png'), import.meta.env.SITE).toString();
 ---
 
 <!doctype html>
@@ -120,6 +122,19 @@ const description = site.seo.descriptionTemplate.replace('{team}', team.name);
     <meta name="description" content={description} />
     <meta name="theme-color" content="#111314" />
     <link rel="canonical" href={site.seo.canonicalUrl} />
+    <link rel="icon" type="image/png" href={faviconUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={site.seo.canonicalUrl} />
+    <meta property="og:image" content={openGraphImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta property="og:image:alt" content={`${team.name} logo`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={openGraphImageUrl} />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
