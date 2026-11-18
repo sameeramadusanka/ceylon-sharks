@@ -60,6 +60,12 @@ jobs:
       - name: Setup AWS SAM CLI
         uses: aws-actions/setup-sam@v2
 
+      - name: Install esbuild for SAM's esbuild builder
+        # SAM's NodejsNpmEsbuildBuilder runs its own staged install for each
+        # function that omits devDependencies, so backend's own esbuild
+        # devDependency isn't visible to it - it needs esbuild on PATH.
+        run: npm install -g esbuild
+
       - name: SAM build
         working-directory: infrastructure
         run: sam build
