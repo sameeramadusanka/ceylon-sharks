@@ -1,4 +1,4 @@
-import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, ScanCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 
 export type Availability = 'NOT_SUBMITTED' | 'AVAILABLE' | 'UNAVAILABLE' | 'MAYBE';
 
@@ -66,6 +66,24 @@ export async function listByMatch(docClient: DynamoDBDocumentClient, tableName: 
         ExclusiveStartKey: exclusiveStartKey,
       }),
     );
+    records.push(...((result.Items as InvitationRecord[] | undefined) ?? []));
+    exclusiveStartKey = result.LastEvaluatedKey;
+  } while (exclusiveStartKey);
+
+  return records;
+}
+
+/**
+ * Every row across every match - used by the admin panel to build the match
+ * list (small table, no GSI by design per the plan doc, so a full scan is
+ * the simplest option; see ceylon-sharks-admin-panel-idea.md).
+ */
+export async function scanAllInvitations(docClient: DynamoDBDocumentClient, tableName: string): Promise<InvitationRecord[]> {
+  const records: InvitationRecord[] = [];
+  let exclusiveStartKey: Record<string, unknown> | undefined;
+
+  do {
+    const result = await docClient.send(new ScanCommand({ TableName: tableName, ExclusiveStartKey: exclusiveStartKey }));
     records.push(...((result.Items as InvitationRecord[] | undefined) ?? []));
     exclusiveStartKey = result.LastEvaluatedKey;
   } while (exclusiveStartKey);
