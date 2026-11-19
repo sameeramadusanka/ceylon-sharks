@@ -13,6 +13,22 @@ describe('logoUrlFor', () => {
   });
 });
 
+describe('email shell (shared header/footer across every template)', () => {
+  it('shows the team name next to the logo, and a copyright line in the footer', () => {
+    const { html } = invitationEmail({
+      playerName: 'Sam Rivera',
+      opponent: 'Cool Stars',
+      matchDate: '2026-11-28',
+      competition: 'League',
+      deadline: '26 Nov 2026 23:59',
+      magicLink: 'https://ceylonsharks.com/availability/respond?token=abc123',
+      logoUrl: LOGO_URL,
+    });
+    expect(html).toContain('Ceylon Sharks');
+    expect(html).toMatch(/&copy;\s*\d{4}\s*Ceylon Sharks/);
+  });
+});
+
 describe('invitationEmail', () => {
   const params = {
     playerName: 'Sam Rivera',
