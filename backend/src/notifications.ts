@@ -61,6 +61,8 @@ export async function sendInvitations(match: Match): Promise<void> {
         opponent: match.opponent,
         competition: match.competition,
         matchDate: match.matchDate,
+        time: match.time,
+        ground: match.ground,
       });
 
       logger.info('invitation sent', { matchId: match.matchId, actionType: 'INVITATION', recipient: member.email });

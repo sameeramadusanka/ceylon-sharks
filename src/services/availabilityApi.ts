@@ -10,6 +10,9 @@ export interface MatchSummary {
   opponent: string;
   competition: string;
   matchDate: string;
+  /** Absent on invitations created before these fields were added. */
+  time?: string;
+  ground?: string;
 }
 
 export interface ValidateResult {

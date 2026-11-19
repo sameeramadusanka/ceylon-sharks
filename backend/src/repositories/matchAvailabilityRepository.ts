@@ -20,6 +20,9 @@ export interface InvitationRecord {
   opponent: string;
   competition: string;
   matchDate: string;
+  /** Optional: absent on records created before these fields were added. */
+  time?: string;
+  ground?: string;
 }
 
 export async function createInvitation(docClient: DynamoDBDocumentClient, tableName: string, record: InvitationRecord): Promise<void> {

@@ -104,6 +104,13 @@ describe('sendInvitations', () => {
     expect(createInvitationMock).toHaveBeenCalledTimes(2);
   });
 
+  it('carries the match time and ground through into the stored invitation record', async () => {
+    await invoke();
+    const storedRecord = createInvitationMock.mock.calls[0][2];
+    expect(storedRecord.time).toBe(MATCH.time);
+    expect(storedRecord.ground).toBe(MATCH.ground);
+  });
+
   it('skips a member who already has an invitation record for this match', async () => {
     getInvitationMock.mockImplementation(async (_doc: unknown, _table: unknown, _matchId: unknown, email: string) =>
       email === 'a@example.com' ? { matchId: 'match-1' } : null,

@@ -41,6 +41,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         opponent: record.opponent,
         competition: record.competition,
         matchDate: record.matchDate,
+        time: record.time,
+        ground: record.ground,
       },
       currentAvailability: record.availability,
       deadline: new Date(record.tokenExpiry * 1000).toISOString(),

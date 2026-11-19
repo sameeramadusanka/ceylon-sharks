@@ -32,12 +32,25 @@
   padding: 36px 28px;
 }
 
+.av-brand-row {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin: 0 0 24px;
+}
+
+.av-logo {
+  display: block;
+  height: 28px;
+  object-fit: contain;
+  width: 28px;
+}
+
 .av-brand {
   color: var(--av-amber);
   font-family: var(--av-mono);
   font-size: 10px;
   letter-spacing: 0.14em;
-  margin: 0 0 24px;
   text-transform: uppercase;
 }
 
