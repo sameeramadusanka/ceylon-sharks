@@ -11,7 +11,7 @@ import { hashToken } from '../token.js';
 const SubmitRequestSchema = z.object({
   token: z.string().min(1),
   availability: z.enum(['AVAILABLE', 'UNAVAILABLE', 'MAYBE']),
-  comments: z.string().max(500).optional(),
+  comments: z.string().max(60).optional(),
 });
 
 function jsonResponse(statusCode: number, body: unknown): APIGatewayProxyStructuredResultV2 {

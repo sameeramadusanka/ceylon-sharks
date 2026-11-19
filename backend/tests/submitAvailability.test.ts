@@ -87,6 +87,11 @@ describe('submitAvailability handler', () => {
     expect(response.statusCode).toBe(400);
   });
 
+  it('returns 400 when comments exceed 60 characters', async () => {
+    const response = (await handler(fakeEvent({ token: VALID_TOKEN, availability: 'AVAILABLE', comments: 'x'.repeat(61) }), {} as never, () => undefined)) as { statusCode: number };
+    expect(response.statusCode).toBe(400);
+  });
+
   it('returns 401 when the token does not match any record', async () => {
     ddbMock.on(QueryCommand).resolves({ Items: [] });
     const response = (await handler(fakeEvent({ token: 'unknown', availability: 'AVAILABLE' }), {} as never, () => undefined)) as { statusCode: number };
