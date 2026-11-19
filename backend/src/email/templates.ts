@@ -88,8 +88,6 @@ function emailShell(logoUrl: string, bodyHtml: string): string {
         </tr>
         <tr>
           <td style="padding:14px 28px;background:${COLOR_PAPER};border-top:1px solid ${COLOR_LINE};color:${COLOR_MUTED};font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-family:${FONT_STACK};">
-            Ceylon Sharks Cricket Club
-            <br>
             &copy; ${new Date().getFullYear()} Ceylon Sharks
           </td>
         </tr>
