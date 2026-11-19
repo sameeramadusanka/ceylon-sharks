@@ -166,7 +166,7 @@ export default function AvailabilityResponse() {
                 <textarea
                   id="av-comments"
                   rows={3}
-                  maxLength={50}
+                  maxLength={60}
                   value={comments}
                   onChange={(event) => setComments(event.target.value)}
                   disabled={phase === 'submitting'}
