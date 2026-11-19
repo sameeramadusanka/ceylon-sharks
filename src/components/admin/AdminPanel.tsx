@@ -28,6 +28,14 @@ const STATUS_LABELS: Record<AvailabilityStatus, string> = {
 
 const STATUS_ORDER: AvailabilityStatus[] = ['AVAILABLE', 'UNAVAILABLE', 'MAYBE', 'NOT_SUBMITTED'];
 
+// Player table only: Available, Maybe, Unavailable, No response - distinct from STATUS_ORDER above,
+// which drives the count chips and stays in sync with the backend's count object field order.
+const PLAYER_SORT_ORDER: Record<AvailabilityStatus, number> = { AVAILABLE: 0, MAYBE: 1, UNAVAILABLE: 2, NOT_SUBMITTED: 3 };
+
+function sortPlayersByStatus(players: MatchDetail['players']): MatchDetail['players'] {
+  return [...players].sort((a, b) => PLAYER_SORT_ORDER[a.availability] - PLAYER_SORT_ORDER[b.availability] || a.playerName.localeCompare(b.playerName));
+}
+
 function loadStoredSession(): Session | null {
   try {
     const raw = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -312,7 +320,7 @@ export default function AdminPanel() {
                 </tr>
               </thead>
               <tbody>
-                {selectedMatch.players.map((player) => (
+                {sortPlayersByStatus(selectedMatch.players).map((player) => (
                   <tr key={player.playerEmail}>
                     <td>{player.playerName}</td>
                     <td>

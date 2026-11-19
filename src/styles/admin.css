@@ -190,8 +190,10 @@
   background: #0f1011;
   border: 1px solid var(--ad-line);
   border-radius: 4px;
+  color: var(--ad-paper);
   cursor: pointer;
   display: flex;
+  font-family: inherit;
   gap: 16px;
   justify-content: space-between;
   padding: 14px 16px;
