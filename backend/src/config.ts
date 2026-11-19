@@ -2,6 +2,9 @@ export interface AvailabilityConfig {
   teamMembersTable: string;
   matchAvailabilityTable: string;
   scheduledActionsTable: string;
+  adminAllowlistTable: string;
+  adminLoginCodesTable: string;
+  adminSessionsTable: string;
   githubMatchDataBaseUrl: string;
   availabilityFrontendUrl: string;
   sesFromEmail: string;
@@ -18,6 +21,9 @@ const REQUIRED_ENV_KEYS = [
   'TEAM_MEMBERS_TABLE',
   'MATCH_AVAILABILITY_TABLE',
   'SCHEDULED_ACTIONS_TABLE',
+  'ADMIN_ALLOWLIST_TABLE',
+  'ADMIN_LOGIN_CODES_TABLE',
+  'ADMIN_SESSIONS_TABLE',
   'GITHUB_MATCH_DATA_BASE_URL',
   'AVAILABILITY_FRONTEND_URL',
   'SES_FROM_EMAIL',
@@ -48,6 +54,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AvailabilityCo
     teamMembersTable: requireEnv(env, 'TEAM_MEMBERS_TABLE'),
     matchAvailabilityTable: requireEnv(env, 'MATCH_AVAILABILITY_TABLE'),
     scheduledActionsTable: requireEnv(env, 'SCHEDULED_ACTIONS_TABLE'),
+    adminAllowlistTable: requireEnv(env, 'ADMIN_ALLOWLIST_TABLE'),
+    adminLoginCodesTable: requireEnv(env, 'ADMIN_LOGIN_CODES_TABLE'),
+    adminSessionsTable: requireEnv(env, 'ADMIN_SESSIONS_TABLE'),
     githubMatchDataBaseUrl: requireEnv(env, 'GITHUB_MATCH_DATA_BASE_URL'),
     availabilityFrontendUrl: requireEnv(env, 'AVAILABILITY_FRONTEND_URL'),
     sesFromEmail: requireEnv(env, 'SES_FROM_EMAIL'),
