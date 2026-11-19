@@ -7,7 +7,7 @@ import { createDocumentClient } from './repositories/scheduledActionsRepository.
 import { createInvitation, getInvitation, listByMatch, markReminderSent } from './repositories/matchAvailabilityRepository.js';
 import { listActiveMembers } from './repositories/teamMembersRepository.js';
 import { createSesClient, sendEmail } from './email/sesClient.js';
-import { finalSummaryEmail, invitationEmail, reminderEmail } from './email/templates.js';
+import { finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail } from './email/templates.js';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -23,6 +23,7 @@ export async function sendInvitations(match: Match): Promise<void> {
   const deadline = closureDeadline(match.matchDate, config.timeZone, config.closureDaysBefore, config.closureLocalTime);
   const tokenExpiry = Math.floor(deadline.toSeconds());
   const deadlineLabel = deadline.toFormat('dd LLL yyyy HH:mm');
+  const logoUrl = logoUrlFor(config.availabilityFrontendUrl);
 
   const failures: string[] = [];
 
@@ -44,6 +45,7 @@ export async function sendInvitations(match: Match): Promise<void> {
         competition: match.competition,
         deadline: deadlineLabel,
         magicLink,
+        logoUrl,
       });
 
       await sendEmail(sesClient, { from: config.sesFromEmail, to: [member.email], subject, html, text });
@@ -98,6 +100,7 @@ export async function sendReminders(match: Match): Promise<void> {
 
   const deadline = closureDeadline(match.matchDate, config.timeZone, config.closureDaysBefore, config.closureLocalTime);
   const deadlineLabel = deadline.toFormat('dd LLL yyyy HH:mm');
+  const logoUrl = logoUrlFor(config.availabilityFrontendUrl);
 
   const failures: string[] = [];
 
@@ -115,6 +118,7 @@ export async function sendReminders(match: Match): Promise<void> {
         competition: record.competition,
         deadline: deadlineLabel,
         magicLink,
+        logoUrl,
       });
 
       await sendEmail(sesClient, { from: config.sesFromEmail, to: [record.playerEmail], subject, html, text });
@@ -162,6 +166,7 @@ export async function closeAndSendSummary(match: Match): Promise<void> {
     unavailable: byAvailability('UNAVAILABLE'),
     maybe: byAvailability('MAYBE'),
     noResponse: byAvailability('NOT_SUBMITTED'),
+    logoUrl: logoUrlFor(config.availabilityFrontendUrl),
   });
 
   await sendEmail(sesClient, { from: config.sesFromEmail, to: [config.captainEmail, config.viceCaptainEmail], subject, html, text });

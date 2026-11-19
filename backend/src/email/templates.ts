@@ -1,3 +1,18 @@
+// Brand palette matches src/styles/global.css's :root variables on the main site.
+// Email HTML can't rely on CSS custom properties (Outlook etc. don't support var()),
+// so the literal hex values are duplicated here intentionally.
+const COLOR_INK = '#111b4f';
+const COLOR_PAPER = '#f8f9f7';
+const COLOR_AMBER = '#ff5310';
+const COLOR_MUTED = '#657080';
+const COLOR_LINE = '#e3e5ea';
+const FONT_STACK = "Arial, Helvetica, 'Segoe UI', sans-serif";
+
+/** The logo must be an absolute, publicly reachable URL - email clients can't load relative paths. */
+export function logoUrlFor(frontendUrl: string): string {
+  return `${frontendUrl.replace(/\/+$/, '')}/brand/ceylon-sharks-logo.png`;
+}
+
 export interface InvitationEmailParams {
   playerName: string;
   opponent: string;
@@ -5,6 +20,7 @@ export interface InvitationEmailParams {
   competition: string;
   deadline: string;
   magicLink: string;
+  logoUrl: string;
 }
 
 export interface FinalSummaryParams {
@@ -15,6 +31,7 @@ export interface FinalSummaryParams {
   unavailable: string[];
   maybe: string[];
   noResponse: string[];
+  logoUrl: string;
 }
 
 export interface CaptainNotificationParams {
@@ -25,6 +42,7 @@ export interface CaptainNotificationParams {
   previousAvailability?: string;
   comments?: string;
   submittedAt: string;
+  logoUrl: string;
 }
 
 export interface EmailBody {
@@ -36,6 +54,49 @@ export interface EmailBody {
 /** Player-supplied free text (name, comments) is rendered here - always escape before interpolating into HTML. */
 function escapeHtml(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/**
+ * Table-based layout with inline styles throughout - email clients (especially
+ * Outlook desktop) don't reliably support flexbox/grid/CSS custom properties/
+ * <style> blocks, so this intentionally avoids all of them.
+ */
+function emailShell(logoUrl: string, bodyHtml: string): string {
+  return `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLOR_PAPER};padding:32px 16px;font-family:${FONT_STACK};">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid ${COLOR_LINE};border-radius:8px;overflow:hidden;">
+        <tr>
+          <td style="background:${COLOR_INK};padding:20px 28px;">
+            <img src="${logoUrl}" width="36" height="36" alt="Ceylon Sharks" style="display:block;border:0;border-radius:50%;">
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px;color:${COLOR_INK};font-size:15px;line-height:1.6;">
+            ${bodyHtml}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 28px;background:${COLOR_PAPER};border-top:1px solid ${COLOR_LINE};color:${COLOR_MUTED};font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-family:${FONT_STACK};">
+            Ceylon Sharks Cricket Club
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`.trim();
+}
+
+function ctaButton(href: string, label: string): string {
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0;">
+      <tr>
+        <td style="background:${COLOR_AMBER};border-radius:6px;">
+          <a href="${href}" style="display:inline-block;padding:13px 26px;color:#ffffff;font-weight:bold;font-size:14px;text-decoration:none;font-family:${FONT_STACK};">${label}</a>
+        </td>
+      </tr>
+    </table>`;
 }
 
 export function invitationEmail(params: InvitationEmailParams): EmailBody {
@@ -53,15 +114,14 @@ export function invitationEmail(params: InvitationEmailParams): EmailBody {
     '- Ceylon Sharks',
   ].join('\n');
 
-  const html = `
-    <p>Hi ${escapeHtml(params.playerName)},</p>
-    <p>Please confirm your availability for the upcoming match against <strong>${escapeHtml(params.opponent)}</strong> (${escapeHtml(params.competition)}) on ${escapeHtml(params.matchDate)}.</p>
-    <p><a href="${params.magicLink}">Respond to this invitation</a></p>
-    <p>Please respond by ${escapeHtml(params.deadline)}. You can revisit this link anytime before the deadline to update your response.</p>
-    <p>- Ceylon Sharks</p>
-  `.trim();
+  const body = `
+    <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(params.playerName)}</strong>,</p>
+    <p style="margin:0 0 16px;">Please confirm your availability for the upcoming match against <strong>${escapeHtml(params.opponent)}</strong> (${escapeHtml(params.competition)}) on ${escapeHtml(params.matchDate)}.</p>
+    ${ctaButton(params.magicLink, 'Respond to this invitation')}
+    <p style="margin:16px 0 0;color:${COLOR_MUTED};font-size:13px;">Please respond by <strong>${escapeHtml(params.deadline)}</strong>. You can revisit this link anytime before the deadline to update your response.</p>
+  `;
 
-  return { subject, text, html };
+  return { subject, text, html: emailShell(params.logoUrl, body) };
 }
 
 export function reminderEmail(params: InvitationEmailParams): EmailBody {
@@ -79,23 +139,27 @@ export function reminderEmail(params: InvitationEmailParams): EmailBody {
     '- Ceylon Sharks',
   ].join('\n');
 
-  const html = `
-    <p>Hi ${escapeHtml(params.playerName)},</p>
-    <p>This is a reminder to confirm your availability for the upcoming match against <strong>${escapeHtml(params.opponent)}</strong> (${escapeHtml(params.competition)}) on ${escapeHtml(params.matchDate)}. We haven't heard from you yet.</p>
-    <p><a href="${params.magicLink}">Respond to this invitation</a></p>
-    <p>Please respond by ${escapeHtml(params.deadline)}. You can revisit this link anytime before the deadline to update your response.</p>
-    <p>- Ceylon Sharks</p>
-  `.trim();
+  const body = `
+    <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(params.playerName)}</strong>,</p>
+    <p style="margin:0 0 16px;">This is a reminder to confirm your availability for the upcoming match against <strong>${escapeHtml(params.opponent)}</strong> (${escapeHtml(params.competition)}) on ${escapeHtml(params.matchDate)}. We haven't heard from you yet.</p>
+    ${ctaButton(params.magicLink, 'Respond to this invitation')}
+    <p style="margin:16px 0 0;color:${COLOR_MUTED};font-size:13px;">Please respond by <strong>${escapeHtml(params.deadline)}</strong>. You can revisit this link anytime before the deadline to update your response.</p>
+  `;
 
-  return { subject, text, html };
+  return { subject, text, html: emailShell(params.logoUrl, body) };
 }
 
 export function finalSummaryEmail(params: FinalSummaryParams): EmailBody {
   const subject = `Ceylon Sharks availability summary – vs ${params.opponent} (${params.matchDate})`;
 
   const textSection = (label: string, names: string[]) => `${label} (${names.length}): ${names.length ? names.join(', ') : 'none'}`;
-  const htmlSection = (label: string, names: string[]) =>
-    `<p><strong>${label} (${names.length}):</strong> ${names.length ? names.map(escapeHtml).join(', ') : 'none'}</p>`;
+  const htmlSection = (label: string, names: string[]) => `
+    <tr>
+      <td style="padding:10px 0;border-top:1px solid ${COLOR_LINE};">
+        <span style="display:inline-block;min-width:110px;color:${COLOR_INK};font-weight:bold;">${label} (${names.length})</span>
+        <span style="color:${COLOR_MUTED};">${names.length ? names.map(escapeHtml).join(', ') : 'none'}</span>
+      </td>
+    </tr>`;
 
   const text = [
     `Availability summary for the match vs ${params.opponent} on ${params.matchDate}.`,
@@ -107,16 +171,18 @@ export function finalSummaryEmail(params: FinalSummaryParams): EmailBody {
     textSection('No response', params.noResponse),
   ].join('\n');
 
-  const html = `
-    <p>Availability summary for the match vs ${escapeHtml(params.opponent)} on ${escapeHtml(params.matchDate)}.</p>
-    <p>Total invited: ${params.totalInvited}</p>
-    ${htmlSection('Available', params.available)}
-    ${htmlSection('Unavailable', params.unavailable)}
-    ${htmlSection('Maybe', params.maybe)}
-    ${htmlSection('No response', params.noResponse)}
-  `.trim();
+  const body = `
+    <p style="margin:0 0 4px;">Availability summary for the match vs <strong>${escapeHtml(params.opponent)}</strong> on ${escapeHtml(params.matchDate)}.</p>
+    <p style="margin:0 0 16px;color:${COLOR_MUTED};font-size:13px;">Total invited: ${params.totalInvited}</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+      ${htmlSection('Available', params.available)}
+      ${htmlSection('Unavailable', params.unavailable)}
+      ${htmlSection('Maybe', params.maybe)}
+      ${htmlSection('No response', params.noResponse)}
+    </table>
+  `;
 
-  return { subject, text, html };
+  return { subject, text, html: emailShell(params.logoUrl, body) };
 }
 
 export function captainNotificationEmail(params: CaptainNotificationParams): EmailBody {
@@ -131,11 +197,11 @@ export function captainNotificationEmail(params: CaptainNotificationParams): Ema
     .filter((line): line is string => line !== null)
     .join('\n');
 
-  const html = `
-    <p><strong>${escapeHtml(params.playerName)}</strong> responded <strong>${escapeHtml(params.newAvailability)}</strong>${escapeHtml(changeSuffix)} for the match vs ${escapeHtml(params.opponent)} on ${escapeHtml(params.matchDate)}.</p>
-    ${params.comments ? `<p>Comments: ${escapeHtml(params.comments)}</p>` : ''}
-    <p>Submitted at: ${escapeHtml(params.submittedAt)}</p>
-  `.trim();
+  const body = `
+    <p style="margin:0 0 16px;"><strong>${escapeHtml(params.playerName)}</strong> responded <strong style="color:${COLOR_AMBER};">${escapeHtml(params.newAvailability)}</strong>${escapeHtml(changeSuffix)} for the match vs <strong>${escapeHtml(params.opponent)}</strong> on ${escapeHtml(params.matchDate)}.</p>
+    ${params.comments ? `<p style="margin:0 0 16px;background:${COLOR_PAPER};border-radius:6px;padding:12px 14px;">${escapeHtml(params.comments)}</p>` : ''}
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;">Submitted at: ${escapeHtml(params.submittedAt)}</p>
+  `;
 
-  return { subject, text, html };
+  return { subject, text, html: emailShell(params.logoUrl, body) };
 }
