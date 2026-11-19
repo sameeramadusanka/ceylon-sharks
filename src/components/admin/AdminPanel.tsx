@@ -10,7 +10,9 @@ import {
   type MatchListItem,
 } from '../../services/adminApi';
 
-type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'loading-detail' | 'detail' | 'error';
+type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
+
+const REDIRECT_SECONDS = 5;
 
 interface Session {
   token: string;
@@ -64,6 +66,22 @@ export default function AdminPanel() {
   const [errorMessage, setErrorMessage] = useState('');
   const [matches, setMatches] = useState<MatchListItem[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<MatchDetail | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState(REDIRECT_SECONDS);
+
+  useEffect(() => {
+    if (phase !== 'signed-out') return;
+    setRedirectCountdown(REDIRECT_SECONDS);
+    const interval = setInterval(() => {
+      setRedirectCountdown((seconds) => {
+        if (seconds <= 1) {
+          window.location.href = import.meta.env.BASE_URL || '/';
+          return 0;
+        }
+        return seconds - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [phase]);
 
   async function loadMatches(activeSession: Session) {
     setPhase('loading-matches');
@@ -163,7 +181,7 @@ export default function AdminPanel() {
     setSelectedMatch(null);
     setInfoMessage('');
     setErrorMessage('');
-    setPhase('email');
+    setPhase('signed-out');
   }
 
   const isSignedIn = session !== null;
@@ -182,6 +200,19 @@ export default function AdminPanel() {
             </button>
           )}
         </div>
+
+        {phase === 'signed-out' && (
+          <>
+            <h1 className="ad-title">Signed out</h1>
+            <p className="ad-subtitle">You've been signed out.</p>
+            <p className="ad-status" role="status">
+              Redirecting to the homepage in {redirectCountdown}s…
+            </p>
+            <button type="button" className="ad-link-button" onClick={() => setPhase('email')}>
+              Sign in again
+            </button>
+          </>
+        )}
 
         {phase === 'email' && (
           <>
