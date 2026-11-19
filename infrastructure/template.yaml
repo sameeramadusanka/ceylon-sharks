@@ -201,7 +201,7 @@ Resources:
         AllowOrigins:
           - !Ref AvailabilityFrontendUrl
         AllowMethods: [GET, POST, OPTIONS]
-        AllowHeaders: [content-type]
+        AllowHeaders: [content-type, authorization]
 
   # ---------------------------------------------------------------------
   # Log groups (created first so Lambda's default retention never applies)
@@ -228,6 +228,30 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-coordinator
+      RetentionInDays: 30
+
+  AdminLoginRequestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-login-request
+      RetentionInDays: 30
+
+  AdminLoginVerifyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-login-verify
+      RetentionInDays: 30
+
+  AdminMatchesLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-matches
+      RetentionInDays: 30
+
+  AdminMatchDetailLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-match-detail
       RetentionInDays: 30
 
   # ---------------------------------------------------------------------
@@ -344,6 +368,117 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/coordinator.ts]
+        Target: es2022
+
+  AdminLoginRequestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-admin-login-request
+      CodeUri: ../backend
+      Handler: src/handlers/requestAdminLogin.handler
+      LoggingConfig:
+        LogGroup: !Ref AdminLoginRequestLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminAllowlistTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AdminLoginCodesTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/login/request
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/requestAdminLogin.ts]
+        Target: es2022
+
+  AdminLoginVerifyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-admin-login-verify
+      CodeUri: ../backend
+      Handler: src/handlers/verifyAdminLogin.handler
+      LoggingConfig:
+        LogGroup: !Ref AdminLoginVerifyLogGroup
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AdminLoginCodesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AdminSessionsTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/login/verify
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/verifyAdminLogin.ts]
+        Target: es2022
+
+  AdminMatchesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-admin-matches
+      CodeUri: ../backend
+      Handler: src/handlers/adminMatches.handler
+      LoggingConfig:
+        LogGroup: !Ref AdminMatchesLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MatchAvailabilityTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/matches
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/adminMatches.ts]
+        Target: es2022
+
+  AdminMatchDetailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-admin-match-detail
+      CodeUri: ../backend
+      Handler: src/handlers/adminMatchDetail.handler
+      LoggingConfig:
+        LogGroup: !Ref AdminMatchDetailLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MatchAvailabilityTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/matches/{matchId}
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/adminMatchDetail.ts]
         Target: es2022
 
 Outputs:

@@ -1,7 +1,7 @@
-import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, ScanCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createInvitation, findByTokenHash, getInvitation, listByMatch, markReminderSent, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
+import { createInvitation, findByTokenHash, getInvitation, listByMatch, markReminderSent, scanAllInvitations, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
 
 const TABLE = 'MatchAvailability';
 const ddbMock = mockClient(DynamoDBDocumentClient);
@@ -103,6 +103,29 @@ describe('listByMatch', () => {
   it('returns an empty array when there are no rows', async () => {
     ddbMock.on(QueryCommand).resolves({});
     const records = await listByMatch(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1');
+    expect(records).toEqual([]);
+  });
+});
+
+describe('scanAllInvitations', () => {
+  it('scans and returns all rows across every match', async () => {
+    ddbMock.on(ScanCommand).resolves({ Items: [RECORD, { ...RECORD, matchId: 'match-2', playerEmail: 'other@example.com' }] });
+    const records = await scanAllInvitations(ddbMock as unknown as DynamoDBDocumentClient, TABLE);
+    expect(records).toHaveLength(2);
+  });
+
+  it('pages through LastEvaluatedKey', async () => {
+    ddbMock
+      .on(ScanCommand)
+      .resolvesOnce({ Items: [RECORD], LastEvaluatedKey: { matchId: 'match-1', playerEmail: 'player@example.com' } })
+      .resolvesOnce({ Items: [{ ...RECORD, matchId: 'match-2' }] });
+    const records = await scanAllInvitations(ddbMock as unknown as DynamoDBDocumentClient, TABLE);
+    expect(records).toHaveLength(2);
+  });
+
+  it('returns an empty array when the table is empty', async () => {
+    ddbMock.on(ScanCommand).resolves({});
+    const records = await scanAllInvitations(ddbMock as unknown as DynamoDBDocumentClient, TABLE);
     expect(records).toEqual([]);
   });
 });

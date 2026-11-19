@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateToken, hashToken } from '../src/token.js';
+import { generateLoginCode, generateToken, hashToken } from '../src/token.js';
 
 describe('generateToken', () => {
   it('generates a unique raw token each call', () => {
@@ -27,5 +27,14 @@ describe('hashToken', () => {
 
   it('differs for different inputs', () => {
     expect(hashToken('a')).not.toBe(hashToken('b'));
+  });
+});
+
+describe('generateLoginCode', () => {
+  it('always returns a 6-digit numeric string', () => {
+    for (let i = 0; i < 20; i++) {
+      const code = generateLoginCode();
+      expect(code).toMatch(/^\d{6}$/);
+    }
   });
 });
