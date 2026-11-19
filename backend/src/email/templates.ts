@@ -68,8 +68,17 @@ function emailShell(logoUrl: string, bodyHtml: string): string {
     <td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid ${COLOR_LINE};border-radius:8px;overflow:hidden;">
         <tr>
-          <td style="background:${COLOR_INK};padding:20px 28px;">
-            <img src="${logoUrl}" width="36" height="36" alt="Ceylon Sharks" style="display:block;border:0;border-radius:50%;">
+          <td style="background:${COLOR_INK};padding:18px 28px;">
+            <table role="presentation" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding-right:10px;">
+                  <img src="${logoUrl}" width="32" height="32" alt="" style="display:block;border:0;border-radius:50%;">
+                </td>
+                <td style="color:#ffffff;font-size:15px;font-weight:bold;letter-spacing:.04em;font-family:${FONT_STACK};">
+                  Ceylon Sharks
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
         <tr>
@@ -80,6 +89,8 @@ function emailShell(logoUrl: string, bodyHtml: string): string {
         <tr>
           <td style="padding:14px 28px;background:${COLOR_PAPER};border-top:1px solid ${COLOR_LINE};color:${COLOR_MUTED};font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-family:${FONT_STACK};">
             Ceylon Sharks Cricket Club
+            <br>
+            &copy; ${new Date().getFullYear()} Ceylon Sharks
           </td>
         </tr>
       </table>
