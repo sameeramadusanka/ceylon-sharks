@@ -2,7 +2,7 @@ import type { APIGatewayProxyHandlerV2, APIGatewayProxyStructuredResultV2 } from
 import { z } from 'zod';
 import { loadConfig } from '../config.js';
 import { createSesClient, sendEmail } from '../email/sesClient.js';
-import { captainNotificationEmail } from '../email/templates.js';
+import { captainNotificationEmail, logoUrlFor } from '../email/templates.js';
 import { logger } from '../logger.js';
 import { findByTokenHash, updateAvailability } from '../repositories/matchAvailabilityRepository.js';
 import { createDocumentClient } from '../repositories/scheduledActionsRepository.js';
@@ -65,6 +65,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         previousAvailability,
         comments,
         submittedAt: nowIso,
+        logoUrl: logoUrlFor(config.availabilityFrontendUrl),
       });
       await sendEmail(sesClient, { from: config.sesFromEmail, to: [config.captainEmail, config.viceCaptainEmail], subject, html, text });
     } catch (notifyError) {

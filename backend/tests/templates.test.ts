@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { captainNotificationEmail, finalSummaryEmail, invitationEmail, reminderEmail } from '../src/email/templates.js';
+import { captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail } from '../src/email/templates.js';
+
+const LOGO_URL = 'https://ceylonsharks.com/brand/ceylon-sharks-logo.png';
+
+describe('logoUrlFor', () => {
+  it('builds the absolute logo URL from the frontend origin', () => {
+    expect(logoUrlFor('https://ceylonsharks.com')).toBe(LOGO_URL);
+  });
+
+  it('strips a trailing slash from the frontend origin', () => {
+    expect(logoUrlFor('https://ceylonsharks.com/')).toBe(LOGO_URL);
+  });
+});
 
 describe('invitationEmail', () => {
   const params = {
@@ -9,6 +21,7 @@ describe('invitationEmail', () => {
     competition: 'League',
     deadline: '26 Nov 2026 23:59',
     magicLink: 'https://ceylonsharks.com/availability/respond?token=abc123',
+    logoUrl: LOGO_URL,
   };
 
   it('includes the magic link and key match details', () => {
@@ -17,6 +30,12 @@ describe('invitationEmail', () => {
     expect(html).toContain(params.magicLink);
     expect(text).toContain('Cool Stars');
     expect(html).toContain('Cool Stars');
+  });
+
+  it('includes the logo image in the HTML body only', () => {
+    const { text, html } = invitationEmail(params);
+    expect(html).toContain(`src="${LOGO_URL}"`);
+    expect(text).not.toContain(LOGO_URL);
   });
 
   it('escapes HTML-unsafe characters in player-controlled text', () => {
@@ -35,6 +54,7 @@ describe('captainNotificationEmail', () => {
       newAvailability: 'AVAILABLE',
       previousAvailability: 'MAYBE',
       submittedAt: '2026-11-20T00:00:00.000Z',
+      logoUrl: LOGO_URL,
     });
     expect(text).toContain('changed from MAYBE');
   });
@@ -47,6 +67,7 @@ describe('captainNotificationEmail', () => {
       newAvailability: 'AVAILABLE',
       previousAvailability: 'NOT_SUBMITTED',
       submittedAt: '2026-11-20T00:00:00.000Z',
+      logoUrl: LOGO_URL,
     });
     expect(text).not.toContain('changed from');
   });
@@ -59,9 +80,22 @@ describe('captainNotificationEmail', () => {
       newAvailability: 'MAYBE',
       comments: '<img src=x onerror=alert(1)>',
       submittedAt: '2026-11-20T00:00:00.000Z',
+      logoUrl: LOGO_URL,
     });
     expect(html).not.toContain('<img src=x');
     expect(html).toContain('&lt;img');
+  });
+
+  it('includes the logo image', () => {
+    const { html } = captainNotificationEmail({
+      playerName: 'Sam Rivera',
+      opponent: 'Cool Stars',
+      matchDate: '2026-11-28',
+      newAvailability: 'AVAILABLE',
+      submittedAt: '2026-11-20T00:00:00.000Z',
+      logoUrl: LOGO_URL,
+    });
+    expect(html).toContain(`src="${LOGO_URL}"`);
   });
 });
 
@@ -73,6 +107,7 @@ describe('reminderEmail', () => {
     competition: 'League',
     deadline: '26 Nov 2026 23:59',
     magicLink: 'https://ceylonsharks.com/availability/respond?token=fresh-token',
+    logoUrl: LOGO_URL,
   };
 
   it('includes the magic link and reads as a reminder, not a first invitation', () => {
@@ -97,6 +132,7 @@ describe('finalSummaryEmail', () => {
       unavailable: ['Jordan Lee'],
       maybe: [],
       noResponse: ['Taylor Kim'],
+      logoUrl: LOGO_URL,
     });
     expect(text).toContain('Available (2): Sam Rivera, Alex Morgan');
     expect(text).toContain('Unavailable (1): Jordan Lee');
@@ -113,6 +149,7 @@ describe('finalSummaryEmail', () => {
       unavailable: [],
       maybe: [],
       noResponse: [],
+      logoUrl: LOGO_URL,
     });
     expect(html).not.toContain('<script>x</script>');
     expect(html).toContain('&lt;script&gt;');
