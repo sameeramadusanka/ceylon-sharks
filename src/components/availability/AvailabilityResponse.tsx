@@ -12,6 +12,8 @@ type Phase = 'loading' | 'missing-token' | 'error' | 'form' | 'submitting' | 'co
 const CHOICES: Availability[] = ['AVAILABLE', 'UNAVAILABLE', 'MAYBE'];
 const CHOICE_LABELS: Record<Availability, string> = { AVAILABLE: 'Available', UNAVAILABLE: 'Unavailable', MAYBE: 'Maybe' };
 
+const REDIRECT_SECONDS = 5;
+
 function formatDeadline(iso: string): string {
   try {
     // Deadlines are defined and communicated in Asia/Singapore throughout the backend
@@ -30,6 +32,22 @@ export default function AvailabilityResponse() {
   const [selected, setSelected] = useState<Availability | null>(null);
   const [comments, setComments] = useState('');
   const [confirmation, setConfirmation] = useState<{ availability: Availability; updatedAt: string } | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState(REDIRECT_SECONDS);
+
+  useEffect(() => {
+    if (phase !== 'confirmed') return;
+    setRedirectCountdown(REDIRECT_SECONDS);
+    const interval = setInterval(() => {
+      setRedirectCountdown((seconds) => {
+        if (seconds <= 1) {
+          window.location.href = import.meta.env.BASE_URL || '/';
+          return 0;
+        }
+        return seconds - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [phase]);
 
   function runValidate(tokenValue: string) {
     setPhase('loading');
@@ -188,6 +206,9 @@ export default function AvailabilityResponse() {
             <p className="av-confirm-badge">{CHOICE_LABELS[confirmation.availability]}</p>
             <h1 className="av-title">Response recorded</h1>
             <p className="av-subtitle">Thanks - the captain and vice-captain have been notified.</p>
+            <p className="av-status" role="status">
+              Redirecting to the homepage in {redirectCountdown}s…
+            </p>
             <button
               type="button"
               className="av-link-button"
