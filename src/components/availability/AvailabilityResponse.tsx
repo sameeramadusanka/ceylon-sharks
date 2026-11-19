@@ -75,7 +75,10 @@ export default function AvailabilityResponse() {
     return (
       <div className="av-page">
         <div className="av-card">
-          <p className="av-brand">Ceylon Sharks</p>
+          <div className="av-brand-row">
+          <img src="/brand/ceylon-sharks-logo.png" alt="" className="av-logo" />
+          <span className="av-brand">Ceylon Sharks</span>
+        </div>
           <h1 className="av-title">Link incomplete</h1>
           <p className="av-subtitle">This page needs the invitation link from your email - please open it directly rather than typing the address in.</p>
         </div>
@@ -86,7 +89,10 @@ export default function AvailabilityResponse() {
   return (
     <div className="av-page">
       <div className="av-card">
-        <p className="av-brand">Ceylon Sharks</p>
+        <div className="av-brand-row">
+          <img src="/brand/ceylon-sharks-logo.png" alt="" className="av-logo" />
+          <span className="av-brand">Ceylon Sharks</span>
+        </div>
 
         {phase === 'loading' && (
           <>
@@ -123,6 +129,18 @@ export default function AvailabilityResponse() {
               <dd>{data.match.competition}</dd>
               <dt>Match date</dt>
               <dd>{data.match.matchDate}</dd>
+              {data.match.time && (
+                <>
+                  <dt>Time</dt>
+                  <dd>{data.match.time}</dd>
+                </>
+              )}
+              {data.match.ground && (
+                <>
+                  <dt>Ground</dt>
+                  <dd>{data.match.ground}</dd>
+                </>
+              )}
               <dt>Respond by</dt>
               <dd>{formatDeadline(data.deadline)}</dd>
             </dl>

@@ -82,15 +82,19 @@ describe('validateAvailability handler', () => {
         opponent: 'Cool Stars',
         competition: 'League',
         matchDate: '2026-11-28',
+        time: '9:45 AM',
+        ground: 'SCL5',
       }],
     });
 
     const response = (await handler(fakeEvent({ token: rawToken }), {} as never, () => undefined)) as { statusCode: number; body: string };
     expect(response.statusCode).toBe(200);
-    const body = parseBody(response);
+    const body = parseBody(response) as Record<string, unknown> & { match: { time: string; ground: string } };
     expect(body.valid).toBe(true);
     expect(body.playerName).toBe('Sam Rivera');
     expect(body.currentAvailability).toBe('MAYBE');
+    expect(body.match.time).toBe('9:45 AM');
+    expect(body.match.ground).toBe('SCL5');
     expect(JSON.stringify(body)).not.toContain('p@example.com');
     expect(JSON.stringify(body)).not.toContain(rawToken);
   });
