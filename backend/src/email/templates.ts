@@ -45,6 +45,11 @@ export interface CaptainNotificationParams {
   logoUrl: string;
 }
 
+export interface AdminLoginCodeParams {
+  code: string;
+  logoUrl: string;
+}
+
 export interface EmailBody {
   subject: string;
   text: string;
@@ -189,6 +194,26 @@ export function finalSummaryEmail(params: FinalSummaryParams): EmailBody {
       ${htmlSection('Maybe', params.maybe)}
       ${htmlSection('No response', params.noResponse)}
     </table>
+  `;
+
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}
+
+export function adminLoginCodeEmail(params: AdminLoginCodeParams): EmailBody {
+  const subject = 'Ceylon Sharks admin panel – your sign-in code';
+
+  const text = [
+    `Your sign-in code is: ${params.code}`,
+    '',
+    'This code expires in 10 minutes and can only be used once.',
+    '',
+    "If you didn't request this, you can ignore this email.",
+  ].join('\n');
+
+  const body = `
+    <p style="margin:0 0 16px;">Your sign-in code is:</p>
+    <p style="margin:0 0 16px;font-size:28px;font-weight:bold;letter-spacing:.08em;color:${COLOR_INK};">${escapeHtml(params.code)}</p>
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;">This code expires in 10 minutes and can only be used once. If you didn't request this, you can ignore this email.</p>
   `;
 
   return { subject, text, html: emailShell(params.logoUrl, body) };

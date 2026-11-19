@@ -5,6 +5,9 @@ const VALID_ENV: NodeJS.ProcessEnv = {
   TEAM_MEMBERS_TABLE: 'TeamMembers',
   MATCH_AVAILABILITY_TABLE: 'MatchAvailability',
   SCHEDULED_ACTIONS_TABLE: 'ScheduledActions',
+  ADMIN_ALLOWLIST_TABLE: 'AdminAllowlist',
+  ADMIN_LOGIN_CODES_TABLE: 'AdminLoginCodes',
+  ADMIN_SESSIONS_TABLE: 'AdminSessions',
   GITHUB_MATCH_DATA_BASE_URL: 'https://raw.githubusercontent.com/example/repo/main',
   AVAILABILITY_FRONTEND_URL: 'https://ceylonsharks.com',
   SES_FROM_EMAIL: 'noreply@ceylonsharks.com',
@@ -21,6 +24,7 @@ describe('loadConfig', () => {
   it('parses a fully populated environment', () => {
     const config = loadConfig(VALID_ENV);
     expect(config.teamMembersTable).toBe('TeamMembers');
+    expect(config.adminAllowlistTable).toBe('AdminAllowlist');
     expect(config.invitationDaysBefore).toBe(5);
     expect(config.reminderDaysBefore).toBe(3);
     expect(config.closureDaysBefore).toBe(2);

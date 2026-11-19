@@ -70,6 +70,9 @@ Globals:
         TEAM_MEMBERS_TABLE: !Ref TeamMembersTable
         MATCH_AVAILABILITY_TABLE: !Ref MatchAvailabilityTable
         SCHEDULED_ACTIONS_TABLE: !Ref ScheduledActionsTable
+        ADMIN_ALLOWLIST_TABLE: !Ref AdminAllowlistTable
+        ADMIN_LOGIN_CODES_TABLE: !Ref AdminLoginCodesTable
+        ADMIN_SESSIONS_TABLE: !Ref AdminSessionsTable
         GITHUB_MATCH_DATA_BASE_URL: !Ref GithubMatchDataBaseUrl
         AVAILABILITY_FRONTEND_URL: !Ref AvailabilityFrontendUrl
         SES_FROM_EMAIL: !Ref SesFromEmail
@@ -138,6 +141,55 @@ Resources:
       KeySchema:
         - AttributeName: actionId
           KeyType: HASH
+
+  # Admin panel (read-only availability dashboard for captain/vice-captain/
+  # trusted others) - see ceylon-sharks-admin-panel-idea.md. Deliberately
+  # separate from TeamMembers: admin access isn't tied to being an active
+  # player, so granting/revoking it can never affect invitation sending.
+  AdminAllowlistTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+
+  AdminLoginCodesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+
+  AdminSessionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: sessionTokenHash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sessionTokenHash
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
 
   # ---------------------------------------------------------------------
   # HTTP API
@@ -307,3 +359,12 @@ Outputs:
 
   ScheduledActionsTableName:
     Value: !Ref ScheduledActionsTable
+
+  AdminAllowlistTableName:
+    Value: !Ref AdminAllowlistTable
+
+  AdminLoginCodesTableName:
+    Value: !Ref AdminLoginCodesTable
+
+  AdminSessionsTableName:
+    Value: !Ref AdminSessionsTable

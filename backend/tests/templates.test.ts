@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail } from '../src/email/templates.js';
+import { adminLoginCodeEmail, captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail } from '../src/email/templates.js';
 
 const LOGO_URL = 'https://ceylonsharks.com/brand/ceylon-sharks-logo.png';
 
@@ -135,6 +135,24 @@ describe('reminderEmail', () => {
   it('escapes HTML-unsafe player names', () => {
     const { html } = reminderEmail({ ...params, playerName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');
+  });
+});
+
+describe('adminLoginCodeEmail', () => {
+  it('includes the code in both text and HTML bodies', () => {
+    const { text, html } = adminLoginCodeEmail({ code: '482913', logoUrl: LOGO_URL });
+    expect(text).toContain('482913');
+    expect(html).toContain('482913');
+  });
+
+  it('mentions the 10-minute expiry', () => {
+    const { text } = adminLoginCodeEmail({ code: '482913', logoUrl: LOGO_URL });
+    expect(text).toContain('10 minutes');
+  });
+
+  it('includes the logo image', () => {
+    const { html } = adminLoginCodeEmail({ code: '482913', logoUrl: LOGO_URL });
+    expect(html).toContain(`src="${LOGO_URL}"`);
   });
 });
 
