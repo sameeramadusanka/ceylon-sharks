@@ -40,7 +40,7 @@ function sortPlayersByStatus(players: MatchDetail['players']): MatchDetail['play
 
 function loadStoredSession(): Session | null {
   try {
-    const raw = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Session;
     return parsed.token && parsed.email ? parsed : null;
@@ -50,11 +50,11 @@ function loadStoredSession(): Session | null {
 }
 
 function storeSession(session: Session): void {
-  sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 }
 
 function clearStoredSession(): void {
-  sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
 export default function AdminPanel() {
