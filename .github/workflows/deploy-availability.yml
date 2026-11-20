@@ -88,14 +88,25 @@ jobs:
           # already-deployed stack. Must be https://ceylonsharks.com (apex,
           # no www) - the site redirects www to apex, so that's the real
           # origin the browser uses, which is what CORS has to match.
+          # TeamSelectionCaptainEmail/TeamSelectionTestRecipientEmail are optional
+          # (template Default: '') and only added to the overrides when their
+          # secrets are set - sam deploy's --parameter-overrides parser rejects
+          # a "Key=" pair with an empty value, unlike CloudFormation itself.
+          PARAMS=(
+            "AvailabilityFrontendUrl=https://ceylonsharks.com"
+            "SesFromEmail=${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}"
+            "CaptainEmail=${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}"
+            "ViceCaptainEmail=${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
+          )
+          if [ -n "${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}" ]; then
+            PARAMS+=("TeamSelectionCaptainEmail=${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}")
+          fi
+          if [ -n "${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}" ]; then
+            PARAMS+=("TeamSelectionTestRecipientEmail=${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}")
+          fi
+
           sam deploy --config-env ci --no-confirm-changeset --no-fail-on-empty-changeset \
-            --parameter-overrides \
-              AvailabilityFrontendUrl="https://ceylonsharks.com" \
-              SesFromEmail="${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}" \
-              CaptainEmail="${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}" \
-              ViceCaptainEmail="${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}" \
-              TeamSelectionCaptainEmail="${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}" \
-              TeamSelectionTestRecipientEmail="${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}"
+            --parameter-overrides "${PARAMS[@]}"
 
       - name: Health check
         run: |
