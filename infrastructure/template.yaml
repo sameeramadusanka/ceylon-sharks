@@ -59,6 +59,23 @@ Parameters:
     Description: Vice-captain's notification email address. Not defaulted; supply at deploy time.
     NoEcho: true
 
+  TeamSelectionCaptainEmail:
+    Type: String
+    Description: >-
+      Email allowed to select the match-day squad. Left empty, the feature
+      stays disabled for everyone. Set to a test address first; switch to the
+      real captain's email once verified.
+    Default: ''
+    NoEcho: true
+
+  TeamSelectionTestRecipientEmail:
+    Type: String
+    Description: >-
+      When set, squad-selection emails are redirected here instead of the
+      real player - for testing before going live. Leave empty in production.
+    Default: ''
+    NoEcho: true
+
 Globals:
   Function:
     Runtime: nodejs24.x
@@ -78,6 +95,8 @@ Globals:
         SES_FROM_EMAIL: !Ref SesFromEmail
         CAPTAIN_EMAIL: !Ref CaptainEmail
         VICE_CAPTAIN_EMAIL: !Ref ViceCaptainEmail
+        TEAM_SELECTION_CAPTAIN_EMAIL: !Ref TeamSelectionCaptainEmail
+        TEAM_SELECTION_TEST_RECIPIENT_EMAIL: !Ref TeamSelectionTestRecipientEmail
         TIME_ZONE: !Ref TimeZone
         INVITATION_DAYS_BEFORE: !Ref InvitationDaysBefore
         REMINDER_DAYS_BEFORE: !Ref ReminderDaysBefore
@@ -200,7 +219,7 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - !Ref AvailabilityFrontendUrl
-        AllowMethods: [GET, POST, OPTIONS]
+        AllowMethods: [GET, POST, PUT, OPTIONS]
         AllowHeaders: [content-type, authorization]
 
   # ---------------------------------------------------------------------
@@ -252,6 +271,12 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-match-detail
+      RetentionInDays: 30
+
+  SelectTeamLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-select-team
       RetentionInDays: 30
 
   # ---------------------------------------------------------------------
@@ -479,6 +504,40 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/adminMatchDetail.ts]
+        Target: es2022
+
+  SelectTeamFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-select-team
+      CodeUri: ../backend
+      Handler: src/handlers/selectTeam.handler
+      Timeout: 30
+      LoggingConfig:
+        LogGroup: !Ref SelectTeamLogGroup
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MatchAvailabilityTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/matches/{matchId}/selection
+            Method: PUT
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/selectTeam.ts]
         Target: es2022
 
 Outputs:

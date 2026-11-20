@@ -23,6 +23,9 @@ export interface InvitationRecord {
   /** Optional: absent on records created before these fields were added. */
   time?: string;
   ground?: string;
+  /** Set by the captain's squad-selection UI. Absent means not selected. */
+  selected?: boolean;
+  selectedAt?: string;
 }
 
 export async function createInvitation(docClient: DynamoDBDocumentClient, tableName: string, record: InvitationRecord): Promise<void> {
@@ -111,6 +114,24 @@ export async function markReminderSent(
       Key: { matchId, playerEmail },
       UpdateExpression: 'SET tokenHash = :tokenHash, reminderSentAt = :reminderSentAt',
       ExpressionAttributeValues: { ':tokenHash': tokenHash, ':reminderSentAt': reminderSentAt },
+    }),
+  );
+}
+
+export async function setSelection(
+  docClient: DynamoDBDocumentClient,
+  tableName: string,
+  matchId: string,
+  playerEmail: string,
+  selected: boolean,
+  now: string,
+): Promise<void> {
+  await docClient.send(
+    new UpdateCommand({
+      TableName: tableName,
+      Key: { matchId, playerEmail },
+      UpdateExpression: 'SET selected = :selected, selectedAt = :now',
+      ExpressionAttributeValues: { ':selected': selected, ':now': now },
     }),
   );
 }

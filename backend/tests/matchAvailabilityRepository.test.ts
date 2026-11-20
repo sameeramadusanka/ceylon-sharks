@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, ScanCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createInvitation, findByTokenHash, getInvitation, listByMatch, markReminderSent, scanAllInvitations, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
+import { createInvitation, findByTokenHash, getInvitation, listByMatch, markReminderSent, scanAllInvitations, setSelection, updateAvailability } from '../src/repositories/matchAvailabilityRepository.js';
 
 const TABLE = 'MatchAvailability';
 const ddbMock = mockClient(DynamoDBDocumentClient);
@@ -78,6 +78,17 @@ describe('updateAvailability', () => {
     await updateAvailability(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1', 'player@example.com', 'UNAVAILABLE', undefined, '2026-11-20T00:00:00.000Z');
     const call = ddbMock.commandCalls(UpdateCommand)[0].args[0].input;
     expect(call.ExpressionAttributeValues?.[':comments']).toBe('');
+  });
+});
+
+describe('setSelection', () => {
+  it('sets selected and selectedAt on the player record', async () => {
+    ddbMock.on(UpdateCommand).resolves({});
+    await setSelection(ddbMock as unknown as DynamoDBDocumentClient, TABLE, 'match-1', 'player@example.com', true, '2026-11-20T00:00:00.000Z');
+    const call = ddbMock.commandCalls(UpdateCommand)[0].args[0].input;
+    expect(call.Key).toEqual({ matchId: 'match-1', playerEmail: 'player@example.com' });
+    expect(call.ExpressionAttributeValues?.[':selected']).toBe(true);
+    expect(call.ExpressionAttributeValues?.[':now']).toBe('2026-11-20T00:00:00.000Z');
   });
 });
 

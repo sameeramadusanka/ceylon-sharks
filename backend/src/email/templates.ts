@@ -45,6 +45,15 @@ export interface CaptainNotificationParams {
   logoUrl: string;
 }
 
+export interface TeamSelectionParams {
+  playerName: string;
+  opponent: string;
+  matchDate: string;
+  time?: string;
+  ground?: string;
+  logoUrl: string;
+}
+
 export interface AdminLoginCodeParams {
   code: string;
   logoUrl: string;
@@ -214,6 +223,30 @@ export function adminLoginCodeEmail(params: AdminLoginCodeParams): EmailBody {
     <p style="margin:0 0 16px;">Your sign-in code is:</p>
     <p style="margin:0 0 16px;font-size:28px;font-weight:bold;letter-spacing:.08em;color:${COLOR_INK};">${escapeHtml(params.code)}</p>
     <p style="margin:0;color:${COLOR_MUTED};font-size:13px;">This code expires in 10 minutes and can only be used once. If you didn't request this, you can ignore this email.</p>
+  `;
+
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}
+
+export function teamSelectionEmail(params: TeamSelectionParams): EmailBody {
+  const subject = `You're selected! Ceylon Sharks vs ${params.opponent}`;
+
+  const details = [params.matchDate, params.time, params.ground].filter((part): part is string => Boolean(part)).join(' · ');
+
+  const text = [
+    `Hi ${params.playerName},`,
+    '',
+    `Congratulations - you've been selected for the match against ${params.opponent}.`,
+    '',
+    details,
+    '',
+    '- Ceylon Sharks',
+  ].join('\n');
+
+  const body = `
+    <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(params.playerName)}</strong>,</p>
+    <p style="margin:0 0 16px;">Congratulations – you've been selected for the match against <strong>${escapeHtml(params.opponent)}</strong>.</p>
+    <p style="margin:0;background:${COLOR_PAPER};border-radius:6px;padding:12px 14px;font-weight:bold;">${escapeHtml(details)}</p>
   `;
 
   return { subject, text, html: emailShell(params.logoUrl, body) };

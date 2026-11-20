@@ -15,6 +15,10 @@ export interface AvailabilityConfig {
   reminderDaysBefore: number;
   closureDaysBefore: number;
   closureLocalTime: string;
+  /** Email allowed to select the match-day squad. Empty until a real captain is configured - the feature stays off until then. */
+  teamSelectionCaptainEmail: string;
+  /** When set, squad-selection emails go here instead of the real player - for testing before real captains are onboarded. */
+  teamSelectionTestRecipientEmail: string;
 }
 
 const REQUIRED_ENV_KEYS = [
@@ -67,6 +71,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AvailabilityCo
     reminderDaysBefore: requireIntEnv(env, 'REMINDER_DAYS_BEFORE'),
     closureDaysBefore: requireIntEnv(env, 'CLOSURE_DAYS_BEFORE'),
     closureLocalTime: requireEnv(env, 'CLOSURE_LOCAL_TIME'),
+    teamSelectionCaptainEmail: env.TEAM_SELECTION_CAPTAIN_EMAIL ?? '',
+    teamSelectionTestRecipientEmail: env.TEAM_SELECTION_TEST_RECIPIENT_EMAIL ?? '',
   };
 }
 

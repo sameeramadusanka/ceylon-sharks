@@ -25,10 +25,18 @@ export interface MatchPlayerStatus {
   comments?: string;
   submittedAt?: string;
   updatedAt?: string;
+  selected: boolean;
 }
 
 export interface MatchDetail extends MatchListItem {
   players: MatchPlayerStatus[];
+  canSelectTeam: boolean;
+}
+
+export interface SelectionResult {
+  selectedCount: number;
+  notifiedCount: number;
+  failedNotifications: string[];
 }
 
 export interface AdminApiError {
@@ -111,4 +119,18 @@ export async function fetchMatchDetail(sessionToken: string, matchId: string): P
     throw unreachableError();
   }
   return readJsonOrThrow<{ success: true } & MatchDetail>(response);
+}
+
+export async function saveTeamSelection(sessionToken: string, matchId: string, selectedPlayerEmails: string[]): Promise<SelectionResult> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/matches/${encodeURIComponent(matchId)}/selection`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${sessionToken}` },
+      body: JSON.stringify({ selectedPlayerEmails }),
+    });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true } & SelectionResult>(response);
 }

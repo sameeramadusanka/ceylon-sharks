@@ -93,7 +93,9 @@ jobs:
               AvailabilityFrontendUrl="https://ceylonsharks.com" \
               SesFromEmail="${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}" \
               CaptainEmail="${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}" \
-              ViceCaptainEmail="${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
+              ViceCaptainEmail="${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}" \
+              TeamSelectionCaptainEmail="${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}" \
+              TeamSelectionTestRecipientEmail="${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}"
 
       - name: Health check
         run: |

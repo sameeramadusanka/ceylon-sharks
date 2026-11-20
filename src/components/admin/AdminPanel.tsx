@@ -3,6 +3,7 @@ import {
   fetchMatchDetail,
   fetchMatches,
   requestLoginCode,
+  saveTeamSelection,
   verifyLoginCode,
   type AdminApiError,
   type AvailabilityStatus,
@@ -67,6 +68,9 @@ export default function AdminPanel() {
   const [matches, setMatches] = useState<MatchListItem[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<MatchDetail | null>(null);
   const [redirectCountdown, setRedirectCountdown] = useState(REDIRECT_SECONDS);
+  const [squadSelection, setSquadSelection] = useState<Set<string>>(new Set());
+  const [savingSquad, setSavingSquad] = useState(false);
+  const [squadMessage, setSquadMessage] = useState('');
 
   useEffect(() => {
     if (phase !== 'signed-out') return;
@@ -152,6 +156,8 @@ export default function AdminPanel() {
     try {
       const detail = await fetchMatchDetail(session.token, matchId);
       setSelectedMatch(detail);
+      setSquadSelection(new Set(detail.players.filter((player) => player.selected).map((player) => player.playerEmail)));
+      setSquadMessage('');
       setPhase('detail');
     } catch (error) {
       const apiError = error as AdminApiError;
@@ -170,6 +176,42 @@ export default function AdminPanel() {
   function backToMatches() {
     setSelectedMatch(null);
     setPhase('matches');
+  }
+
+  function toggleSquadPlayer(playerEmail: string) {
+    setSquadSelection((current) => {
+      const next = new Set(current);
+      if (next.has(playerEmail)) next.delete(playerEmail);
+      else next.add(playerEmail);
+      return next;
+    });
+  }
+
+  async function saveSquad() {
+    if (!session || !selectedMatch) return;
+    setSavingSquad(true);
+    setSquadMessage('');
+    try {
+      const result = await saveTeamSelection(session.token, selectedMatch.matchId, Array.from(squadSelection));
+      setSelectedMatch({
+        ...selectedMatch,
+        players: selectedMatch.players.map((player) => ({ ...player, selected: squadSelection.has(player.playerEmail) })),
+      });
+      const failedNote = result.failedNotifications.length ? ` (${result.failedNotifications.length} email(s) failed to send)` : '';
+      setSquadMessage(`Squad saved. Notified ${result.notifiedCount} newly selected player(s).${failedNote}`);
+    } catch (error) {
+      const apiError = error as AdminApiError;
+      if (apiError.status === 401) {
+        clearStoredSession();
+        setSession(null);
+        setErrorMessage('Your session has expired - please sign in again.');
+        setPhase('email');
+        return;
+      }
+      setSquadMessage(apiError.message);
+    } finally {
+      setSavingSquad(false);
+    }
   }
 
   function signOut() {
@@ -345,6 +387,7 @@ export default function AdminPanel() {
             <table className="ad-player-table">
               <thead>
                 <tr>
+                  {selectedMatch.canSelectTeam && <th>Select</th>}
                   <th>Player</th>
                   <th>Status</th>
                   <th>Comments</th>
@@ -353,6 +396,16 @@ export default function AdminPanel() {
               <tbody>
                 {sortPlayersByStatus(selectedMatch.players).map((player) => (
                   <tr key={player.playerEmail}>
+                    {selectedMatch.canSelectTeam && (
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={squadSelection.has(player.playerEmail)}
+                          onChange={() => toggleSquadPlayer(player.playerEmail)}
+                          aria-label={`Select ${player.playerName} for the squad`}
+                        />
+                      </td>
+                    )}
                     <td>{player.playerName}</td>
                     <td>
                       <span className={`ad-chip ad-chip--${player.availability.toLowerCase()}`}>{STATUS_LABELS[player.availability]}</span>
@@ -362,6 +415,19 @@ export default function AdminPanel() {
                 ))}
               </tbody>
             </table>
+
+            {selectedMatch.canSelectTeam && (
+              <div className="ad-squad-actions">
+                <button type="button" className="ad-button ad-squad-save" onClick={saveSquad} disabled={savingSquad}>
+                  {savingSquad ? 'Saving…' : 'Save squad & notify'}
+                </button>
+                {squadMessage && (
+                  <p className="ad-status" role="status">
+                    {squadMessage}
+                  </p>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
