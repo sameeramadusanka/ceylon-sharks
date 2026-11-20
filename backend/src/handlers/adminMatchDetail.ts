@@ -50,8 +50,11 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         comments: record.comments,
         submittedAt: record.submittedAt,
         updatedAt: record.updatedAt,
+        selected: record.selected === true,
       }))
       .sort((a, b) => a.playerName.localeCompare(b.playerName));
+
+    const canSelectTeam = Boolean(config.teamSelectionCaptainEmail) && session.email === config.teamSelectionCaptainEmail.toLowerCase();
 
     return jsonResponse(200, {
       success: true,
@@ -64,6 +67,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       totalInvited: records.length,
       counts,
       players,
+      canSelectTeam,
     });
   } catch (error) {
     logger.error('admin match detail endpoint failed', {

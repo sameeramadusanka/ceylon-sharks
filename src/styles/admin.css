@@ -290,6 +290,19 @@
   color: var(--ad-muted);
 }
 
+.ad-squad-actions {
+  margin-top: 20px;
+}
+
+.ad-squad-save {
+  width: auto;
+  padding: 12px 20px;
+}
+
+.ad-squad-actions .ad-status {
+  margin-top: 10px;
+}
+
 @media (max-width: 480px) {
   .ad-page {
     padding: 28px 16px;

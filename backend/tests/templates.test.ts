@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { adminLoginCodeEmail, captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail } from '../src/email/templates.js';
+import { adminLoginCodeEmail, captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail, teamSelectionEmail } from '../src/email/templates.js';
 
 const LOGO_URL = 'https://ceylonsharks.com/brand/ceylon-sharks-logo.png';
 
@@ -186,6 +186,33 @@ describe('finalSummaryEmail', () => {
       logoUrl: LOGO_URL,
     });
     expect(html).not.toContain('<script>x</script>');
+    expect(html).toContain('&lt;script&gt;');
+  });
+});
+
+describe('teamSelectionEmail', () => {
+  const params = { playerName: 'Sam Rivera', opponent: 'Cool Stars', matchDate: '2026-11-28', time: '14:00', ground: 'Padang A', logoUrl: LOGO_URL };
+
+  it('includes a congratulations message and the match date, time, and ground', () => {
+    const { text, html } = teamSelectionEmail(params);
+    expect(text).toContain('Congratulations');
+    expect(text).toContain('Cool Stars');
+    expect(text).toContain('2026-11-28');
+    expect(text).toContain('14:00');
+    expect(text).toContain('Padang A');
+    expect(html).toContain('Congratulations');
+    expect(html).toContain('Padang A');
+  });
+
+  it('omits time and ground when absent instead of leaving stray separators', () => {
+    const { text } = teamSelectionEmail({ ...params, time: undefined, ground: undefined });
+    expect(text).toContain('2026-11-28');
+    expect(text).not.toMatch(/2026-11-28\s*·/);
+  });
+
+  it('escapes HTML-unsafe characters in the player name', () => {
+    const { html } = teamSelectionEmail({ ...params, playerName: '<script>alert(1)</script>' });
+    expect(html).not.toContain('<script>alert(1)</script>');
     expect(html).toContain('&lt;script&gt;');
   });
 });
