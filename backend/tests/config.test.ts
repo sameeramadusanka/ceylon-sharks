@@ -38,6 +38,17 @@ describe('loadConfig', () => {
   it('throws when a numeric variable is not an integer', () => {
     expect(() => loadConfig({ ...VALID_ENV, INVITATION_DAYS_BEFORE: 'five' })).toThrow(/INVITATION_DAYS_BEFORE/);
   });
+
+  it('normalizes the "none" placeholder for the optional squad-selection emails to empty', () => {
+    const config = loadConfig({ ...VALID_ENV, TEAM_SELECTION_CAPTAIN_EMAIL: 'none', TEAM_SELECTION_TEST_RECIPIENT_EMAIL: 'none' });
+    expect(config.teamSelectionCaptainEmail).toBe('');
+    expect(config.teamSelectionTestRecipientEmail).toBe('');
+  });
+
+  it('passes through a real squad-selection email unchanged', () => {
+    const config = loadConfig({ ...VALID_ENV, TEAM_SELECTION_CAPTAIN_EMAIL: 'captain@example.com' });
+    expect(config.teamSelectionCaptainEmail).toBe('captain@example.com');
+  });
 });
 
 describe('configPresence', () => {
