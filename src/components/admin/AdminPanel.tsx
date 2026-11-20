@@ -357,7 +357,7 @@ export default function AdminPanel() {
                     <td>
                       <span className={`ad-chip ad-chip--${player.availability.toLowerCase()}`}>{STATUS_LABELS[player.availability]}</span>
                     </td>
-                    <td className="ad-player-table__comments">{player.comments || '—'}</td>
+                    <td className="ad-player-table__comments">{player.comments}</td>
                   </tr>
                 ))}
               </tbody>
