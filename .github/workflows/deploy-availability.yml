@@ -88,22 +88,23 @@ jobs:
           # already-deployed stack. Must be https://ceylonsharks.com (apex,
           # no www) - the site redirects www to apex, so that's the real
           # origin the browser uses, which is what CORS has to match.
-          # TeamSelectionCaptainEmail/TeamSelectionTestRecipientEmail are optional
-          # (template Default: '') and only added to the overrides when their
-          # secrets are set - sam deploy's --parameter-overrides parser rejects
-          # a "Key=" pair with an empty value, unlike CloudFormation itself.
+          # TeamSelectionCaptainEmail/TeamSelectionTestRecipientEmail are optional.
+          # They're always passed explicitly (never omitted) so an update can't
+          # silently keep a stale stack value - CloudFormation reuses the last
+          # value for any parameter left out of --parameter-overrides, same as
+          # the AvailabilityFrontendUrl note above. "none" is the non-empty
+          # placeholder sam deploy's CLI parser requires when a secret is unset;
+          # config.ts normalizes it back to '' (feature off).
+          TEAM_SELECTION_CAPTAIN_EMAIL="${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}"
+          TEAM_SELECTION_TEST_RECIPIENT_EMAIL="${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}"
           PARAMS=(
             "AvailabilityFrontendUrl=https://ceylonsharks.com"
             "SesFromEmail=${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}"
             "CaptainEmail=${{ secrets.AVAILABILITY_CAPTAIN_EMAIL }}"
             "ViceCaptainEmail=${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
+            "TeamSelectionCaptainEmail=${TEAM_SELECTION_CAPTAIN_EMAIL:-none}"
+            "TeamSelectionTestRecipientEmail=${TEAM_SELECTION_TEST_RECIPIENT_EMAIL:-none}"
           )
-          if [ -n "${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}" ]; then
-            PARAMS+=("TeamSelectionCaptainEmail=${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}")
-          fi
-          if [ -n "${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}" ]; then
-            PARAMS+=("TeamSelectionTestRecipientEmail=${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}")
-          fi
 
           sam deploy --config-env ci --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides "${PARAMS[@]}"

@@ -53,6 +53,17 @@ function requireIntEnv(env: NodeJS.ProcessEnv, key: string): number {
   return value;
 }
 
+/**
+ * The deploy workflow always passes an explicit value for these two
+ * optional parameters (never omits them) so CloudFormation can't silently
+ * keep a stale stack value on an update - "none" is its non-empty
+ * placeholder for "not configured", normalized back to '' here.
+ */
+function optionalEmailEnv(env: NodeJS.ProcessEnv, key: string): string {
+  const value = env[key] ?? '';
+  return value === 'none' ? '' : value;
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): AvailabilityConfig {
   return {
     teamMembersTable: requireEnv(env, 'TEAM_MEMBERS_TABLE'),
@@ -71,8 +82,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AvailabilityCo
     reminderDaysBefore: requireIntEnv(env, 'REMINDER_DAYS_BEFORE'),
     closureDaysBefore: requireIntEnv(env, 'CLOSURE_DAYS_BEFORE'),
     closureLocalTime: requireEnv(env, 'CLOSURE_LOCAL_TIME'),
-    teamSelectionCaptainEmail: env.TEAM_SELECTION_CAPTAIN_EMAIL ?? '',
-    teamSelectionTestRecipientEmail: env.TEAM_SELECTION_TEST_RECIPIENT_EMAIL ?? '',
+    teamSelectionCaptainEmail: optionalEmailEnv(env, 'TEAM_SELECTION_CAPTAIN_EMAIL'),
+    teamSelectionTestRecipientEmail: optionalEmailEnv(env, 'TEAM_SELECTION_TEST_RECIPIENT_EMAIL'),
   };
 }
 
