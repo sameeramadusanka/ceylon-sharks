@@ -231,22 +231,34 @@ export function adminLoginCodeEmail(params: AdminLoginCodeParams): EmailBody {
 export function teamSelectionEmail(params: TeamSelectionParams): EmailBody {
   const subject = `You're selected! Ceylon Sharks vs ${params.opponent}`;
 
-  const details = [params.matchDate, params.time, params.ground].filter((part): part is string => Boolean(part)).join(' · ');
+  const rows: Array<{ label: string; value: string }> = [{ label: 'Date', value: params.matchDate }];
+  if (params.time) rows.push({ label: 'Time', value: params.time });
+  if (params.ground) rows.push({ label: 'Ground', value: params.ground });
 
   const text = [
     `Hi ${params.playerName},`,
     '',
     `Congratulations - you've been selected for the match against ${params.opponent}.`,
     '',
-    details,
+    rows.map((row) => `${row.label}: ${row.value}`).join('\n'),
     '',
     '- Ceylon Sharks',
   ].join('\n');
 
+  const detailRow = (row: { label: string; value: string }, withDivider: boolean) => `
+    <tr>
+      <td style="padding:8px 14px;${withDivider ? `border-top:1px solid ${COLOR_LINE};` : ''}">
+        <span style="display:inline-block;min-width:60px;color:${COLOR_MUTED};font-size:11px;letter-spacing:.06em;text-transform:uppercase;">${row.label}</span>
+        <strong style="color:${COLOR_INK};">${escapeHtml(row.value)}</strong>
+      </td>
+    </tr>`;
+
   const body = `
     <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(params.playerName)}</strong>,</p>
     <p style="margin:0 0 16px;">Congratulations – you've been selected for the match against <strong>${escapeHtml(params.opponent)}</strong>.</p>
-    <p style="margin:0;background:${COLOR_PAPER};border-radius:6px;padding:12px 14px;font-weight:bold;">${escapeHtml(details)}</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLOR_PAPER};border-radius:6px;font-size:14px;">
+      ${rows.map((row, index) => detailRow(row, index > 0)).join('')}
+    </table>
   `;
 
   return { subject, text, html: emailShell(params.logoUrl, body) };

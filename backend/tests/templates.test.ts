@@ -193,21 +193,27 @@ describe('finalSummaryEmail', () => {
 describe('teamSelectionEmail', () => {
   const params = { playerName: 'Sam Rivera', opponent: 'Cool Stars', matchDate: '2026-11-28', time: '14:00', ground: 'Padang A', logoUrl: LOGO_URL };
 
-  it('includes a congratulations message and the match date, time, and ground', () => {
+  it('includes a congratulations message and labeled date, time, and ground rows', () => {
     const { text, html } = teamSelectionEmail(params);
     expect(text).toContain('Congratulations');
     expect(text).toContain('Cool Stars');
-    expect(text).toContain('2026-11-28');
-    expect(text).toContain('14:00');
-    expect(text).toContain('Padang A');
+    expect(text).toContain('Date: 2026-11-28');
+    expect(text).toContain('Time: 14:00');
+    expect(text).toContain('Ground: Padang A');
     expect(html).toContain('Congratulations');
+    expect(html).toContain('>Date<');
+    expect(html).toContain('>Time<');
+    expect(html).toContain('>Ground<');
     expect(html).toContain('Padang A');
   });
 
-  it('omits time and ground when absent instead of leaving stray separators', () => {
-    const { text } = teamSelectionEmail({ ...params, time: undefined, ground: undefined });
-    expect(text).toContain('2026-11-28');
-    expect(text).not.toMatch(/2026-11-28\s*·/);
+  it('omits time and ground rows entirely when absent', () => {
+    const { text, html } = teamSelectionEmail({ ...params, time: undefined, ground: undefined });
+    expect(text).toContain('Date: 2026-11-28');
+    expect(text).not.toContain('Time:');
+    expect(text).not.toContain('Ground:');
+    expect(html).not.toContain('>Time<');
+    expect(html).not.toContain('>Ground<');
   });
 
   it('escapes HTML-unsafe characters in the player name', () => {
