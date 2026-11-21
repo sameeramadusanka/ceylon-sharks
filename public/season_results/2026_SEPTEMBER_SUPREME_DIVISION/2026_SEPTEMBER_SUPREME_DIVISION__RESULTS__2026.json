@@ -58,6 +58,15 @@
         "teamTwo": "Singa Smashers",
         "result": "Ceylon Sharks won by 127 Runs",
         "scoreSummary": "Ceylon Sharks: 199/3(15)Singa Smashers: 72/7(12.1)"
+      },
+      {
+        "id": 7,
+        "format": "League",
+        "date": "2026-11-21",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Lightning Hawks",
+        "result": "Ceylon Sharks won by 7 Wickets",
+        "scoreSummary": "Ceylon Sharks: 70/3(10.1)Lightning Hawks: 69/8(15)"
       }
     ]
   }

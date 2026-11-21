@@ -1,4 +1,3 @@
-
 {
   "season": {
     "name": "2026_T4_SAT_SUPREME",
@@ -10,11 +9,11 @@
         "player": "Hasanka Chandrasena",
         "team": null,
         "catches": 1,
-        "wicketKeeperCatches": 8,
+        "wicketKeeperCatches": 11,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 9
+        "totalDismissals": 12
       },
       {
         "rank": 2,
@@ -42,43 +41,43 @@
         "rank": 4,
         "player": "Sameera Perera",
         "team": null,
-        "catches": 2,
+        "catches": 3,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 2
+        "totalDismissals": 3
       },
       {
         "rank": 5,
         "player": "Tharindu Hettiarachchi",
         "team": null,
-        "catches": 2,
+        "catches": 3,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 2
+        "totalDismissals": 3
       },
       {
         "rank": 6,
+        "player": "Nuwan Sanjeewa",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 1,
+        "stumpings": 0,
+        "totalDismissals": 3
+      },
+      {
+        "rank": 7,
         "player": "Kasun Sampath",
         "team": null,
         "catches": 2,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 2
-      },
-      {
-        "rank": 7,
-        "player": "Nuwan Sanjeewa",
-        "team": null,
-        "catches": 1,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 1,
         "stumpings": 0,
         "totalDismissals": 2
       },
