@@ -5,7 +5,8 @@ import { hashToken } from './token.js';
 export const LOGIN_CODE_TTL_SECONDS = 10 * 60;
 export const LOGIN_CODE_RESEND_COOLDOWN_SECONDS = 60;
 export const MAX_LOGIN_CODE_ATTEMPTS = 5;
-export const SESSION_TTL_SECONDS = 24 * 60 * 60;
+// Admins stay signed in for 2 weeks before needing a new email code.
+export const SESSION_TTL_SECONDS = 14 * 24 * 60 * 60;
 
 export function extractBearerToken(authHeader: string | undefined): string | null {
   if (!authHeader?.startsWith('Bearer ')) return null;
