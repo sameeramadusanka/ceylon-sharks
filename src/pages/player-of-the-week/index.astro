@@ -1,0 +1,9 @@
+---
+// Always shows the latest winner: /player-of-the-week/ (handy for an Instagram bio link).
+import PlayerOfTheWeekPage from '../../components/PlayerOfTheWeekPage.astro';
+import { loadPlayerOfTheWeek } from '../../lib/playerOfTheWeek';
+
+const [latest, ...others] = await loadPlayerOfTheWeek();
+---
+
+<PlayerOfTheWeekPage entry={latest} pagePath="player-of-the-week/" others={others} />

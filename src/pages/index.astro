@@ -1,5 +1,7 @@
 ---
 import TeamDashboard from '../components/TeamDashboard';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import { loadPlayerOfTheWeek } from '../lib/playerOfTheWeek';
 import '../styles/global.css';
 import team from '../data/team.json';
 import site from '../data/site.json';
@@ -108,6 +110,8 @@ const upcomingScheduleMatches = filesIn(join(publicDirectory, 'upcoming_schedule
     }
   });
 
+const playerOfTheWeek = await loadPlayerOfTheWeek();
+
 const title = `${team.name} | ${site.seo.titleSuffix}`;
 const description = site.seo.descriptionTemplate.replace('{team}', team.name);
 const faviconUrl = publicAsset('/brand/favicon.png');
@@ -136,18 +140,9 @@ const openGraphImageUrl = new URL(publicAsset('/brand/Open-graph-image.png'), im
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={openGraphImageUrl} />
     <title>{title}</title>
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-B35J5LJTFY');
-    </script>
+    <GoogleAnalytics />
   </head>
   <body>
-    <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} historyImages={historyImages} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} upcomingScheduleMatches={upcomingScheduleMatches} />
+    <TeamDashboard client:load playersBySeason={playersBySeason} bannerImages={bannerImages} groundImage={groundImage} historyImages={historyImages} playerImages={playerImages} seasonFiles={seasonFiles} seasonStatistics={seasonStatistics} scoreCards={scoreCards} upcomingScheduleMatches={upcomingScheduleMatches} playerOfTheWeek={playerOfTheWeek} />
   </body>
 </html>

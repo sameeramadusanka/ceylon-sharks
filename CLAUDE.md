@@ -20,7 +20,17 @@ This is a fully static Astro + React + TypeScript site (**Ceylon Sharks Cricket 
 
 ### Main site: single-page, data-driven-at-build-time
 
-`src/pages/index.astro` is the main site's only page. In its frontmatter it walks `public/` recursively with `readdirSync`/`readFileSync` (Node `fs`, build-time only) to discover season data purely from **filename convention** — there is no manifest file listing which seasons/files exist. It then passes everything as props into one React island, `TeamDashboard`, rendered with `client:load` (the entire UI is one hydrated component, not multiple islands).
+`src/pages/index.astro` is the main site's homepage. In its frontmatter it walks `public/` recursively with `readdirSync`/`readFileSync` (Node `fs`, build-time only) to discover season data purely from **filename convention** — there is no manifest file listing which seasons/files exist. It then passes everything as props into one React island, `TeamDashboard`, rendered with `client:load` (the entire UI is one hydrated component, not multiple islands).
+
+### Player of the Week: homepage section + share pages
+
+Posters live in per-season folders under `src/assets/player_of_the_week/`, named exactly like the season's other data folders (e.g. `src/assets/player_of_the_week/2026_SEPTEMBER_SUPREME_DIVISION/`). They're under `src/`, not `public/`, so Astro's image pipeline resizes/compresses them:
+
+- `{YYYY-MM-DD}__{playerId}.jpg` — the designed 9:16 poster
+- `{YYYY-MM-DD}__{playerId}.json` — `playerName`, `opponent` (required), `competition`, `batting`, `bowling`, `fielding`, `caption` (optional)
+- `{YYYY-MM-DD}__{playerId}__share.jpg` — optional wide (1200x630) link-preview image; the poster is used otherwise
+
+`src/lib/playerOfTheWeek.ts` loads them at build time (newest first) and, unlike the season-data matchers, **throws** on a misnamed image, a file outside a season folder, a poster without its `.json`, or two winners on one date — so a mistake fails `npm run build` instead of silently disappearing. `TeamDashboard` filters entries to the season selected in its season picker and renders the newest with `PlayerOfTheWeekSection`; if that season has no winners, the section and its nav link are hidden. Each entry also gets a static share page at `/player-of-the-week/{date}/` (plus `/player-of-the-week/` for the latest), rendered by `PlayerOfTheWeekPage.astro` with per-winner Open Graph/Twitter tags so social media links preview the poster. Those pages link back into the homepage with `?scorecard={date}` / `?player={id}` / `#section`, which `TeamDashboard` handles on load. Google Analytics lives in `GoogleAnalytics.astro`, shared by the homepage and these pages.
 
 ### Availability feature: a second, independent page
 

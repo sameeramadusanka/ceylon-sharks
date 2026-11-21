@@ -1,0 +1,147 @@
+---
+// The page people land on from a social media post. Its <head> carries the link-preview
+// (Open Graph / Twitter) tags for one winner; its body shows the poster and leads into the site.
+import GoogleAnalytics from './GoogleAnalytics.astro';
+import { posterAlt } from './PlayerOfTheWeekSection';
+import { summarizePerformance, type PlayerOfTheWeekEntry } from '../lib/playerOfTheWeek';
+import team from '../data/team.json';
+import site from '../data/site.json';
+import '../styles/global.css';
+import '../styles/player-of-the-week.css';
+
+interface Props {
+  entry: PlayerOfTheWeekEntry | undefined;
+  /** This page's own path (relative to the site root), used for og:url. */
+  pagePath: string;
+  /** Older winners to link to at the bottom of the page. */
+  others: PlayerOfTheWeekEntry[];
+}
+
+const { entry, pagePath, others } = Astro.props;
+const copy = site.playerOfTheWeek;
+const fill = (template: string, values: Record<string, string>) => Object.entries(values).reduce((result, [key, value]) => result.replaceAll(`{${key}}`, value), template);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const sitePath = (path: string) => `${base}/${path.replace(/^\/+/, '')}`;
+const absolute = (path: string) => new URL(path, Astro.site).toString();
+
+const title = entry ? fill(copy.shareTitleTemplate, { player: entry.playerName, team: team.name }) : fill(copy.latestPageTitle, { team: team.name });
+const description = entry ? `${summarizePerformance(entry)} · ${entry.displayDate}${entry.caption ? `. ${entry.caption}` : ''}` : copy.emptyMessage;
+const pageUrl = absolute(sitePath(pagePath));
+const canonicalUrl = entry ? absolute(sitePath(entry.pagePath)) : pageUrl;
+const image = entry ? { url: absolute(entry.shareImage.src), ...entry.shareImage } : { url: absolute(sitePath('/brand/Open-graph-image.png')), width: 1200, height: 675, type: 'image/png' };
+const imageAlt = entry ? posterAlt(entry) : `${team.name} logo`;
+const stats = entry ? [
+  { label: copy.batting, value: entry.batting },
+  { label: copy.bowling, value: entry.bowling },
+  { label: copy.fielding, value: entry.fielding },
+].filter((stat) => stat.value) : [];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111314" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href={sitePath('/brand/favicon.png')} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content={team.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={image.url} />
+    <meta property="og:image:type" content={image.type} />
+    <meta property="og:image:width" content={String(image.width)} />
+    <meta property="og:image:height" content={String(image.height)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image.url} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <title>{title}</title>
+    <GoogleAnalytics />
+  </head>
+  <body class="potw-page">
+    <header class="potw-page-header">
+      <a class="brand" href={sitePath('/')}>
+        <img class="brand-mark" src={sitePath(site.assets.logoImage)} alt="" />
+        <span><b>{team.shortName.toUpperCase()}</b><small>CRICKET CLUB</small></span>
+      </a>
+      <a class="header-cta" href={sitePath('/')}>{fill(copy.exploreSite, { team: team.shortName })} →</a>
+    </header>
+
+    <main class="potw-page-main">
+      {entry ? (
+        <article class="potw-page-feature">
+          <img class="potw-page-poster" src={entry.poster.src} width={entry.poster.width} height={entry.poster.height} alt={imageAlt} />
+          <div class="potw-page-details">
+            <p class="potw-page-kicker">{fill(copy.pageKicker, { team: team.name })}</p>
+            <h1>{entry.playerName}</h1>
+            <p class="potw-page-match">{copy.versus} <b>{entry.opponent}</b><br />{entry.displayDate}{entry.competition ? ` · ${entry.competition}` : ''}</p>
+            {stats.length > 0 && (
+              <div class="potw-page-stats">
+                {stats.map((stat) => <div><strong>{stat.value}</strong><span>{stat.label}</span></div>)}
+              </div>
+            )}
+            {entry.caption && <p class="potw-page-caption">{entry.caption}</p>}
+            <div class="potw-page-actions">
+              {entry.hasScoreCard && <a class="button button--primary" href={`${sitePath('/')}?scorecard=${entry.date}`}>{copy.viewScoreCard} →</a>}
+              <a class={`button ${entry.hasScoreCard ? 'potw-page-secondary' : 'button--primary'}`} href={`${sitePath('/')}?player=${entry.playerId}`}>{copy.viewProfile} →</a>
+              <a class="button potw-page-secondary" href={`${sitePath('/')}#squad`}>{copy.meetSquad}</a>
+              <button class="button potw-page-secondary" type="button" data-share-url={canonicalUrl} data-share-title={title} data-copied-label={copy.linkCopied}>{copy.share}</button>
+            </div>
+            <a class="potw-page-home" href={sitePath('/')}>{fill(copy.exploreSite, { team: team.name })} →</a>
+          </div>
+        </article>
+      ) : (
+        <div class="potw-page-empty">
+          <p>{copy.emptyMessage}</p>
+          <a class="button button--primary" href={sitePath('/')}>{fill(copy.exploreSite, { team: team.name })} →</a>
+        </div>
+      )}
+
+      {others.length > 0 && (
+        <section class="potw-page-archive" aria-labelledby="potw-archive-heading">
+          <h2 id="potw-archive-heading">{copy.previousWinners}</h2>
+          <div class="potw-page-archive-list">
+            {others.map((other) => (
+              <a href={sitePath(other.pagePath)}>
+                <img src={other.thumbnail} alt="" loading="lazy" decoding="async" />
+                <b>{other.playerName}</b>
+                <small>{other.displayDate} · {copy.versus} {other.opponent}</small>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('[data-share-url]').forEach((button) => {
+        const originalLabel = button.textContent ?? '';
+        button.addEventListener('click', async () => {
+          const url = button.dataset.shareUrl ?? window.location.href;
+          const title = button.dataset.shareTitle ?? document.title;
+          if (navigator.share) {
+            try {
+              await navigator.share({ title, url });
+            } catch {
+              // The user closed the share sheet.
+            }
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(url);
+            button.textContent = button.dataset.copiedLabel ?? originalLabel;
+            window.setTimeout(() => { button.textContent = originalLabel; }, 2500);
+          } catch {
+            window.prompt(title, url);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

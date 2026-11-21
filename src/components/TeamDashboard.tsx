@@ -7,6 +7,8 @@ import history from '../data/history.json';
 import site from '../data/site.json';
 import '../styles/scorecard.css';
 import ScorecardModal, { type ScoreCard } from './ScorecardModal';
+import PlayerOfTheWeekSection from './PlayerOfTheWeekSection';
+import type { PlayerOfTheWeekEntry } from '../lib/playerOfTheWeek';
 
 type Player = {
   id: number;
@@ -53,11 +55,12 @@ type Match = {
   venue: string;
 };
 type Metric = (typeof site.metrics)[number]['key'];
+type SectionKey = keyof typeof site.sections;
 type SeasonFile = { fileName: string; season: string; division: string; year: number; content: string };
 type SeasonStatisticsSource = { fileName: string; season: string; division: string; statisticsType: string; content: string };
 type ScoreCardSource = { fileName: string; season: string; division: string; matchNumber: number; date: string; content: string };
 type UpcomingScheduleMatch = { fileName: string; date: string; time: string; teamOne: string; teamTwo: string; ground: string; status: string; result: string | null };
-type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; historyImages: string[]; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[]; upcomingScheduleMatches?: UpcomingScheduleMatch[] };
+type DashboardProps = { playersBySeason: Record<string, string>; bannerImages: string[]; groundImage: string; historyImages: string[]; playerImages: Record<string, string>; seasonFiles: SeasonFile[]; seasonStatistics: SeasonStatisticsSource[]; scoreCards: ScoreCardSource[]; upcomingScheduleMatches?: UpcomingScheduleMatch[]; playerOfTheWeek?: PlayerOfTheWeekEntry[] };
 
 const shortName = (name: string) => name.split(' ').map((part) => part[0]).join('').slice(0, 7).toUpperCase();
 const displayDate = (date: string) => new Intl.DateTimeFormat('en', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(date));
@@ -223,7 +226,7 @@ function StatBlock({ value, label, accent = false }: { value: string; label: str
   return <div className={`stat-block${accent ? ' stat-block--accent' : ''}`}><strong>{value}</strong><span>{label}</span></div>;
 }
 
-export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, historyImages = [], playerImages, seasonFiles, seasonStatistics, scoreCards, upcomingScheduleMatches = [] }: DashboardProps) {
+export default function TeamDashboard({ playersBySeason, bannerImages, groundImage, historyImages = [], playerImages, seasonFiles, seasonStatistics, scoreCards, upcomingScheduleMatches = [], playerOfTheWeek = [] }: DashboardProps) {
   const [bannerImageIndex, setBannerImageIndex] = useState(0);
   const [historyImageIndex, setHistoryImageIndex] = useState(0);
   const [format, setFormat] = useState(site.filters.all);
@@ -245,6 +248,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const [datasetMenuOpen, setDatasetMenuOpen] = useState(false);
   const datasetPickerRef = useRef<HTMLDivElement>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pendingProfileId = useRef<number | null>(null);
 
   useEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration;
@@ -255,6 +259,25 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       window.history.scrollRestoration = previousScrollRestoration;
     };
   }, []);
+
+  // Deep links from the Player of the Week share pages: ?scorecard=YYYY-MM-DD opens that
+  // match's scorecard, ?player=ID opens that player's profile, and #section scrolls there.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const scoreCardDate = url.searchParams.get('scorecard');
+    const profileId = Number(url.searchParams.get('player'));
+    if (scoreCardDate) {
+      const source = scoreCards.find((scoreCard) => scoreCard.date === scoreCardDate);
+      if (source) setSelectedScoreCard(parseScoreCard(source));
+    }
+    if (profileId) pendingProfileId.current = profileId;
+    if (url.searchParams.has('scorecard') || url.searchParams.has('player')) {
+      url.searchParams.delete('scorecard');
+      url.searchParams.delete('player');
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+    if (url.hash.length > 1) document.getElementById(decodeURIComponent(url.hash.slice(1)))?.scrollIntoView();
+  }, [scoreCards]);
 
   const storyImages = historyImages.length ? historyImages : (groundImage ? [groundImage] : []);
   const currentHistoryImage = storyImages[historyImageIndex] ?? storyImages[0] ?? groundImage;
@@ -275,7 +298,14 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
     const selectedFile = seasonFiles.find((file) => file.fileName === selectedSeasonFile) ?? seasonFiles[0];
     const selectedStatistics = seasonStatistics.filter((source) => source.season === selectedFile?.season && source.division === selectedFile?.division);
     const playersJson = playersBySeason[selectedFile?.season ?? ''] ?? Object.values(playersBySeason)[0] ?? '';
-    if (playersJson) setPlayers(parsePlayers(playersJson, selectedStatistics, playerImages));
+    if (!playersJson) return;
+    const parsedPlayers = parsePlayers(playersJson, selectedStatistics, playerImages);
+    setPlayers(parsedPlayers);
+    if (pendingProfileId.current !== null) {
+      const linkedPlayer = parsedPlayers.find((player) => player.id === pendingProfileId.current);
+      pendingProfileId.current = null;
+      if (linkedPlayer) setSelectedPlayer(linkedPlayer);
+    }
   }, [playersBySeason, playerImages, seasonFiles, seasonStatistics, selectedSeasonFile]);
 
   useEffect(() => {
@@ -353,6 +383,15 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
     ...stat,
     value: [String(bestWinningStreak), totalOvers ? (scoredMatches.reduce((total, score) => total + score.runs, 0) / totalOvers).toFixed(1) : '-', String(highestScore), matches.length ? (totalWickets / matches.length).toFixed(1) : '-'][index],
   }));
+  // Player of the Week follows the season selector; with no winners for that season the section and its nav link are hidden.
+  const seasonPlayerOfTheWeek = playerOfTheWeek.filter((entry) => entry.season === selectedSeason?.season);
+  const currentPlayerOfTheWeek = seasonPlayerOfTheWeek[0];
+  const profileOfTheWeek = currentPlayerOfTheWeek ? players.find((player) => player.id === currentPlayerOfTheWeek.playerId) : undefined;
+  const scoreCardOfTheWeek = currentPlayerOfTheWeek ? seasonScoreCards.find((scoreCard) => scoreCard.date === currentPlayerOfTheWeek.date) : undefined;
+  const navigationItems = site.navigation.filter((item) => item.href !== '#player-of-the-week' || currentPlayerOfTheWeek);
+  // Section numbers ("01 / The Snapshot") follow the sections actually shown, so hiding one never leaves a gap.
+  const visibleSections: SectionKey[] = ['snapshot', ...(currentPlayerOfTheWeek ? ['playerOfTheWeek' as const] : []), 'performance', 'matches', 'squad', 'history', 'records'];
+  const sectionLabel = (key: SectionKey) => `${String(visibleSections.indexOf(key) + 1).padStart(2, '0')} / ${site.sections[key].label}`;
   return (
     <main>
       <header className="site-header">
@@ -364,7 +403,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
           {mobileNavOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
         <nav className={mobileNavOpen ? 'main-nav main-nav--open' : 'main-nav'} aria-label="Main navigation">
-          {site.navigation.map((item) => (
+          {navigationItems.map((item) => (
             <a key={item.href} href={item.href} onClick={() => setMobileNavOpen(false)}>{item.label}</a>
           ))}
         </nav>
@@ -393,13 +432,20 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       </section>
 
       <section className="snapshot page-width" aria-label={site.sections.snapshot.label}>
-        <div className="snapshot-intro"><SectionLabel>{site.sections.snapshot.label}</SectionLabel><h2>{site.sections.snapshot.titleBefore}<br /><em>{site.sections.snapshot.titleEmphasis}</em></h2></div>
+        <div className="snapshot-intro"><SectionLabel>{sectionLabel('snapshot')}</SectionLabel><h2>{site.sections.snapshot.titleBefore}<br /><em>{site.sections.snapshot.titleEmphasis}</em></h2></div>
         <div className="snapshot-stats">{site.snapshotStats.map((stat, index) => <StatBlock key={stat.label} value={snapshotValues[index]} label={stat.label} accent={stat.accent} />)}</div>
       </section>
 
+      <PlayerOfTheWeekSection
+        entries={seasonPlayerOfTheWeek}
+        label={sectionLabel('playerOfTheWeek')}
+        onViewProfile={profileOfTheWeek ? () => setSelectedPlayer(profileOfTheWeek) : undefined}
+        onViewScoreCard={scoreCardOfTheWeek ? () => setSelectedScoreCard(parseScoreCard(scoreCardOfTheWeek)) : undefined}
+      />
+
       <section className="performance section-dark" id="statistics">
         <div className="page-width">
-          <div className="section-heading"><div><SectionLabel>{site.sections.performance.label}</SectionLabel><h2>{site.sections.performance.titleBefore}<br /><em>{site.sections.performance.titleEmphasis}</em></h2></div></div>
+          <div className="section-heading"><div><SectionLabel>{sectionLabel('performance')}</SectionLabel><h2>{site.sections.performance.titleBefore}<br /><em>{site.sections.performance.titleEmphasis}</em></h2></div></div>
           <div className="chart-panel">
             <div className="chart-toolbar"><div className="metric-tabs">{site.metrics.map((item) => <button className={metric === item.key ? 'is-active' : ''} key={item.key} onClick={() => setMetric(item.key)}>{item.label}</button>)}</div><span className="chart-note">{performanceMatches.length ? `${site.matchLabels.matchPrefix.toUpperCase()} ${performanceMatches[0].id} — ${performanceMatches[performanceMatches.length - 1].id}` : 'NO MATCH DATA'} <ChevronRight size={15} /></span></div>
             <div className="chart-area"><div className="chart-y-axis">{selectedMetric.axis.map((value) => <span key={value}>{value}</span>)}</div><div className="chart-bars">{chartValues.map((value, index) => <div className="chart-column" key={`${value}-${index}`}><div className="bar-tooltip">{value}{selectedMetric.suffix}</div><div className="chart-bar" style={{ height: `${Math.max(12, (value / chartMax) * 100)}%` }} /><span>{site.matchLabels.matchPrefix.charAt(0).toUpperCase()}{performanceMatches[index]?.id ?? index + 1}</span></div>)}</div></div>
@@ -409,20 +455,20 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       </section>
 
       <section className="matches page-width" id="matches">
-        <div className="section-heading"><div><SectionLabel>{site.sections.matches.label}</SectionLabel><h2>{site.sections.matches.titleBefore}<br /><em>{site.sections.matches.titleEmphasis}</em></h2></div></div>
+        <div className="section-heading"><div><SectionLabel>{sectionLabel('matches')}</SectionLabel><h2>{site.sections.matches.titleBefore}<br /><em>{site.sections.matches.titleEmphasis}</em></h2></div></div>
         <div className="match-filters">{seasonFiles.length > 0 && <div className="filter-group dataset-filter" ref={datasetPickerRef}><span>{site.filters.datasetLabel}</span><div className="dataset-picker"><button className="dataset-picker-trigger" type="button" aria-expanded={datasetMenuOpen} aria-haspopup="listbox" onClick={() => setDatasetMenuOpen(!datasetMenuOpen)}><span>{formatDisplayName(selectedSeason?.season ?? '')}</span><ChevronDown size={14} /></button>{datasetMenuOpen && <div className="dataset-menu" role="listbox" aria-label={site.filters.datasetLabel}>{seasonFiles.map((file) => <button className={file.fileName === selectedSeasonFile ? 'is-selected' : ''} type="button" role="option" aria-selected={file.fileName === selectedSeasonFile} key={file.fileName} onClick={() => { setSelectedSeasonFile(file.fileName); setDatasetMenuOpen(false); }}><strong>{formatDisplayName(file.season)}</strong></button>)}</div>}</div></div>}<div className="filter-group"><span>{site.filters.formatLabel}</span>{availableFormats.map((item) => <button className={format === item ? 'is-active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</div><div className="filter-group"><span>{site.filters.resultLabel}</span>{[site.filters.all, 'WIN', 'LOSS', 'NO RESULT'].map((item) => <button className={matchFilter === item ? 'is-active' : ''} onClick={() => setMatchFilter(item)} key={item}>{item}</button>)}</div></div>
         <div className="fixture-feature"><div><span className="match-kicker">{text(site.nextMatch.labelTemplate, { league: team.league })}</span><p className="fixture-date">{nextScheduledDate.day} <small>{nextScheduledDate.month}</small> {nextScheduledDate.year} <b>{nextScheduledMatch?.time ?? site.nextMatch.time}</b></p><div className="fixture-teams"><strong>{team.shortName.toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong><span>{site.nextMatch.versus}</span><strong>{(nextScheduledMatch ? nextScheduledOpponent : site.nextMatch.opponent).toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong></div><p className="fixture-venue">{nextScheduledMatch?.ground || team.stadium} · {site.nextMatch.venueSuffix}</p></div><div className="fixture-badge"><span>{site.nextMatch.formLabel}</span><div>{recentForm.slice(-5).map((item, index) => <b className={item === 'W' ? 'win' : item === 'L' ? 'loss' : 'no-result'} key={`${item}-${index}`}>{item}</b>)}</div><small>{site.nextMatch.lastMatchesLabel}</small></div></div>
         <div className="match-list">{filteredMatches.map((match) => { const scoreCardSource = seasonScoreCards.find((scoreCard) => scoreCard.matchNumber === match.id); const matchResultClass = match.result === 'WIN' ? 'match-result--win' : match.result === 'NO RESULT' ? 'match-result--no-result' : 'match-result--loss'; const resultBadge = match.result === 'WIN' ? site.matchLabels.winShort : match.result === 'NO RESULT' ? 'NR' : site.matchLabels.lossShort; const resultLabel = match.result === 'NO RESULT' ? 'NO RESULT' : match.result; return <article className={`match-card${scoreCardSource ? ' match-card--interactive' : ''}`} key={match.id} onClick={() => scoreCardSource && setSelectedScoreCard(parseScoreCard(scoreCardSource))} onKeyDown={(event) => { if (scoreCardSource && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelectedScoreCard(parseScoreCard(scoreCardSource)); } }} role={scoreCardSource ? 'button' : undefined} tabIndex={scoreCardSource ? 0 : undefined}><div className="match-meta"><span>{match.format} · {site.matchLabels.matchPrefix} {match.id}</span><span>{match.date}</span></div><div className="match-score"><span>{team.shortName.toUpperCase()}</span><strong>{match.teamScore}</strong></div><div className="match-score"><span>{match.opponent.toUpperCase()}</span><strong>{match.opponentScore}</strong></div><div className={`match-result ${matchResultClass}`}><b>{resultBadge}</b> {resultLabel} {match.result !== 'NO RESULT' ? `${match.result === 'WIN' ? site.matchLabels.winBy : site.matchLabels.lossBy} ${match.margin}` : ''}</div>{scoreCardSource && <span className="scorecard-link">{site.scorecardLabels.view} <ArrowUpRight size={13} /></span>}</article>; })}</div>
       </section>
 
       <section className="squad section-cream" id="squad">
-        <div className="page-width"><div className="section-heading"><div><SectionLabel>{site.sections.squad.label}</SectionLabel><h2>{site.sections.squad.titleBefore}<br /><em>{site.sections.squad.titleEmphasis}</em></h2></div><p className="section-aside">{text(site.sections.squad.description, { team: team.name })}</p></div><div className="player-grid">{players.map((player) => <button className={`player-card${player.leadership ? ` player-card--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice-captain'}` : ''}`} key={player.id} onClick={() => setSelectedPlayer(player)}><div className={`player-photo${player.image ? '' : ' player-photo--empty'}`} style={player.image ? { backgroundImage: `url(${player.image})` } : undefined}>{!player.image && <strong>{initials(player.name)}</strong>}<span>#{String(player.number).padStart(2, '0')}</span><i><ArrowUpRight size={17} /></i></div><div className="player-info"><div><h3>{player.name}</h3></div><strong className={player.leadership ? `player-leadership player-leadership--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice'}` : undefined}>{player.leadership ?? player.shortRole}</strong></div><div className="player-stat"><span>BAT <b>{player.battingRuns.toLocaleString()}</b></span><span>BOWL <b>{player.bowlingWickets}</b></span><span>FIELD <b>{player.fieldingDismissals}</b></span></div></button>)}</div></div>
+        <div className="page-width"><div className="section-heading"><div><SectionLabel>{sectionLabel('squad')}</SectionLabel><h2>{site.sections.squad.titleBefore}<br /><em>{site.sections.squad.titleEmphasis}</em></h2></div><p className="section-aside">{text(site.sections.squad.description, { team: team.name })}</p></div><div className="player-grid">{players.map((player) => <button className={`player-card${player.leadership ? ` player-card--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice-captain'}` : ''}`} key={player.id} onClick={() => setSelectedPlayer(player)}><div className={`player-photo${player.image ? '' : ' player-photo--empty'}`} style={player.image ? { backgroundImage: `url(${player.image})` } : undefined}>{!player.image && <strong>{initials(player.name)}</strong>}<span>#{String(player.number).padStart(2, '0')}</span><i><ArrowUpRight size={17} /></i></div><div className="player-info"><div><h3>{player.name}</h3></div><strong className={player.leadership ? `player-leadership player-leadership--${player.leadership === 'CAPTAIN' ? 'captain' : 'vice'}` : undefined}>{player.leadership ?? player.shortRole}</strong></div><div className="player-stat"><span>BAT <b>{player.battingRuns.toLocaleString()}</b></span><span>BOWL <b>{player.bowlingWickets}</b></span><span>FIELD <b>{player.fieldingDismissals}</b></span></div></button>)}</div></div>
       </section>
 
       <section className="story" id="history">
         <div className="story-intro page-width">
           <div className="story-heading">
-            <SectionLabel>{site.sections.history.label}</SectionLabel>
+            <SectionLabel>{sectionLabel('history')}</SectionLabel>
             <h2>{site.sections.history.titleBefore}<br /><em>{site.sections.history.titleEmphasis}</em></h2>
           </div>
           <div className="story-description">
@@ -439,7 +485,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
         <div className="timeline-full page-width">{history.map((event) => { const id = `${event.year}-${event.title}`; const isOpen = !!expandedHistory[id]; return <div className={`timeline-item${isOpen ? ' is-open' : ''}`} key={id}><button className="timeline-toggle" type="button" onClick={() => setExpandedHistory((current) => ({ ...current, [id]: !current[id] }))}><b>{event.year}</b><span>{event.title}</span><ChevronDown size={14} className="timeline-chevron" /></button>{isOpen && <div className="timeline-detail"><p>{event.text}</p></div>}</div>; })}</div>
       </section>
 
-      <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{site.sections.records.label}</SectionLabel><div className="records-intro"><div><span className="records-season-label">{formatDisplayName(selectedRecordSeason?.season ?? seasonLabel)}</span><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2></div><p>{site.sections.records.description}</p></div><div className="records-data"><div className="record-season-tabs" role="tablist" aria-label="Record seasons">{recordSeasons.map((season, index) => { const isSelected = season.fileName === selectedRecordSeason?.fileName; return <button className={isSelected ? 'is-active' : ''} type="button" role="tab" aria-selected={isSelected} aria-controls="season-record-panel" id={`record-season-tab-${index}`} key={season.fileName} onClick={() => setSelectedRecordFileName(season.fileName)}>{index === 0 ? 'Current season' : 'Previous season'}</button>; })}</div><div className="record-list" role="tabpanel" id="season-record-panel" aria-labelledby={`record-season-tab-${recordSeasons.findIndex((season) => season.fileName === selectedRecordSeason?.fileName)}`} key={selectedRecordSeason?.fileName}>{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></section>
+      <section className="records section-dark" id="records"><div className="page-width"><SectionLabel>{sectionLabel('records')}</SectionLabel><div className="records-intro"><div><span className="records-season-label">{formatDisplayName(selectedRecordSeason?.season ?? seasonLabel)}</span><h2>{site.sections.records.titleBefore}<br /><em>{site.sections.records.titleEmphasis}</em></h2></div><p>{site.sections.records.description}</p></div><div className="records-data"><div className="record-season-tabs" role="tablist" aria-label="Record seasons">{recordSeasons.map((season, index) => { const isSelected = season.fileName === selectedRecordSeason?.fileName; return <button className={isSelected ? 'is-active' : ''} type="button" role="tab" aria-selected={isSelected} aria-controls="season-record-panel" id={`record-season-tab-${index}`} key={season.fileName} onClick={() => setSelectedRecordFileName(season.fileName)}>{index === 0 ? 'Current season' : 'Previous season'}</button>; })}</div><div className="record-list" role="tabpanel" id="season-record-panel" aria-labelledby={`record-season-tab-${recordSeasons.findIndex((season) => season.fileName === selectedRecordSeason?.fileName)}`} key={selectedRecordSeason?.fileName}>{seasonRecords.map((record) => <div key={record.label}><span>{record.label}</span><b>{record.value} <small>{record.detail}</small></b></div>)}</div></div></div></section>
 
   <footer className="site-footer"><div className="page-width"><div className="footer-top"><div className="footer-brand"><img className="brand-mark" src={assetPath(site.assets.logoImage)} alt={`${team.name} logo`} /><div><strong>{team.name.toUpperCase()}</strong><p>{site.footer.tagline}</p></div></div><a className="footer-social-link" href="https://www.facebook.com/share/18DwXDXe2p/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Visit Ceylon Sharks on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6h1.7V3.1c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5v2.1H7v3.2h2.8V21h3.7z" /></svg></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} CEYLON SHARKS</span><span>{site.actions.madeForMoments} <ArrowUpRight size={14} /></span></div></div></footer>
 

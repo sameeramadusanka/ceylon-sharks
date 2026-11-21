@@ -101,3 +101,42 @@ a { color: inherit; text-decoration: none; }
 .player-photo--empty, .modal-photo--empty { align-items: center; background: linear-gradient(145deg, #d5d0c4, #a8a59b); display: flex; justify-content: center; }
 .player-photo--empty::after { background: linear-gradient(transparent 45%, rgba(17, 19, 20, .42)); }
 .player-photo--empty strong, .modal-photo--empty strong { color: rgba(242, 239, 232, .78); font-family: var(--serif); font-size: clamp(4rem, 8vw, 7rem); font-weight: 500; letter-spacing: -.08em; }
+
+/* Player of the Week */
+.button { border: 0; cursor: pointer; }
+.button--outline { background: transparent; border: 1px solid currentColor; color: var(--ink); transition: background .2s, color .2s; }
+.button--outline:hover { background: var(--ink); color: var(--paper); }
+.potw { padding: 115px 0 125px; }
+.potw-feature { align-items: center; display: grid; gap: clamp(40px, 7vw, 96px); grid-template-columns: minmax(260px, 400px) 1fr; margin-top: 70px; }
+.potw-poster { box-shadow: 0 30px 60px -30px rgba(17, 27, 79, .55); display: block; overflow: hidden; }
+.potw-poster img { aspect-ratio: 9 / 16; display: block; height: auto; object-fit: cover; transition: transform .35s; width: 100%; }
+.potw-poster:hover img { transform: scale(1.02); }
+.potw-kicker { color: var(--orange); font-family: var(--mono); font-size: 10px; letter-spacing: .14em; margin: 0; text-transform: uppercase; }
+.potw-name { font-family: var(--serif); font-size: clamp(2.6rem, 5vw, 4.6rem); font-weight: 500; letter-spacing: -.07em; line-height: .95; margin: 18px 0 14px; }
+.potw-opponent { color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: .06em; margin: 0; text-transform: uppercase; }
+.potw-opponent b { color: var(--ink); font-weight: 500; }
+.potw-stats { border-top: 1px solid var(--line); display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; margin-top: 38px; max-width: 520px; }
+.potw-stats .stat-block:last-child { border-right: 0; }
+.potw-caption { color: #5f6470; font-size: 14px; line-height: 1.8; margin: 32px 0 0; max-width: 460px; }
+.potw-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.potw-archive { border-top: 1px solid var(--line); margin-top: 80px; padding-top: 34px; }
+.potw-archive h3 { color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 400; letter-spacing: .14em; margin: 0 0 22px; text-transform: uppercase; }
+.potw-archive-list { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.potw-archive-item { display: grid; gap: 10px; }
+.potw-archive-item img { aspect-ratio: 9 / 16; display: block; object-fit: cover; transition: opacity .2s; width: 100%; }
+.potw-archive-item:hover img { opacity: .85; }
+.potw-archive-item b { display: block; font-family: var(--serif); font-size: 15px; font-weight: 500; letter-spacing: -.03em; }
+.potw-archive-item small { color: var(--muted); display: block; font-family: var(--mono); font-size: 8px; letter-spacing: .08em; margin-top: 4px; text-transform: uppercase; }
+@media (max-width: 800px) {
+  .potw { padding-bottom: 80px; padding-top: 80px; }
+  .potw-feature { gap: 36px; grid-template-columns: 1fr; margin-top: 48px; }
+  .potw-poster { margin: 0 auto; max-width: 360px; width: 100%; }
+  .potw-stats .stat-block strong { font-size: 26px; }
+  .potw-archive { margin-top: 56px; }
+}
+@media (max-width: 470px) {
+  .potw-actions .button { flex: 1 1 100%; justify-content: center; }
+  .potw-archive-list { grid-template-columns: repeat(2, 1fr); }
+}
+.main-nav a { white-space: nowrap; }
+.potw-stats strong, .potw-page-stats strong { white-space: nowrap; }
