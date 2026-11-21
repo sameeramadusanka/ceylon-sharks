@@ -1,0 +1,583 @@
+{
+  "match": {
+    "id": "2026 SEPTEMBER SUPREME DIVISION",
+    "competition": "2026 SEPTEMBER SUPREME DIVISION",
+    "matchTitle": "Lightning Hawks Vs Ceylon Sharks",
+    "date": "2026-11-21",
+    "teams": {
+      "home": {
+        "name": "Lightning Hawks",
+        "shortName": "Lightning Hawks"
+      },
+      "away": {
+        "name": "Ceylon Sharks",
+        "shortName": "Ceylon Sharks"
+      }
+    },
+    "result": {
+      "winner": "Ceylon Sharks",
+      "resultType": "WON",
+      "margin": {
+        "type": "WICKETS",
+        "value": 7
+      },
+      "summary": "Ceylon Sharks won by 7 wickets"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Lightning Hawks",
+      "opponent": "Ceylon Sharks",
+      "score": {
+        "runs": 69,
+        "wickets": 8,
+        "overs": "15",
+        "display": "69/8",
+        "runRate": 4.6
+      },
+      "batting": [
+        {
+          "player": "Aravind B",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Nuwan Sanjeewa",
+            "bowler": "Gagith Abeysekara"
+          },
+          "runs": 4,
+          "balls": 7,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 57.14
+        },
+        {
+          "player": "Arun Kumar Mathiyazhagan",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Tharindu Hettiarachchi",
+            "bowler": "Sampath Basnagoda"
+          },
+          "runs": 1,
+          "balls": 3,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 33.33
+        },
+        {
+          "player": "Luxman Srikumar",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Hasitha De Silva"
+          },
+          "runs": 15,
+          "balls": 27,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 55.56
+        },
+        {
+          "player": "Hari NRS",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Gagith Abeysekara"
+          },
+          "runs": 0,
+          "balls": 1,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Kalluri Upendra Babu",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Hasanka Chandrasena",
+            "bowler": "Hasitha De Silva"
+          },
+          "runs": 3,
+          "balls": 8,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 37.5
+        },
+        {
+          "player": "Ganesan Kanthasamy",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Sameera Perera",
+            "bowler": "Sampath Basnagoda"
+          },
+          "runs": 1,
+          "balls": 9,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 11.11
+        },
+        {
+          "player": "Vijay Vk",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Hasanka Chandrasena",
+            "bowler": "Gagith Abeysekara"
+          },
+          "runs": 21,
+          "balls": 10,
+          "fours": 0,
+          "sixes": 3,
+          "strikeRate": 210.0
+        },
+        {
+          "player": "Anast Raj",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 10,
+          "balls": 17,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 58.82
+        },
+        {
+          "player": "Ganesan Sivabalasubramanian007",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Hasanka Chandrasena",
+            "bowler": "Nuwan Sanjeewa"
+          },
+          "runs": 4,
+          "balls": 6,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 66.67
+        },
+        {
+          "player": "Arjun Shanmugasamy",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 3,
+          "balls": 2,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 150.0
+        },
+        {
+          "player": "Mukesh Balakumar",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 0,
+        "wides": 7,
+        "noBalls": 0,
+        "penalty": 0,
+        "total": 7
+      },
+      "bowling": [
+        {
+          "player": "Sampath Basnagoda",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 6,
+          "wickets": 2,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 14,
+          "economy": 2.0
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 3,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 12,
+          "economy": 4.0
+        },
+        {
+          "player": "Chamara Jayalath",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 0,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 12,
+          "economy": 4.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "overs": "2",
+          "maidens": 0,
+          "runs": 23,
+          "wickets": 0,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 6,
+          "economy": 11.5
+        },
+        {
+          "player": "Hasitha De Silva",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 11,
+          "wickets": 2,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 3.67
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 5,
+          "wickets": 1,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 3,
+          "economy": 5.0
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Aravind B",
+          "score": 4,
+          "over": "1.1"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Arun Kumar Mathiyazhagan",
+          "score": 8,
+          "over": "2.6"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Hari NRS",
+          "score": 9,
+          "over": "3.5"
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Luxman Srikumar",
+          "score": 25,
+          "over": "7.3"
+        },
+        {
+          "wicketNumber": 5,
+          "player": "Ganesan Kanthasamy",
+          "score": 27,
+          "over": "8.6"
+        },
+        {
+          "wicketNumber": 6,
+          "player": "Kalluri Upendra Babu",
+          "score": 30,
+          "over": "9.2"
+        },
+        {
+          "wicketNumber": 7,
+          "player": "Vijay Vk",
+          "score": 56,
+          "over": "12.2"
+        },
+        {
+          "wicketNumber": 8,
+          "player": "Ganesan Sivabalasubramanian007",
+          "score": 66,
+          "over": "14.2"
+        }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Ceylon Sharks",
+      "opponent": "Lightning Hawks",
+      "score": {
+        "runs": 70,
+        "wickets": 3,
+        "overs": "10.1",
+        "display": "70/3",
+        "runRate": 6.89
+      },
+      "batting": [
+        {
+          "player": "Hasanka Chandrasena",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Kalluri Upendra Babu",
+            "bowler": "Arjun Shanmugasamy"
+          },
+          "runs": 0,
+          "balls": 4,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Hasitha De Silva",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 9,
+          "balls": 28,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 32.14
+        },
+        {
+          "player": "Sameera Perera",
+          "dismissal": {
+            "type": "RUN_OUT",
+            "fielder": "Kalluri Upendra Babu",
+            "bowler": "Vijay Vk"
+          },
+          "runs": 4,
+          "balls": 9,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 44.44
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Kalluri Upendra Babu",
+            "bowler": "Vijay Vk"
+          },
+          "runs": 2,
+          "balls": 3,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 66.67
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 36,
+          "balls": 19,
+          "fours": 0,
+          "sixes": 5,
+          "strikeRate": 189.47
+        },
+        {
+          "player": "Lasitha Lokuge",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Chinthaka Rajarathna",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Chamara Jayalath",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Kasun Sampath",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 0,
+        "wides": 17,
+        "noBalls": 2,
+        "penalty": 0,
+        "total": 19
+      },
+      "bowling": [
+        {
+          "player": "Arjun Shanmugasamy",
+          "overs": "3",
+          "maidens": 1,
+          "runs": 2,
+          "wickets": 1,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 17,
+          "economy": 0.67
+        },
+        {
+          "player": "Aravind B",
+          "overs": "2",
+          "maidens": 0,
+          "runs": 15,
+          "wickets": 0,
+          "wides": 4,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 6,
+          "economy": 7.5
+        },
+        {
+          "player": "Vijay Vk",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 17,
+          "wickets": 1,
+          "wides": 0,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 5.67
+        },
+        {
+          "player": "Ganesan Sivabalasubramanian007",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 23,
+          "wickets": 0,
+          "wides": 9,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 3,
+          "economy": 23.0
+        },
+        {
+          "player": "Luxman Srikumar",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 0,
+          "wides": 3,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 2,
+          "economy": 12.0
+        },
+        {
+          "player": "Mukesh Balakumar",
+          "overs": "0.1",
+          "maidens": 0,
+          "runs": 1,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 0,
+          "economy": 6.0
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Hasanka Chandrasena",
+          "score": 0,
+          "over": "0.4"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Sameera Perera",
+          "score": 11,
+          "over": "3.5"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Nuwan Sanjeewa",
+          "score": 13,
+          "over": "5.2"
+        }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Lightning Hawks 69/8 (15 overs)",
+    "secondInnings": "Ceylon Sharks 70/3 (10.1 overs)",
+    "winner": "Ceylon Sharks",
+    "margin": "7 wickets"
+  }
+}
