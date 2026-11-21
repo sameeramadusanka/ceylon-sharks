@@ -1,0 +1,15 @@
+---
+// Shared Google Analytics tag for the public pages (homepage and Player of the Week).
+// The availability and admin pages deliberately don't include it.
+---
+
+<!-- Google tag (gtag.js) -->
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B35J5LJTFY"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-B35J5LJTFY');
+</script>

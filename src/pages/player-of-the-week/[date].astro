@@ -1,0 +1,17 @@
+---
+// One share page per winner: /player-of-the-week/YYYY-MM-DD/
+import PlayerOfTheWeekPage from '../../components/PlayerOfTheWeekPage.astro';
+import { loadPlayerOfTheWeek } from '../../lib/playerOfTheWeek';
+
+export async function getStaticPaths() {
+  const entries = await loadPlayerOfTheWeek();
+  return entries.map((entry) => ({
+    params: { date: entry.date },
+    props: { entry, others: entries.filter((other) => other.date !== entry.date) },
+  }));
+}
+
+const { entry, others } = Astro.props;
+---
+
+<PlayerOfTheWeekPage entry={entry} pagePath={entry.pagePath} others={others} />
