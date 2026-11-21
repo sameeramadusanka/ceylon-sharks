@@ -253,7 +253,8 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   useEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = 'manual';
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // Start at the top, unless the link points at a section (e.g. /#squad); the deep-link effect below handles that.
+    if (window.location.hash.length <= 1) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
     return () => {
       window.history.scrollRestoration = previousScrollRestoration;
@@ -276,8 +277,35 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       url.searchParams.delete('player');
       window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
     }
-    if (url.hash.length > 1) document.getElementById(decodeURIComponent(url.hash.slice(1)))?.scrollIntoView();
   }, [scoreCards]);
+
+  // #section links (e.g. "Meet the squad" → /#squad). The page first renders placeholder matches and
+  // players and then swaps in the season data, which changes the page height, so jump only once that has
+  // rendered and fonts have loaded — instantly, not with the site's smooth scroll — and re-check after
+  // images load. Stops as soon as the visitor scrolls on their own.
+  useEffect(() => {
+    const sectionId = decodeURIComponent(window.location.hash.slice(1));
+    if (!sectionId) return undefined;
+    let visitorScrolled = false;
+    const stop = () => { visitorScrolled = true; };
+    const settle = () => {
+      const target = document.getElementById(sectionId);
+      if (visitorScrolled || !target) return;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, left: 0, behavior: 'instant' });
+    };
+    const interactions = ['wheel', 'touchstart', 'keydown', 'mousedown'] as const;
+    interactions.forEach((type) => window.addEventListener(type, stop, { passive: true }));
+    let frame = window.requestAnimationFrame(() => { frame = window.requestAnimationFrame(settle); });
+    const timer = window.setTimeout(settle, 500);
+    void document.fonts?.ready.then(settle);
+    window.addEventListener('load', settle);
+    return () => {
+      interactions.forEach((type) => window.removeEventListener(type, stop));
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+      window.removeEventListener('load', settle);
+    };
+  }, []);
 
   const storyImages = historyImages.length ? historyImages : (groundImage ? [groundImage] : []);
   const currentHistoryImage = storyImages[historyImageIndex] ?? storyImages[0] ?? groundImage;
