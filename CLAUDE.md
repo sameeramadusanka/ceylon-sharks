@@ -45,7 +45,7 @@ Data lives in per-season subfolders under `public/`, named e.g. `2026_SEPTEMBER_
 - `public/season_statistics/{season}/{SEASON}__{BATTING|BOWLING|FIELDING}__{YEAR}.json`
 - `public/score_cards/{season}/{SEASON}__MATCH-{N}__{YYYY-MM-DD}.json`
 - `public/upcoming_schedules/*.json` — any `.json`, shape `{ matches: [...] }`, not season-scoped
-- `public/banner_images/optimized/`, `public/history_images/`, `public/ground_images/`, `public/player_images/{playerId}.ext` — plain image folders, sorted alphabetically, no manifest
+- `src/assets/banner_images/`, `src/assets/history_images/`, `src/assets/ground_images/`, `src/assets/player_images/{playerId}.ext` — plain image folders, sorted alphabetically, no manifest. They live under `src/` (not `public/`) so `src/lib/siteImages.ts` can resize/compress them to WebP at build time via `astro:assets`; only `public/brand/` images (logo, favicon, Open Graph image) are served as-is because they need stable URLs
 
 Each matcher also accepts a legacy double-segment form (`{SEASON}__{DIVISION}__...`) alongside the modern single-segment form — both regex variants are tried. When adding a new season, follow the existing naming exactly; a misnamed file is silently excluded rather than erroring.
 

@@ -74,11 +74,7 @@ src/
     scorecard.css
     availability.css
 public/
-  banner_images/optimized/
   brand/
-  ground_images/
-  history_images/
-  player_images/
   players/
   score_cards/
   season_results/
@@ -119,10 +115,13 @@ When adding a season, provide matching results, player, and statistics files usi
 - `public/season_statistics/` — batting, bowling, and fielding statistics
 - `public/score_cards/` — detailed match scorecards
 - `public/upcoming_schedules/` — scheduled fixtures
-- `public/history_images/` — images for the History carousel
-- `public/banner_images/optimized/` — hero banner images
-- `public/ground_images/` — fallback ground image
-- `public/player_images/` — player photos
+- `src/assets/history_images/` — images for the History carousel
+- `src/assets/banner_images/` — hero banner images
+- `src/assets/ground_images/` — fallback ground image
+- `src/assets/player_images/` — player photos, named `{playerId}.png` or `.jpg`
+- `src/assets/player_of_the_week/{season}/` — Player of the Week posters and details
+
+Images under `src/assets/` are resized and compressed automatically at build time, so add full-size originals there. Only the compressed copies are published.
 - `public/brand/favicon.png` — browser favicon
 - `public/brand/Open-graph-image.png` — Open Graph and Twitter share image
 
