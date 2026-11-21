@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ChevronDown, ChevronRight, CircleDot, Menu, Play, X } from 'lucide-react';
 import team from '../data/team.json';
 import fallbackPlayers from '../data/players.json';
@@ -218,6 +218,9 @@ function text(template: string, values: Record<string, string>) {
   return Object.entries(values).reduce((result, [key, value]) => result.replace(`{${key}}`, value), template);
 }
 
+// useLayoutEffect warns during Astro's server render; fall back to useEffect there.
+const useBrowserLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
 function SectionLabel({ children }: { children: string }) {
   return <p className="section-label"><span />{children}</p>;
 }
@@ -249,6 +252,10 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
   const datasetPickerRef = useRef<HTMLDivElement>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const pendingProfileId = useRef<number | null>(null);
+  // Where the season picker sat on screen when a new season was picked (see the layout effect below).
+  // Measure the button itself: on phones a long season name wraps it onto its own line inside the filter row.
+  const seasonPickerAnchor = useRef<{ top: number; until: number } | null>(null);
+  const seasonPickerButton = () => datasetPickerRef.current?.querySelector<HTMLElement>('.dataset-picker-trigger') ?? datasetPickerRef.current;
 
   useEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration;
@@ -306,6 +313,22 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
       window.removeEventListener('load', settle);
     };
   }, []);
+
+  // Switching season can add or remove sections above Match Centre (e.g. Player of the Week), which moves
+  // the page under the visitor. Browsers without scroll anchoring (Safari) then jump, so keep the season
+  // picker where it was on screen across the season's renders. Where the browser already compensated, the
+  // measured shift is 0 and this does nothing.
+  useBrowserLayoutEffect(() => {
+    const anchor = seasonPickerAnchor.current;
+    const picker = seasonPickerButton();
+    if (!anchor || !picker) return;
+    if (performance.now() > anchor.until) {
+      seasonPickerAnchor.current = null;
+      return;
+    }
+    const shift = picker.getBoundingClientRect().top - anchor.top;
+    if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, left: 0, behavior: 'instant' });
+  }, [selectedSeasonFile, matches, players]);
 
   const storyImages = historyImages.length ? historyImages : (groundImage ? [groundImage] : []);
   const currentHistoryImage = storyImages[historyImageIndex] ?? storyImages[0] ?? groundImage;
@@ -484,7 +507,7 @@ export default function TeamDashboard({ playersBySeason, bannerImages, groundIma
 
       <section className="matches page-width" id="matches">
         <div className="section-heading"><div><SectionLabel>{sectionLabel('matches')}</SectionLabel><h2>{site.sections.matches.titleBefore}<br /><em>{site.sections.matches.titleEmphasis}</em></h2></div></div>
-        <div className="match-filters">{seasonFiles.length > 0 && <div className="filter-group dataset-filter" ref={datasetPickerRef}><span>{site.filters.datasetLabel}</span><div className="dataset-picker"><button className="dataset-picker-trigger" type="button" aria-expanded={datasetMenuOpen} aria-haspopup="listbox" onClick={() => setDatasetMenuOpen(!datasetMenuOpen)}><span>{formatDisplayName(selectedSeason?.season ?? '')}</span><ChevronDown size={14} /></button>{datasetMenuOpen && <div className="dataset-menu" role="listbox" aria-label={site.filters.datasetLabel}>{seasonFiles.map((file) => <button className={file.fileName === selectedSeasonFile ? 'is-selected' : ''} type="button" role="option" aria-selected={file.fileName === selectedSeasonFile} key={file.fileName} onClick={() => { setSelectedSeasonFile(file.fileName); setDatasetMenuOpen(false); }}><strong>{formatDisplayName(file.season)}</strong></button>)}</div>}</div></div>}<div className="filter-group"><span>{site.filters.formatLabel}</span>{availableFormats.map((item) => <button className={format === item ? 'is-active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</div><div className="filter-group"><span>{site.filters.resultLabel}</span>{[site.filters.all, 'WIN', 'LOSS', 'NO RESULT'].map((item) => <button className={matchFilter === item ? 'is-active' : ''} onClick={() => setMatchFilter(item)} key={item}>{item}</button>)}</div></div>
+        <div className="match-filters">{seasonFiles.length > 0 && <div className="filter-group dataset-filter" ref={datasetPickerRef}><span>{site.filters.datasetLabel}</span><div className="dataset-picker"><button className="dataset-picker-trigger" type="button" aria-expanded={datasetMenuOpen} aria-haspopup="listbox" onClick={() => setDatasetMenuOpen(!datasetMenuOpen)}><span>{formatDisplayName(selectedSeason?.season ?? '')}</span><ChevronDown size={14} /></button>{datasetMenuOpen && <div className="dataset-menu" role="listbox" aria-label={site.filters.datasetLabel}>{seasonFiles.map((file) => <button className={file.fileName === selectedSeasonFile ? 'is-selected' : ''} type="button" role="option" aria-selected={file.fileName === selectedSeasonFile} key={file.fileName} onClick={() => { seasonPickerAnchor.current = { top: seasonPickerButton()?.getBoundingClientRect().top ?? 0, until: performance.now() + 500 }; setSelectedSeasonFile(file.fileName); setDatasetMenuOpen(false); }}><strong>{formatDisplayName(file.season)}</strong></button>)}</div>}</div></div>}<div className="filter-group"><span>{site.filters.formatLabel}</span>{availableFormats.map((item) => <button className={format === item ? 'is-active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</div><div className="filter-group"><span>{site.filters.resultLabel}</span>{[site.filters.all, 'WIN', 'LOSS', 'NO RESULT'].map((item) => <button className={matchFilter === item ? 'is-active' : ''} onClick={() => setMatchFilter(item)} key={item}>{item}</button>)}</div></div>
         <div className="fixture-feature"><div><span className="match-kicker">{text(site.nextMatch.labelTemplate, { league: team.league })}</span><p className="fixture-date">{nextScheduledDate.day} <small>{nextScheduledDate.month}</small> {nextScheduledDate.year} <b>{nextScheduledMatch?.time ?? site.nextMatch.time}</b></p><div className="fixture-teams"><strong>{team.shortName.toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong><span>{site.nextMatch.versus}</span><strong>{(nextScheduledMatch ? nextScheduledOpponent : site.nextMatch.opponent).toUpperCase()} <small>{site.nextMatch.opponentSuffix}</small></strong></div><p className="fixture-venue">{nextScheduledMatch?.ground || team.stadium} · {site.nextMatch.venueSuffix}</p></div><div className="fixture-badge"><span>{site.nextMatch.formLabel}</span><div>{recentForm.slice(-5).map((item, index) => <b className={item === 'W' ? 'win' : item === 'L' ? 'loss' : 'no-result'} key={`${item}-${index}`}>{item}</b>)}</div><small>{site.nextMatch.lastMatchesLabel}</small></div></div>
         <div className="match-list">{filteredMatches.map((match) => { const scoreCardSource = seasonScoreCards.find((scoreCard) => scoreCard.matchNumber === match.id); const matchResultClass = match.result === 'WIN' ? 'match-result--win' : match.result === 'NO RESULT' ? 'match-result--no-result' : 'match-result--loss'; const resultBadge = match.result === 'WIN' ? site.matchLabels.winShort : match.result === 'NO RESULT' ? 'NR' : site.matchLabels.lossShort; const resultLabel = match.result === 'NO RESULT' ? 'NO RESULT' : match.result; return <article className={`match-card${scoreCardSource ? ' match-card--interactive' : ''}`} key={match.id} onClick={() => scoreCardSource && setSelectedScoreCard(parseScoreCard(scoreCardSource))} onKeyDown={(event) => { if (scoreCardSource && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelectedScoreCard(parseScoreCard(scoreCardSource)); } }} role={scoreCardSource ? 'button' : undefined} tabIndex={scoreCardSource ? 0 : undefined}><div className="match-meta"><span>{match.format} · {site.matchLabels.matchPrefix} {match.id}</span><span>{match.date}</span></div><div className="match-score"><span>{team.shortName.toUpperCase()}</span><strong>{match.teamScore}</strong></div><div className="match-score"><span>{match.opponent.toUpperCase()}</span><strong>{match.opponentScore}</strong></div><div className={`match-result ${matchResultClass}`}><b>{resultBadge}</b> {resultLabel} {match.result !== 'NO RESULT' ? `${match.result === 'WIN' ? site.matchLabels.winBy : site.matchLabels.lossBy} ${match.margin}` : ''}</div>{scoreCardSource && <span className="scorecard-link">{site.scorecardLabels.view} <ArrowUpRight size={13} /></span>}</article>; })}</div>
       </section>
