@@ -120,6 +120,12 @@ describe('verifyAdminLogin handler', () => {
     expect(ddbMock.commandCalls(DeleteCommand)).toHaveLength(1);
     const putCall = ddbMock.commandCalls(PutCommand)[0].args[0].input;
     expect(putCall.Item?.email).toBe('captain@example.com');
+
+    // Sessions last 2 weeks (a few seconds of slack: the clock isn't frozen in this test).
+    const twoWeeksSeconds = 14 * 24 * 60 * 60;
+    const lifetime = (putCall.Item?.expiresAt as number) - NOW_SECONDS;
+    expect(lifetime).toBeGreaterThanOrEqual(twoWeeksSeconds);
+    expect(lifetime).toBeLessThanOrEqual(twoWeeksSeconds + 5);
   });
 
   it('returns 500 without leaking internal error details when a lookup throws', async () => {
