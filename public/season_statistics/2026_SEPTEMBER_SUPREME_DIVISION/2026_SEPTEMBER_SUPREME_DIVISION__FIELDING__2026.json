@@ -17,6 +17,17 @@
       },
       {
         "rank": 2,
+        "player": "Tharindu Hettiarachchi",
+        "team": null,
+        "catches": 4,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 1,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 5
+      },
+      {
+        "rank": 3,
         "player": "Chamara Jayalath",
         "team": null,
         "catches": 2,
@@ -27,7 +38,7 @@
         "totalDismissals": 4
       },
       {
-        "rank": 3,
+        "rank": 4,
         "player": "Pasindu Chandrasekara",
         "team": null,
         "catches": 4,
@@ -38,19 +49,8 @@
         "totalDismissals": 4
       },
       {
-        "rank": 4,
-        "player": "Sameera Perera",
-        "team": null,
-        "catches": 3,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 3
-      },
-      {
         "rank": 5,
-        "player": "Tharindu Hettiarachchi",
+        "player": "Sameera Perera",
         "team": null,
         "catches": 3,
         "wicketKeeperCatches": 0,
@@ -83,6 +83,17 @@
       },
       {
         "rank": 8,
+        "player": "Gagith Abeysekara",
+        "team": null,
+        "catches": 2,
+        "wicketKeeperCatches": 0,
+        "directRunOuts": 0,
+        "indirectRunOuts": 0,
+        "stumpings": 0,
+        "totalDismissals": 2
+      },
+      {
+        "rank": 9,
         "player": "Malinda Mendis",
         "team": null,
         "catches": 0,
@@ -93,7 +104,7 @@
         "totalDismissals": 1
       },
       {
-        "rank": 9,
+        "rank": 10,
         "player": "Hasitha De Silva",
         "team": null,
         "catches": 1,
@@ -104,7 +115,7 @@
         "totalDismissals": 1
       },
       {
-        "rank": 10,
+        "rank": 11,
         "player": "Thameera Muthukumarana",
         "team": null,
         "catches": 1,
@@ -115,7 +126,7 @@
         "totalDismissals": 1
       },
       {
-        "rank": 11,
+        "rank": 12,
         "player": "Lasitha Lokuge",
         "team": null,
         "catches": 0,
@@ -126,19 +137,8 @@
         "totalDismissals": 0
       },
       {
-        "rank": 12,
-        "player": "Chinthaka Rajarathna",
-        "team": null,
-        "catches": 0,
-        "wicketKeeperCatches": 0,
-        "directRunOuts": 0,
-        "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 0
-      },
-      {
         "rank": 13,
-        "player": "Gagith Abeysekara",
+        "player": "Chinthaka Rajarathna",
         "team": null,
         "catches": 0,
         "wicketKeeperCatches": 0,
