@@ -67,6 +67,15 @@
         "teamTwo": "Lightning Hawks",
         "result": "Ceylon Sharks won by 7 Wickets",
         "scoreSummary": "Ceylon Sharks: 70/3(10.1)Lightning Hawks: 69/8(15)"
+      },
+      {
+        "id": 8,
+        "format": "League",
+        "date": "2026-11-22",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Cool Blue",
+        "result": "Ceylon Sharks won by 6 Wickets",
+        "scoreSummary": "Ceylon Sharks: 82/4(11.1)Cool Blue: 81/5(15)"
       }
     ]
   }

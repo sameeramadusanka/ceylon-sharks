@@ -1,0 +1,571 @@
+{
+  "match": {
+    "id": "2026 SEPTEMBER SUPREME DIVISION",
+    "competition": "2026 SEPTEMBER SUPREME DIVISION",
+    "matchTitle": "Cool Blue Vs Ceylon Sharks",
+    "date": "2026-11-22",
+    "teams": {
+      "home": {
+        "name": "Cool Blue",
+        "shortName": "Cool Blue"
+      },
+      "away": {
+        "name": "Ceylon Sharks",
+        "shortName": "Ceylon Sharks"
+      }
+    },
+    "result": {
+      "winner": "Ceylon Sharks",
+      "resultType": "WON",
+      "margin": {
+        "type": "WICKETS",
+        "value": 6
+      },
+      "summary": "Ceylon Sharks won by 6 wickets"
+    }
+  },
+  "innings": [
+    {
+      "inningsNumber": 1,
+      "team": "Cool Blue",
+      "opponent": "Ceylon Sharks",
+      "score": {
+        "runs": 81,
+        "wickets": 5,
+        "overs": "15",
+        "display": "81/5",
+        "runRate": 5.4
+      },
+      "batting": [
+        {
+          "player": "J D",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Gagith Abeysekara",
+            "bowler": "Nuwan Sanjeewa"
+          },
+          "runs": 10,
+          "balls": 27,
+          "fours": 0,
+          "sixes": 1,
+          "strikeRate": 37.04
+        },
+        {
+          "player": "Srinivasan Balaji",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Nuwan Sanjeewa"
+          },
+          "runs": 28,
+          "balls": 24,
+          "fours": 1,
+          "sixes": 3,
+          "strikeRate": 116.67
+        },
+        {
+          "player": "Rajaram Saravana Kumar",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Gagith Abeysekara",
+            "bowler": "Hasitha De Silva"
+          },
+          "runs": 1,
+          "balls": 2,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 50.0
+        },
+        {
+          "player": "Pugalendhi Thirunavukkarasu",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 17,
+          "balls": 16,
+          "fours": 0,
+          "sixes": 2,
+          "strikeRate": 106.25
+        },
+        {
+          "player": "Pushpa Raj",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Tharindu Hettiarachchi",
+            "bowler": "Nuwan Sanjeewa"
+          },
+          "runs": 1,
+          "balls": 5,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 20.0
+        },
+        {
+          "player": "Sandeep Sandy",
+          "dismissal": {
+            "type": "RUN_OUT",
+            "fielder": null,
+            "bowler": "Tharindu Hettiarachchi"
+          },
+          "runs": 17,
+          "balls": 16,
+          "fours": 1,
+          "sixes": 2,
+          "strikeRate": 106.25
+        },
+        {
+          "player": "Ramesh Kumar Petchimuthu",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 2,
+          "balls": 1,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 200.0
+        },
+        {
+          "player": "Saranraj Munusamy",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Prakasam Raju",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "UDHAYAKUMAR SHANMUGAM",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Murugan Muthumari",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 1,
+        "wides": 3,
+        "noBalls": 1,
+        "penalty": 0,
+        "total": 5
+      },
+      "bowling": [
+        {
+          "player": "Sampath Basnagoda",
+          "overs": "3",
+          "maidens": 1,
+          "runs": 12,
+          "wickets": 0,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 15,
+          "economy": 4.0
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "overs": "3",
+          "maidens": 1,
+          "runs": 17,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 14,
+          "economy": 5.67
+        },
+        {
+          "player": "Chamara Jayalath",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 17,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 5.67
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 22,
+          "wickets": 0,
+          "wides": 1,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 7.33
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "overs": "2",
+          "maidens": 0,
+          "runs": 10,
+          "wickets": 3,
+          "wides": 1,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 8,
+          "economy": 5.0
+        },
+        {
+          "player": "Hasitha De Silva",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 2,
+          "wickets": 1,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 4,
+          "economy": 2.0
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Srinivasan Balaji",
+          "score": 40,
+          "over": "8.2"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "J D",
+          "score": 41,
+          "over": "8.4"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Rajaram Saravana Kumar",
+          "score": 43,
+          "over": "9.2"
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Pushpa Raj",
+          "score": 44,
+          "over": "10.2"
+        },
+        {
+          "wicketNumber": 5,
+          "player": "Sandeep Sandy",
+          "score": 79,
+          "over": "14.6"
+        }
+      ]
+    },
+    {
+      "inningsNumber": 2,
+      "team": "Ceylon Sharks",
+      "opponent": "Cool Blue",
+      "score": {
+        "runs": 82,
+        "wickets": 4,
+        "overs": "11.1",
+        "display": "82/4",
+        "runRate": 7.34
+      },
+      "batting": [
+        {
+          "player": "Hasanka Chandrasena",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "J D",
+            "bowler": "Rajaram Saravana Kumar"
+          },
+          "runs": 6,
+          "balls": 10,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 60.0
+        },
+        {
+          "player": "Tharindu Hettiarachchi",
+          "dismissal": {
+            "type": "BOWLED",
+            "fielder": null,
+            "bowler": "Pushpa Raj"
+          },
+          "runs": 45,
+          "balls": 32,
+          "fours": 2,
+          "sixes": 5,
+          "strikeRate": 140.62
+        },
+        {
+          "player": "Pasindu Chandrasekara",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Sandeep Sandy",
+            "bowler": "Rajaram Saravana Kumar"
+          },
+          "runs": 0,
+          "balls": 1,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Sameera Perera",
+          "dismissal": {
+            "type": "CAUGHT",
+            "fielder": "Srinivasan Balaji",
+            "bowler": "Pushpa Raj"
+          },
+          "runs": 16,
+          "balls": 17,
+          "fours": 0,
+          "sixes": 2,
+          "strikeRate": 94.12
+        },
+        {
+          "player": "Nuwan Sanjeewa",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 5,
+          "balls": 10,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 50.0
+        },
+        {
+          "player": "Kasun Sampath",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Lasitha Lokuge",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Hasitha De Silva",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Chamara Jayalath",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Gagith Abeysekara",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        },
+        {
+          "player": "Sampath Basnagoda",
+          "dismissal": {
+            "type": "NOT_OUT",
+            "fielder": null,
+            "bowler": null
+          },
+          "runs": 0,
+          "balls": 0,
+          "fours": 0,
+          "sixes": 0,
+          "strikeRate": 0.0
+        }
+      ],
+      "extras": {
+        "byes": 0,
+        "legByes": 0,
+        "wides": 7,
+        "noBalls": 3,
+        "penalty": 0,
+        "total": 10
+      },
+      "bowling": [
+        {
+          "player": "Murugan Muthumari",
+          "overs": "3",
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 0,
+          "wides": 2,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 11,
+          "economy": 4.0
+        },
+        {
+          "player": "Prakasam Raju",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 14,
+          "wickets": 0,
+          "wides": 1,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 4,
+          "economy": 14.0
+        },
+        {
+          "player": "Rajaram Saravana Kumar",
+          "overs": "2",
+          "maidens": 0,
+          "runs": 20,
+          "wickets": 2,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 9,
+          "economy": 10.0
+        },
+        {
+          "player": "Ramesh Kumar Petchimuthu",
+          "overs": "2",
+          "maidens": 0,
+          "runs": 12,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 1,
+          "hattricks": 0,
+          "dotBalls": 7,
+          "economy": 6.0
+        },
+        {
+          "player": "Pugalendhi Thirunavukkarasu",
+          "overs": "1",
+          "maidens": 0,
+          "runs": 15,
+          "wickets": 0,
+          "wides": 0,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 2,
+          "economy": 15.0
+        },
+        {
+          "player": "Pushpa Raj",
+          "overs": "2.1",
+          "maidens": 0,
+          "runs": 9,
+          "wickets": 2,
+          "wides": 2,
+          "noBalls": 0,
+          "hattricks": 0,
+          "dotBalls": 7,
+          "economy": 4.15
+        }
+      ],
+      "fallOfWickets": [
+        {
+          "wicketNumber": 1,
+          "player": "Hasanka Chandrasena",
+          "score": 31,
+          "over": "3.3"
+        },
+        {
+          "wicketNumber": 2,
+          "player": "Pasindu Chandrasekara",
+          "score": 31,
+          "over": "3.4"
+        },
+        {
+          "wicketNumber": 3,
+          "player": "Sameera Perera",
+          "score": 74,
+          "over": "9.1"
+        },
+        {
+          "wicketNumber": 4,
+          "player": "Tharindu Hettiarachchi",
+          "score": 78,
+          "over": "9.6"
+        }
+      ]
+    }
+  ],
+  "matchSummary": {
+    "firstInnings": "Cool Blue 81/5 (15 overs)",
+    "secondInnings": "Ceylon Sharks 82/4 (11.1 overs)",
+    "winner": "Ceylon Sharks",
+    "margin": "6 wickets"
+  }
+}
