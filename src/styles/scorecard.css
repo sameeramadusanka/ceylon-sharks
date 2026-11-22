@@ -227,6 +227,22 @@
   text-transform: none;
 }
 
+.scorecard-did-not-bat {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 10px 0 0;
+}
+
+.scorecard-did-not-bat span {
+  color: #777870;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .06em;
+  margin-right: 6px;
+  text-transform: uppercase;
+}
+
 .scorecard-fall-of-wickets p {
   line-height: 1.8;
   margin: 0;

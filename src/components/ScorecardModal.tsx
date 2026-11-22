@@ -81,6 +81,13 @@ export function battersWhoBatted(innings: Innings): Innings['batting'] {
   return batting.slice(0, Math.max(atCrease, lastWithEvidence));
 }
 
+/** The rest of the batting order: listed on one line under the table, as on a printed scorecard. */
+function DidNotBat({ innings }: { innings: Innings }) {
+  const names = innings.batting.slice(battersWhoBatted(innings).length).map((batter) => batter.player);
+  if (names.length === 0) return null;
+  return <p className="scorecard-did-not-bat"><span>{site.scorecardLabels.didNotBat}</span> {names.join(', ')}</p>;
+}
+
 function dismissalText(dismissal: ScoreCard['innings'][number]['batting'][number]['dismissal']) {
   if (!dismissal) return 'not out';
   const detail = dismissal.bowler ? ` b ${dismissal.bowler}` : dismissal.fielder ? ` (${dismissal.fielder})` : '';
@@ -113,6 +120,7 @@ export default function ScorecardModal({ scoreCard, onClose }: ScorecardModalPro
                   {battersWhoBatted(innings).map((batter) => <div className="scorecard-table-row" key={batter.player}><span className="scorecard-player-name">{batter.player}</span><span className="scorecard-dismissal">{dismissalText(batter.dismissal)}</span><span>{batter.runs}</span><span>{batter.balls}</span><span>{batter.fours}</span><span>{batter.sixes}</span><span>{rateText(batter.strikeRate)}</span></div>)}
                 </div>
                 <div className="scorecard-extras"><span>{site.scorecardLabels.extras}</span><b>{innings.extras.total}</b><small> b {innings.extras.byes} · lb {innings.extras.legByes} · w {innings.extras.wides} · nb {innings.extras.noBalls}</small></div>
+                <DidNotBat innings={innings} />
               </div>
               <div className="scorecard-section">
                 <div className="scorecard-section-heading"><h3>{site.scorecardLabels.bowling}</h3><span>{site.scorecardLabels.wickets}</span></div>

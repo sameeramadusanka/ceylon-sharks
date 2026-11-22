@@ -120,6 +120,7 @@
     "player": "Player",
     "dismissal": "Dismissal",
     "extras": "Extras",
+    "didNotBat": "Did not bat",
     "fallOfWickets": "Fall of wickets"
   },
   "playerLabels": {
