@@ -13,7 +13,7 @@ export type ScoreCard = {
     inningsNumber: number;
     team: string;
     opponent: string;
-    score: { display: string; overs: number; runRate: number | string };
+    score: { display: string; overs: number | string; runRate: number | string; wickets?: number | string };
     batting: Array<{
       player: string;
       dismissal: { type: string; fielder: string | null; bowler: string | null } | null;
@@ -55,6 +55,38 @@ const numericValue = (value: number | string | null | undefined) => {
   return Number.isFinite(numeric) ? numeric : 0;
 };
 const rateText = (value: number | string | null | undefined) => numericValue(value).toFixed(2);
+/** "12.4" overs → 76 balls. */
+const oversToBalls = (overs: number | string | undefined) => {
+  const [whole, part] = String(overs ?? '0').split('.');
+  return numericValue(whole) * 6 + numericValue(part);
+};
+
+type Innings = ScoreCard['innings'][number];
+
+/**
+ * The batters who actually batted, in batting order. The source data lists all eleven, with anyone who
+ * never batted as "not out" off 0 balls. Batters reach the crease in list order, so the number who batted
+ * is: one per wicket, plus any retired hurt (not counted as a wicket), plus the two at the crease at the
+ * end — or only one if the last wicket fell on the innings' final ball, because the next batter never
+ * walked out. Anyone dismissed or who faced a ball is always kept, so a data quirk never hides a real innings.
+ */
+export function battersWhoBatted(innings: Innings): Innings['batting'] {
+  const batting = innings.batting;
+  const wickets = numericValue(innings.score.wickets);
+  const retiredHurt = batting.filter((batter) => batter.dismissal?.type === 'RETIRED_HURT').length;
+  const lastWicketBall = Math.max(-1, ...innings.fallOfWickets.map((wicket) => oversToBalls(wicket.over)));
+  const lastBallWicket = innings.fallOfWickets.length > 0 && lastWicketBall >= oversToBalls(innings.score.overs);
+  const atCrease = wickets + retiredHurt + (lastBallWicket ? 1 : 2);
+  const lastWithEvidence = batting.reduce((last, batter, index) => (batter.dismissal && batter.dismissal.type !== 'NOT_OUT') || numericValue(batter.balls) > 0 ? index + 1 : last, 0);
+  return batting.slice(0, Math.max(atCrease, lastWithEvidence));
+}
+
+/** The rest of the batting order: listed on one line under the table, as on a printed scorecard. */
+function DidNotBat({ innings }: { innings: Innings }) {
+  const names = innings.batting.slice(battersWhoBatted(innings).length).map((batter) => batter.player);
+  if (names.length === 0) return null;
+  return <p className="scorecard-did-not-bat"><span>{site.scorecardLabels.didNotBat}</span> {names.join(', ')}</p>;
+}
 
 function dismissalText(dismissal: ScoreCard['innings'][number]['batting'][number]['dismissal']) {
   if (!dismissal) return 'not out';
@@ -85,9 +117,10 @@ export default function ScorecardModal({ scoreCard, onClose }: ScorecardModalPro
                 <div className="scorecard-section-heading"><h3>{site.scorecardLabels.batting}</h3><span>{site.scorecardLabels.runs}</span></div>
                 <div className="scorecard-table scorecard-table--batting">
                   <div className="scorecard-table-row scorecard-table-heading"><span>{site.scorecardLabels.player}</span><span>{site.scorecardLabels.dismissal}</span><span>R</span><span>B</span><span>4s</span><span>6s</span><span>SR</span></div>
-                  {innings.batting.map((batter) => <div className="scorecard-table-row" key={batter.player}><span className="scorecard-player-name">{batter.player}</span><span className="scorecard-dismissal">{dismissalText(batter.dismissal)}</span><span>{batter.runs}</span><span>{batter.balls}</span><span>{batter.fours}</span><span>{batter.sixes}</span><span>{rateText(batter.strikeRate)}</span></div>)}
+                  {battersWhoBatted(innings).map((batter) => <div className="scorecard-table-row" key={batter.player}><span className="scorecard-player-name">{batter.player}</span><span className="scorecard-dismissal">{dismissalText(batter.dismissal)}</span><span>{batter.runs}</span><span>{batter.balls}</span><span>{batter.fours}</span><span>{batter.sixes}</span><span>{rateText(batter.strikeRate)}</span></div>)}
                 </div>
                 <div className="scorecard-extras"><span>{site.scorecardLabels.extras}</span><b>{innings.extras.total}</b><small> b {innings.extras.byes} · lb {innings.extras.legByes} · w {innings.extras.wides} · nb {innings.extras.noBalls}</small></div>
+                <DidNotBat innings={innings} />
               </div>
               <div className="scorecard-section">
                 <div className="scorecard-section-heading"><h3>{site.scorecardLabels.bowling}</h3><span>{site.scorecardLabels.wickets}</span></div>
