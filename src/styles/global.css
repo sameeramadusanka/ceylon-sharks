@@ -71,6 +71,9 @@ a { color: inherit; text-decoration: none; }
 .modal-detail-sections { gap: 30px; }
 @media (max-width: 800px) {
 	.player-photo { height: 300px; }
+	/* Keep squad cards top-aligned and reserve two lines for names so a long name doesn't shift its row */
+	.player-card { display: flex; flex-direction: column; justify-content: flex-start; }
+	.player-info h3 { line-height: 1.2; min-height: 2.4em; }
 	.modal-photo { background-color: var(--cream); background-position: center top; background-size: contain; background-repeat: no-repeat; min-height: 360px; }
 	.modal-content { padding: 42px 30px; }
 }
