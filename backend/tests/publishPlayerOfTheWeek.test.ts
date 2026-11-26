@@ -18,6 +18,8 @@ vi.mock('../src/github/githubClient.js', async (importOriginal) => {
   return { ...original, createGithubClient: vi.fn(() => github) };
 });
 vi.mock('../src/github/githubToken.js', () => ({ getGithubToken, resetGithubTokenCache }));
+const startPlayerOfTheWeekNotification = vi.fn();
+vi.mock('../src/handlers/notifyTrigger.js', () => ({ startPlayerOfTheWeekNotification }));
 
 const { handler, imageExtension } = await import('../src/handlers/publishPlayerOfTheWeek.js');
 const { GithubApiError } = await import('../src/github/githubClient.js');
@@ -44,6 +46,7 @@ const ENV = {
   POTW_PUBLISH_BRANCH: 'potw-test',
   POTW_BASE_BRANCH: 'main',
   GITHUB_TOKEN_PARAMETER: '/ceylon-sharks/github-publish-token',
+  NOTIFY_POTW_FUNCTION: 'ceylon-sharks-availability-notify-potw',
 };
 
 const SEASON = '2026_SEPTEMBER_SUPREME_DIVISION';
@@ -92,6 +95,7 @@ beforeEach(() => {
   for (const fn of Object.values(github)) fn.mockReset();
   getGithubToken.mockReset().mockResolvedValue('gh-test');
   resetGithubTokenCache.mockReset();
+  startPlayerOfTheWeekNotification.mockReset().mockResolvedValue(undefined);
   github.ensureBranch.mockResolvedValue(undefined);
   github.listDirectory.mockImplementation(async (path: string) =>
     path.startsWith('public/players/') ? [{ name: `${SEASON}__PLAYERS__2026.json`, path: `public/players/${SEASON}/${SEASON}__PLAYERS__2026.json`, type: 'file' }] : [],
@@ -218,6 +222,46 @@ describe('publishPlayerOfTheWeek handler', () => {
     expect(status).toBe(502);
     expect(body.message).toMatch(/token may have expired/);
     expect(resetGithubTokenCache).toHaveBeenCalled();
+  });
+});
+
+describe('publishPlayerOfTheWeek notifications', () => {
+  it('starts the notify function with the published entry', async () => {
+    signIn('owner@example.com');
+    const { status, body } = await invoke(validBody());
+    expect(status).toBe(200);
+    expect(body.notifications).toBe('scheduled');
+    expect(startPlayerOfTheWeekNotification).toHaveBeenCalledWith('ceylon-sharks-availability-notify-potw', {
+      season: SEASON,
+      date: '2026-11-22',
+      playerId: 3190737,
+      details: expect.objectContaining({ playerName: 'Tharindu Hettiarachchi', wicketKeeping: '1 stumping' }),
+      notifyPlayer: true,
+      replaced: false,
+      publishedBy: 'owner@example.com',
+      commitUrl: 'https://github.com/example/ceylon-sharks/commit/abc123',
+    });
+  });
+
+  it('passes "Email the player" unticked through', async () => {
+    signIn('owner@example.com');
+    await invoke(validBody({ notifyPlayer: false }));
+    expect(startPlayerOfTheWeekNotification.mock.calls[0][1].notifyPlayer).toBe(false);
+  });
+
+  it('still reports a successful publish when the notifications cannot be started', async () => {
+    signIn('owner@example.com');
+    startPlayerOfTheWeekNotification.mockRejectedValue(new Error('AccessDenied'));
+    const { status, body } = await invoke(validBody());
+    expect(status).toBe(200);
+    expect(body.notifications).toBe('not-scheduled');
+  });
+
+  it('does not notify when the publish fails', async () => {
+    signIn('owner@example.com');
+    github.commitFiles.mockRejectedValue(new GithubApiError('boom', 500));
+    expect((await invoke(validBody())).status).toBe(502);
+    expect(startPlayerOfTheWeekNotification).not.toHaveBeenCalled();
   });
 });
 

@@ -284,3 +284,151 @@ export function captainNotificationEmail(params: CaptainNotificationParams): Ema
 
   return { subject, text, html: emailShell(params.logoUrl, body) };
 }
+
+// ---------------------------------------------------------------------------
+// Player of the Week - sent by the notify-potw Lambda once the share page is live.
+// ---------------------------------------------------------------------------
+
+export interface PlayerOfTheWeekEmailParams {
+  playerName: string;
+  opponent: string;
+  /** e.g. "14 Nov 2026" */
+  displayDate: string;
+  competition?: string;
+  /** Only the figures that were filled in, e.g. [{ label: 'Batting', value: '73* (36, 4×4, 7×6)' }]. */
+  figures: Array<{ label: string; value: string }>;
+  caption?: string;
+  pageUrl: string;
+  logoUrl: string;
+}
+
+/** What happened to the winner's congratulations email - reported to the publishers. */
+export type PlayerEmailOutcome = 'sent' | 'skipped' | 'no-email' | 'failed';
+
+export interface PlayerOfTheWeekAdminParams extends PlayerOfTheWeekEmailParams {
+  publishedBy: string;
+  replaced: boolean;
+  commitUrl: string;
+  playerEmail: PlayerEmailOutcome;
+}
+
+function playerOfTheWeekCard(params: PlayerOfTheWeekEmailParams): string {
+  const matchLine = [`vs ${params.opponent}`, params.competition, params.displayDate].filter(Boolean).join(' · ');
+  const figureRows = params.figures
+    .map(
+      (figure, index) => `
+    <tr>
+      <td style="padding:8px 14px;${index > 0 ? `border-top:1px solid ${COLOR_LINE};` : ''}">
+        <span style="display:inline-block;min-width:110px;color:${COLOR_MUTED};font-size:11px;letter-spacing:.06em;text-transform:uppercase;">${escapeHtml(figure.label)}</span>
+        <strong style="color:${COLOR_INK};">${escapeHtml(figure.value)}</strong>
+      </td>
+    </tr>`,
+    )
+    .join('');
+  return `
+    <p style="margin:0 0 4px;color:${COLOR_AMBER};font-size:11px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;">Player of the Week</p>
+    <p style="margin:0 0 4px;font-size:22px;font-weight:bold;color:${COLOR_INK};">${escapeHtml(params.playerName)}</p>
+    <p style="margin:0 0 16px;color:${COLOR_MUTED};font-size:13px;">${escapeHtml(matchLine)}</p>
+    ${figureRows ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLOR_PAPER};border-radius:6px;font-size:14px;margin:0 0 16px;">${figureRows}</table>` : ''}
+    ${params.caption ? `<p style="margin:0 0 16px;font-style:italic;">“${escapeHtml(params.caption)}”</p>` : ''}`;
+}
+
+function figuresText(params: PlayerOfTheWeekEmailParams): string[] {
+  return [
+    `vs ${params.opponent}${params.competition ? ` · ${params.competition}` : ''} · ${params.displayDate}`,
+    ...params.figures.map((figure) => `${figure.label}: ${figure.value}`),
+    ...(params.caption ? ['', params.caption] : []),
+  ];
+}
+
+export function playerOfTheWeekCongratsEmail(params: PlayerOfTheWeekEmailParams): EmailBody {
+  const firstName = params.playerName.trim().split(/\s+/)[0] || params.playerName;
+  const subject = `Congratulations ${firstName} - you're Ceylon Sharks Player of the Week!`;
+
+  const text = [
+    `Hi ${firstName},`,
+    '',
+    `Congratulations - you've been named Ceylon Sharks Player of the Week!`,
+    '',
+    ...figuresText(params),
+    '',
+    `See your Player of the Week page and share it: ${params.pageUrl}`,
+    '',
+    '- Ceylon Sharks',
+  ].join('\n');
+
+  const body = `
+    <p style="margin:0 0 16px;">Hi <strong>${escapeHtml(firstName)}</strong>,</p>
+    <p style="margin:0 0 20px;">Congratulations – you've been named <strong>Ceylon Sharks Player of the Week</strong>! 🏏</p>
+    ${playerOfTheWeekCard(params)}
+    ${ctaButton(params.pageUrl, 'View your Player of the Week page')}
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;">Share the page with friends and family - it shows your poster when you send the link.</p>
+  `;
+
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}
+
+function playerEmailNote(outcome: PlayerEmailOutcome, playerName: string): string {
+  switch (outcome) {
+    case 'sent':
+      return `${playerName} has been emailed a congratulations message with the link.`;
+    case 'skipped':
+      return `No email was sent to ${playerName} ("Email the player" was unticked).`;
+    case 'no-email':
+      return `${playerName} has no email on file in the team list, so no congratulations email was sent.`;
+    case 'failed':
+      return `The congratulations email to ${playerName} couldn't be sent - please let them know yourself.`;
+  }
+}
+
+export function playerOfTheWeekLiveAdminEmail(params: PlayerOfTheWeekAdminParams): EmailBody {
+  const subject = `Player of the Week is live: ${params.playerName}`;
+  const action = params.replaced ? 'replaced the Player of the Week' : 'published a new Player of the Week';
+  const note = playerEmailNote(params.playerEmail, params.playerName);
+
+  const text = [
+    `${params.publishedBy} ${action}. It's now live on the website.`,
+    '',
+    params.playerName,
+    ...figuresText(params),
+    '',
+    `Page: ${params.pageUrl}`,
+    note,
+    `Commit: ${params.commitUrl}`,
+  ].join('\n');
+
+  const body = `
+    <p style="margin:0 0 20px;"><strong>${escapeHtml(params.publishedBy)}</strong> ${action}. It's now live on the website.</p>
+    ${playerOfTheWeekCard(params)}
+    ${ctaButton(params.pageUrl, 'View the page')}
+    <p style="margin:0 0 12px;background:${COLOR_PAPER};border-radius:6px;padding:12px 14px;font-size:14px;">${escapeHtml(note)}</p>
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;"><a href="${params.commitUrl}" style="color:${COLOR_MUTED};">See the commit on GitHub</a></p>
+  `;
+
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}
+
+export function playerOfTheWeekNotLiveAdminEmail(params: Omit<PlayerOfTheWeekAdminParams, 'playerEmail'>): EmailBody {
+  const subject = `Player of the Week published, but not live yet: ${params.playerName}`;
+  const action = params.replaced ? 'replaced the Player of the Week with' : 'published';
+
+  const text = [
+    `${params.publishedBy} ${action} ${params.playerName} (vs ${params.opponent}, ${params.displayDate}), but the page still isn't live after several minutes.`,
+    '',
+    'The site deploy may have failed. Check the "Deploy Astro site to GitHub Pages" run in the repository\'s Actions tab.',
+    `${params.playerName} hasn't been emailed yet - let them know once the page is up.`,
+    '',
+    `Page: ${params.pageUrl}`,
+    `Commit: ${params.commitUrl}`,
+  ].join('\n');
+
+  const body = `
+    <p style="margin:0 0 16px;"><strong>${escapeHtml(params.publishedBy)}</strong> ${action} <strong>${escapeHtml(params.playerName)}</strong> (vs ${escapeHtml(params.opponent)}, ${escapeHtml(params.displayDate)}), but the page <strong style="color:${COLOR_AMBER};">still isn't live</strong> after several minutes.</p>
+    <p style="margin:0 0 16px;">The site deploy may have failed. Check the <strong>Deploy Astro site to GitHub Pages</strong> run in the repository's Actions tab.</p>
+    <p style="margin:0 0 16px;background:${COLOR_PAPER};border-radius:6px;padding:12px 14px;font-size:14px;">${escapeHtml(params.playerName)} hasn't been emailed yet – let them know once the page is up.</p>
+    ${ctaButton(params.commitUrl, 'See the commit')}
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;">Page: <a href="${params.pageUrl}" style="color:${COLOR_MUTED};">${escapeHtml(params.pageUrl)}</a></p>
+  `;
+
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}

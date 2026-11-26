@@ -152,6 +152,8 @@ export interface PlayerOfTheWeekRequest {
   /** JPEG or PNG bytes, base64 (no data: prefix). */
   imageBase64: string;
   replaceExisting: boolean;
+  /** Email the winner a congratulations message once the page is live. */
+  notifyPlayer: boolean;
 }
 
 export interface PlayerOfTheWeekResult {
@@ -159,6 +161,8 @@ export interface PlayerOfTheWeekResult {
   commitUrl: string;
   pagePath: string;
   replaced: boolean;
+  /** Whether the "page is live" emails were set up to go out. */
+  notifications?: 'scheduled' | 'not-scheduled';
 }
 
 export async function publishPlayerOfTheWeek(sessionToken: string, request: PlayerOfTheWeekRequest): Promise<PlayerOfTheWeekResult> {
@@ -174,6 +178,7 @@ export async function publishPlayerOfTheWeek(sessionToken: string, request: Play
         details: request.details,
         image: { dataBase64: request.imageBase64 },
         replaceExisting: request.replaceExisting,
+        notifyPlayer: request.notifyPlayer,
       }),
     });
   } catch {

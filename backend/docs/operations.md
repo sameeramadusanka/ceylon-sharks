@@ -167,6 +167,29 @@ Where it commits: `PlayerOfTheWeekPublishBranch`, set explicitly in
 change to the publish flow safely, set it to `potw-test` (created from
 `main` if missing; pushes there don't deploy), test, then set it back.
 
+### Emails after publishing
+
+After a successful commit, `publish-potw` starts `notify-potw` in the
+background (an async "Event" invoke, with no automatic retries so nobody gets
+emailed twice). It waits about a minute, then checks the share page every
+30 seconds until it shows the new winner:
+
+- **Live:** the winner gets a congratulations email with the page link (unless
+  "Email the player" was unticked), then the captain, vice-captain and site
+  owner get a "Player of the Week is live" email that says whether the
+  winner was emailed.
+- **Not live after ~12 minutes:** only the publishers get a "published, but not
+  live yet" email pointing at the Pages deploy; the winner isn't emailed.
+
+The winner's address comes from the TeamMembers table: matched on
+`playerId` (the squad file's player ID) first, then on exact name. Add
+`playerId` to the seed rows to make that reliable. A publish never fails
+because of an email problem.
+
+```bash
+aws logs tail /aws/lambda/ceylon-sharks-availability-notify-potw --since 1h --region ap-southeast-1
+```
+
 ### The GitHub token
 
 A fine-grained personal access token from the repo owner's account, limited

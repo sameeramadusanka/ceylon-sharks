@@ -315,6 +315,12 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-publish-potw
       RetentionInDays: 30
 
+  NotifyPlayerOfTheWeekLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-notify-potw
+      RetentionInDays: 30
+
   # ---------------------------------------------------------------------
   # Lambda functions
   # ---------------------------------------------------------------------
@@ -595,11 +601,14 @@ Resources:
           POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
           POTW_BASE_BRANCH: main
           GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+          NOTIFY_POTW_FUNCTION: !Ref NotifyPlayerOfTheWeekFunction
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref AdminSessionsTable
         - SSMParameterReadPolicy:
             ParameterName: !Ref GithubTokenParameterName
+        - LambdaInvokePolicy:
+            FunctionName: !Ref NotifyPlayerOfTheWeekFunction
       Events:
         Api:
           Type: HttpApi
@@ -611,6 +620,37 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/publishPlayerOfTheWeek.ts]
+        Target: es2022
+
+  # Started (asynchronously) by the publish function. Waits for the new
+  # share page to go live, then emails the winner and the publishers.
+  NotifyPlayerOfTheWeekFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-notify-potw
+      CodeUri: ../backend
+      Handler: src/handlers/notifyPlayerOfTheWeek.handler
+      # Polls the site for up to ~12 minutes while GitHub Pages deploys.
+      Timeout: 900
+      LoggingConfig:
+        LogGroup: !Ref NotifyPlayerOfTheWeekLogGroup
+      # No automatic retries: a retry after a partial run would email people twice.
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref TeamMembersTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/notifyPlayerOfTheWeek.ts]
         Target: es2022
 
 Outputs:
