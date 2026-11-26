@@ -16,8 +16,6 @@ type NumberKey = Exclude<keyof PotwStats, 'notOut'>;
 const GROUP_OF: Record<keyof PotwStats, PotwStatGroup> = {
   runs: 'batting',
   balls: 'batting',
-  fours: 'batting',
-  sixes: 'batting',
   notOut: 'batting',
   overs: 'bowling',
   maidens: 'bowling',
@@ -36,10 +34,8 @@ const GROUPS: { group: PotwStatGroup; title: string; fields: { key: NumberKey; l
     fields: [
       { key: 'runs', label: 'Runs' },
       { key: 'balls', label: 'Balls' },
-      { key: 'fours', label: '4s' },
-      { key: 'sixes', label: '6s' },
     ],
-    placeholder: '45* (32, 4×4, 2×6)',
+    placeholder: '45* (32)',
   },
   {
     group: 'bowling',
