@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { adminLoginCodeEmail, captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, reminderEmail, teamSelectionEmail } from '../src/email/templates.js';
+import { adminLoginCodeEmail, captainNotificationEmail, finalSummaryEmail, invitationEmail, logoUrlFor, playerOfTheWeekCongratsEmail, playerOfTheWeekLiveAdminEmail, reminderEmail, teamSelectionEmail } from '../src/email/templates.js';
 
 const LOGO_URL = 'https://ceylonsharks.com/brand/ceylon-sharks-logo.png';
 
@@ -220,5 +220,35 @@ describe('teamSelectionEmail', () => {
     const { html } = teamSelectionEmail({ ...params, playerName: '<script>alert(1)</script>' });
     expect(html).not.toContain('<script>alert(1)</script>');
     expect(html).toContain('&lt;script&gt;');
+  });
+});
+
+describe('Player of the Week emails', () => {
+  const params = {
+    playerName: 'Hasanka <b>Chandrasena</b>',
+    opponent: 'Singa & Smashers',
+    displayDate: '14 Nov 2026',
+    competition: 'SCL - Supreme Division',
+    figures: [{ label: 'Batting', value: '73* (36)' }],
+    caption: 'Great knock',
+    pageUrl: 'https://ceylonsharks.com/player-of-the-week/2026-11-14/',
+    logoUrl: LOGO_URL,
+  };
+
+  it('uses the branded shell, escapes free text and links to the page', () => {
+    const email = playerOfTheWeekCongratsEmail(params);
+    expect(email.html).toContain(LOGO_URL);
+    expect(email.html).toContain('Ceylon Sharks');
+    expect(email.html).toContain('href="https://ceylonsharks.com/player-of-the-week/2026-11-14/"');
+    expect(email.html).not.toContain('<b>Chandrasena</b>');
+    expect(email.html).toContain('Singa &amp; Smashers');
+    expect(email.text).toContain('73* (36)');
+  });
+
+  it('reports the winner email outcome to the publishers', () => {
+    const email = playerOfTheWeekLiveAdminEmail({ ...params, playerName: 'Hasanka', publishedBy: 'owner@example.com', replaced: false, commitUrl: 'https://github.com/x', playerEmail: 'no-email' });
+    expect(email.subject).toBe('Player of the Week is live: Hasanka');
+    expect(email.html).toContain('has no email on file');
+    expect(email.html).toContain(LOGO_URL);
   });
 });

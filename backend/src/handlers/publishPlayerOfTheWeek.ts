@@ -6,6 +6,7 @@ import { createGithubClient, GithubApiError, type FileToCommit } from '../github
 import { getGithubToken, resetGithubTokenCache } from '../github/githubToken.js';
 import { logger } from '../logger.js';
 import { createDocumentClient } from '../repositories/scheduledActionsRepository.js';
+import { startPlayerOfTheWeekNotification } from './notifyTrigger.js';
 
 // Publishes a Player of the Week entry by committing the poster + details JSON
 // to the site repository, named exactly as src/lib/playerOfTheWeek.ts expects.
@@ -41,6 +42,8 @@ const RequestSchema = z.object({
   }),
   image: z.object({ dataBase64: z.string().min(1) }),
   replaceExisting: z.boolean().optional().default(false),
+  /** Email the winner once the page is live ("Email the player" tick, on by default). */
+  notifyPlayer: z.boolean().optional().default(true),
 });
 
 function jsonResponse(statusCode: number, body: unknown): APIGatewayProxyStructuredResultV2 {
@@ -81,7 +84,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       const issue = parsed.error.issues[0];
       return jsonResponse(400, { success: false, message: `Invalid request: ${issue ? `${issue.path.join('.')} ${issue.message}` : 'unknown field'}` });
     }
-    const { season, date, playerId, details, image, replaceExisting } = parsed.data;
+    const { season, date, playerId, details, image, replaceExisting, notifyPlayer } = parsed.data;
 
     const imageBytes = Buffer.from(image.dataBase64, 'base64');
     if (imageBytes.length > MAX_IMAGE_BYTES) {
@@ -129,8 +132,29 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       deletePaths,
     });
 
+    // Emails go out from a separate Lambda once the page is live. Never let a problem here fail a publish that already landed.
+    let notifications: 'scheduled' | 'not-scheduled' = 'not-scheduled';
+    const notifyFunction = process.env.NOTIFY_POTW_FUNCTION;
+    if (notifyFunction) {
+      try {
+        await startPlayerOfTheWeekNotification(notifyFunction, {
+          season,
+          date,
+          playerId,
+          details,
+          notifyPlayer,
+          replaced: existing.length > 0,
+          publishedBy: session.email,
+          commitUrl: commit.commitUrl,
+        });
+        notifications = 'scheduled';
+      } catch (error) {
+        logger.error('player of the week: could not start notifications', { date, errorCategory: error instanceof Error ? error.message : 'unknown error' });
+      }
+    }
+
     logger.info('player of the week published', { date, playerId, season, branch, replaced: existing.length > 0, recipient: session.email, commitSha: commit.commitSha });
-    return jsonResponse(200, { success: true, branch, commitUrl: commit.commitUrl, pagePath: `/player-of-the-week/${date}/`, replaced: existing.length > 0 });
+    return jsonResponse(200, { success: true, branch, commitUrl: commit.commitUrl, pagePath: `/player-of-the-week/${date}/`, replaced: existing.length > 0, notifications });
   } catch (error) {
     if (error instanceof GithubApiError) {
       if (error.status === 401) resetGithubTokenCache();

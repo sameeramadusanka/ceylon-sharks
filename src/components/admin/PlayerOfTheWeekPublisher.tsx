@@ -150,6 +150,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
   const [posterError, setPosterError] = useState('');
   const [preparing, setPreparing] = useState(false);
   const [replaceExisting, setReplaceExisting] = useState(false);
+  const [notifyPlayer, setNotifyPlayer] = useState(true);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<PlayerOfTheWeekResult | null>(null);
@@ -192,6 +193,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
     setPosterError('');
     setPosterInputKey((key) => key + 1);
     setReplaceExisting(false);
+    setNotifyPlayer(true);
     setError('');
   }
 
@@ -273,6 +275,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
         },
         imageBase64: poster.base64,
         replaceExisting,
+        notifyPlayer,
       });
       setPublishedKeys((keys) => [...keys, `${season}/${date}`]);
       clearForm();
@@ -303,7 +306,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
           <div className="ad-success ad-potw-message ad-potw-message--top" role="status">
             {isLive ? (
               <>
-                Published! The site will update in about 3 minutes:{' '}
+                Published! The site will update in about 3 minutes{result.notifications === 'scheduled' ? ", and you'll get an email once it's live" : ''}:{' '}
                 <a href={result.pagePath} target="_blank" rel="noreferrer">
                   view the share page
                 </a>
@@ -481,6 +484,13 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
                 <span>{formatDate(date)} already has a Player of the Week. Replace it?</span>
               </label>
             )}
+
+            <label className="ad-checkbox">
+              <input type="checkbox" checked={notifyPlayer} onChange={(event) => setNotifyPlayer(event.target.checked)} />
+              <span>
+                Email {player ? player.name : 'the player'} a congratulations message once the page is live. You, the captain and the vice-captain always get a confirmation email.
+              </span>
+            </label>
 
             <button type="submit" className="ad-button" disabled={!canPublish}>
               {publishing ? 'Publishing…' : 'Publish'}
