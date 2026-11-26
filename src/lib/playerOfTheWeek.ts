@@ -22,6 +22,7 @@ type PlayerOfTheWeekDetails = {
   batting?: string;
   bowling?: string;
   fielding?: string;
+  wicketKeeping?: string;
   caption?: string;
 };
 
@@ -134,6 +135,6 @@ async function buildEntries(): Promise<PlayerOfTheWeekEntry[]> {
 
 /** "36 (19) & 3/12 (3) vs Lightning Hawks" style summary for link previews. */
 export function summarizePerformance(entry: PlayerOfTheWeekEntry): string {
-  const figures = [entry.batting, entry.bowling, entry.fielding].filter(Boolean).join(' & ');
+  const figures = [entry.batting, entry.bowling, entry.fielding, entry.wicketKeeping].filter(Boolean).join(' & ');
   return figures ? `${figures} vs ${entry.opponent}` : `vs ${entry.opponent}`;
 }

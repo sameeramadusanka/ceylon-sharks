@@ -62,7 +62,7 @@ function validBody(overrides: Record<string, unknown> = {}) {
     season: SEASON,
     date: '2026-11-22',
     playerId: 3190737,
-    details: { playerName: 'Tharindu Hettiarachchi', opponent: 'Cool Blue', competition: 'SCL - Supreme Division', batting: '45 (32)', bowling: '', caption: 'Top score.' },
+    details: { playerName: 'Tharindu Hettiarachchi', opponent: 'Cool Blue', competition: 'SCL - Supreme Division', batting: '45 (32)', bowling: '', wicketKeeping: '1 stumping', caption: 'Top score.' },
     image: { dataBase64: PNG.toString('base64') },
     ...overrides,
   };
@@ -144,7 +144,7 @@ describe('publishPlayerOfTheWeek handler', () => {
 
     const details = JSON.parse(Buffer.from(request.files[1].contentBase64, 'base64').toString('utf8'));
     // Empty optional fields are dropped rather than written as "".
-    expect(details).toEqual({ playerName: 'Tharindu Hettiarachchi', opponent: 'Cool Blue', competition: 'SCL - Supreme Division', batting: '45 (32)', caption: 'Top score.' });
+    expect(details).toEqual({ playerName: 'Tharindu Hettiarachchi', opponent: 'Cool Blue', competition: 'SCL - Supreme Division', batting: '45 (32)', wicketKeeping: '1 stumping', caption: 'Top score.' });
   });
 
   it('names JPEG posters .jpg', async () => {

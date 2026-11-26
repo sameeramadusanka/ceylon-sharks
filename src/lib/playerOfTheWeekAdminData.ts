@@ -7,13 +7,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import team from '../data/team.json';
+import { emptyStats, type PotwStats } from './playerOfTheWeekFigures';
 
 export interface AdminPotwPlayer {
   id: number;
   name: string;
-  batting: string;
-  bowling: string;
-  fielding: string;
+  /** Figures from the scorecard; zeros/empty when the player didn't bat, bowl or field. */
+  stats: PotwStats;
 }
 
 export interface AdminPotwMatch {
@@ -25,16 +25,23 @@ export interface AdminPotwMatch {
   players: AdminPotwPlayer[];
 }
 
+export interface AdminPotwSquad {
+  season: string;
+  players: { id: number; name: string }[];
+}
+
 export interface AdminPotwData {
   matches: AdminPotwMatch[];
+  /** Every season with a squad file, newest first - for entering a winner manually (e.g. before the scorecard is added). */
+  squads: AdminPotwSquad[];
   /** Dates (per season) that already have a winner: `${season}/${date}`. */
   existing: string[];
   defaultCompetition: string;
 }
 
 type Dismissal = { type?: string | null; fielder?: string | null; bowler?: string | null } | null;
-type Batter = { player: string; dismissal?: Dismissal; runs?: number; balls?: number };
-type Bowler = { player: string; overs?: string | number; runs?: number; wickets?: number };
+type Batter = { player: string; dismissal?: Dismissal; runs?: number; balls?: number; fours?: number; sixes?: number };
+type Bowler = { player: string; overs?: string | number; maidens?: number; runs?: number; wickets?: number };
 type Innings = { team: string; batting?: Batter[]; bowling?: Bowler[] };
 type ScoreCard = { match?: { date?: string; teams?: { home?: { name?: string }; away?: { name?: string } } }; innings?: Innings[] };
 type SquadFile = { season?: { players?: { id: number; name: string }[] } };
@@ -45,33 +52,50 @@ const potwDetailsPattern = /^(\d{4}-\d{2}-\d{2})__\d+\.json$/;
 
 const readJson = <T>(path: string): T => JSON.parse(readFileSync(path, 'utf8')) as T;
 const sameName = (a?: string | null, b?: string | null) => Boolean(a && b && a.trim().toLowerCase() === b.trim().toLowerCase());
+const text = (value: unknown) => (value === undefined || value === null ? '' : String(value));
 
-function battingFigure(innings: Innings[], name: string): string {
-  for (const inn of innings) {
+const MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+
+/** Sort key for season folders like 2026_SEPTEMBER_SUPREME_DIVISION: year, then month. */
+function seasonOrder(season: string): number {
+  const [year, ...rest] = season.split('_');
+  const month = MONTHS.findIndex((name) => rest.includes(name));
+  return Number(year) * 100 + (month + 1);
+}
+
+function playerStats(ours: Innings[], theirs: Innings[], name: string): PotwStats {
+  const stats = emptyStats();
+
+  for (const inn of ours) {
     const batter = inn.batting?.find((entry) => sameName(entry.player, name));
     if (!batter) continue;
     const type = batter.dismissal?.type ?? null;
     const balls = Number(batter.balls ?? 0);
-    const batted = (type !== null && type !== 'NOT_OUT') || balls > 0;
-    if (!batted) return '';
-    return `${batter.runs ?? 0}${type === 'NOT_OUT' || type === null ? '*' : ''} (${balls})`;
+    if ((type !== null && type !== 'NOT_OUT') || balls > 0) {
+      stats.runs = text(batter.runs ?? 0);
+      stats.balls = text(balls);
+      stats.fours = batter.fours ? text(batter.fours) : '';
+      stats.sixes = batter.sixes ? text(batter.sixes) : '';
+      stats.notOut = type === 'NOT_OUT' || type === null;
+    }
+    break;
   }
-  return '';
-}
 
-function bowlingFigure(innings: Innings[], name: string): string {
-  for (const inn of innings) {
+  for (const inn of theirs) {
     const bowler = inn.bowling?.find((entry) => sameName(entry.player, name));
-    if (bowler && Number.parseFloat(String(bowler.overs ?? 0)) > 0) return `${bowler.wickets ?? 0}/${bowler.runs ?? 0} (${bowler.overs})`;
+    if (bowler && Number.parseFloat(String(bowler.overs ?? 0)) > 0) {
+      stats.overs = text(bowler.overs);
+      stats.maidens = bowler.maidens ? text(bowler.maidens) : '';
+      stats.runsConceded = text(bowler.runs ?? 0);
+      stats.wickets = text(bowler.wickets ?? 0);
+      break;
+    }
   }
-  return '';
-}
 
-function fieldingFigure(opponentInnings: Innings[], name: string): string {
   let catches = 0;
-  let stumpings = 0;
   let runOuts = 0;
-  for (const inn of opponentInnings) {
+  let stumpings = 0;
+  for (const inn of theirs) {
     for (const batter of inn.batting ?? []) {
       const dismissal = batter.dismissal;
       if (!dismissal) continue;
@@ -81,11 +105,11 @@ function fieldingFigure(opponentInnings: Innings[], name: string): string {
       else if (dismissal.type === 'RUN_OUT' && (sameName(dismissal.fielder, name) || sameName(dismissal.bowler, name))) runOuts++;
     }
   }
-  const parts = [];
-  if (catches) parts.push(`${catches} ${catches === 1 ? 'catch' : 'catches'}`);
-  if (stumpings) parts.push(`${stumpings} ${stumpings === 1 ? 'stumping' : 'stumpings'}`);
-  if (runOuts) parts.push(`${runOuts} ${runOuts === 1 ? 'run out' : 'run outs'}`);
-  return parts.join(', ');
+  // Scorecards don't say who kept wicket, so catches all count as fielding; stumpings can only be the keeper's.
+  if (catches) stats.catches = text(catches);
+  if (runOuts) stats.runOuts = text(runOuts);
+  if (stumpings) stats.stumpings = text(stumpings);
+  return stats;
 }
 
 export function loadPlayerOfTheWeekAdminData(root = process.cwd()): AdminPotwData {
@@ -94,15 +118,19 @@ export function loadPlayerOfTheWeekAdminData(root = process.cwd()): AdminPotwDat
   const potwRoot = join(root, 'src/assets/player_of_the_week');
   const clubName = team.name;
   const matches: AdminPotwMatch[] = [];
+  const squads: AdminPotwSquad[] = [];
 
-  const seasons = existsSync(scoreCardRoot) ? readdirSync(scoreCardRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name) : [];
+  // Seasons come from the squad folders: the publish backend requires the squad file, and a new season may have no scorecards yet.
+  const seasons = existsSync(playersRoot) ? readdirSync(playersRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name) : [];
   for (const season of seasons) {
     const squadDir = join(playersRoot, season);
     const squadFile = existsSync(squadDir) ? readdirSync(squadDir).find((name) => squadPattern.test(name)) : undefined;
-    if (!squadFile) continue; // The publish backend requires the squad file, so a season without one can't be published to.
+    if (!squadFile) continue;
     const squad = readJson<SquadFile>(join(squadDir, squadFile)).season?.players ?? [];
+    squads.push({ season, players: squad.map((player) => ({ id: player.id, name: player.name })) });
 
-    for (const file of readdirSync(join(scoreCardRoot, season))) {
+    const cardDir = join(scoreCardRoot, season);
+    for (const file of existsSync(cardDir) ? readdirSync(cardDir) : []) {
       const dateMatch = scoreCardPattern.exec(file);
       if (!dateMatch) continue;
       const card = readJson<ScoreCard>(join(scoreCardRoot, season, file));
@@ -112,13 +140,7 @@ export function loadPlayerOfTheWeekAdminData(root = process.cwd()): AdminPotwDat
       const teams = [card.match?.teams?.home?.name, card.match?.teams?.away?.name];
       const opponent = teams.find((name) => name && !sameName(name, clubName)) ?? theirs[0]?.team ?? 'Unknown';
 
-      const players = squad.map((player) => ({
-        id: player.id,
-        name: player.name,
-        batting: battingFigure(ours, player.name),
-        bowling: bowlingFigure(theirs, player.name),
-        fielding: fieldingFigure(theirs, player.name),
-      }));
+      const players = squad.map((player) => ({ id: player.id, name: player.name, stats: playerStats(ours, theirs, player.name) }));
       const playedNames = new Set(
         [...ours.flatMap((inn) => (inn.batting ?? []).map((b) => b.player)), ...theirs.flatMap((inn) => (inn.bowling ?? []).map((b) => b.player))].map((name) => name.trim().toLowerCase()),
       );
@@ -144,5 +166,7 @@ export function loadPlayerOfTheWeekAdminData(root = process.cwd()): AdminPotwDat
     }
   }
 
-  return { matches, existing, defaultCompetition: latestCompetition.value };
+  squads.sort((a, b) => seasonOrder(b.season) - seasonOrder(a.season));
+
+  return { matches, squads, existing, defaultCompetition: latestCompetition.value };
 }

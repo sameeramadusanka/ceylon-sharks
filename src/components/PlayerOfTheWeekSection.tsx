@@ -39,6 +39,7 @@ export default function PlayerOfTheWeekSection({ entries, label, onViewProfile, 
     { label: copy.batting, value: current.batting },
     { label: copy.bowling, value: current.bowling },
     { label: copy.fielding, value: current.fielding },
+    { label: copy.wicketKeeping, value: current.wicketKeeping },
   ].filter((stat): stat is { label: string; value: string } => Boolean(stat.value));
 
   const share = async () => {
@@ -79,7 +80,7 @@ export default function PlayerOfTheWeekSection({ entries, label, onViewProfile, 
             <h3 className="potw-name">{current.playerName}</h3>
             <p className="potw-opponent">{copy.versus} <b>{current.opponent}</b></p>
             {stats.length > 0 && (
-              <div className="potw-stats">
+              <div className={stats.length > 3 ? 'potw-stats potw-stats--grid' : 'potw-stats'}>
                 {stats.map((stat, index) => (
                   <div className={`stat-block${index === 0 ? ' stat-block--accent' : ''}`} key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>
                 ))}

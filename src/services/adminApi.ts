@@ -146,6 +146,7 @@ export interface PlayerOfTheWeekRequest {
     batting?: string;
     bowling?: string;
     fielding?: string;
+    wicketKeeping?: string;
     caption?: string;
   };
   /** JPEG or PNG bytes, base64 (no data: prefix). */

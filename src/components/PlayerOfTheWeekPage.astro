@@ -34,6 +34,7 @@ const stats = entry ? [
   { label: copy.batting, value: entry.batting },
   { label: copy.bowling, value: entry.bowling },
   { label: copy.fielding, value: entry.fielding },
+  { label: copy.wicketKeeping, value: entry.wicketKeeping },
 ].filter((stat) => stat.value) : [];
 ---
 
@@ -82,7 +83,7 @@ const stats = entry ? [
             <h1>{entry.playerName}</h1>
             <p class="potw-page-match">{copy.versus} <b>{entry.opponent}</b><br />{entry.displayDate}{entry.competition ? ` · ${entry.competition}` : ''}</p>
             {stats.length > 0 && (
-              <div class="potw-page-stats">
+              <div class:list={['potw-page-stats', { 'potw-page-stats--grid': stats.length > 3 }]}>
                 {stats.map((stat) => <div><strong>{stat.value}</strong><span>{stat.label}</span></div>)}
               </div>
             )}

@@ -36,6 +36,7 @@ const RequestSchema = z.object({
     batting: optionalText(60),
     bowling: optionalText(60),
     fielding: optionalText(60),
+    wicketKeeping: optionalText(60),
     caption: optionalText(400),
   }),
   image: z.object({ dataBase64: z.string().min(1) }),

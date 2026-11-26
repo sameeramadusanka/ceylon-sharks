@@ -433,9 +433,98 @@
   color: var(--ad-paper);
 }
 
+/* "From scorecard" / "Enter manually" switch */
+.ad-segmented {
+  border: 1px solid rgba(248, 249, 247, 0.2);
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 12px;
+  overflow: hidden;
+}
+
+.ad-segmented button {
+  background: #0f1011;
+  border: 0;
+  color: var(--ad-muted);
+  cursor: pointer;
+  font-family: var(--ad-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 12px 10px;
+  text-transform: uppercase;
+}
+
+.ad-segmented button + button {
+  border-left: 1px solid rgba(248, 249, 247, 0.2);
+}
+
+.ad-segmented button.is-active {
+  background: var(--ad-amber);
+  color: var(--ad-ink);
+}
+
+.ad-segmented button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ad-segmented + .ad-hint {
+  margin-top: 0;
+}
+
+/* Batting / bowling / fielding / wicket keeping figures */
+.ad-stat-group {
+  border: 1px solid var(--ad-line);
+  border-radius: 4px;
+  margin: 0 0 16px;
+  padding: 14px 14px 0;
+}
+
+.ad-stat-group legend {
+  color: var(--ad-paper);
+  font-family: var(--ad-serif);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0 6px;
+}
+
+.ad-stat-inputs {
+  display: grid;
+  gap: 0 10px;
+}
+
+.ad-stat-inputs--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ad-stat-inputs--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ad-stat-inputs .ad-field {
+  margin-bottom: 12px;
+}
+
+.ad-checkbox--inline {
+  margin: 0 0 12px;
+}
+
+.ad-field--shown-as {
+  margin-bottom: 14px;
+}
+
+.ad-reset {
+  margin: 0 0 20px;
+}
+
 @media (max-width: 560px) {
   .ad-field-row,
   .ad-field-row--three {
     grid-template-columns: 1fr;
+  }
+
+  .ad-stat-inputs--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
