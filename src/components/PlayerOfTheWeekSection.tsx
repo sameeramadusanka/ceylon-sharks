@@ -35,12 +35,6 @@ export default function PlayerOfTheWeekSection({ entries, label, onViewProfile, 
   if (!current) return null;
 
   const pagePath = sitePath(current.pagePath);
-  const stats = [
-    { label: copy.batting, value: current.batting },
-    { label: copy.bowling, value: current.bowling },
-    { label: copy.fielding, value: current.fielding },
-    { label: copy.wicketKeeping, value: current.wicketKeeping },
-  ].filter((stat): stat is { label: string; value: string } => Boolean(stat.value));
 
   const share = async () => {
     const url = new URL(pagePath, window.location.origin).toString();
@@ -76,16 +70,8 @@ export default function PlayerOfTheWeekSection({ entries, label, onViewProfile, 
             <img src={current.poster.src} width={current.poster.width} height={current.poster.height} alt={posterAlt(current)} loading="lazy" decoding="async" />
           </a>
           <div className="potw-details">
-            <p className="potw-kicker">{current.displayDate}{current.competition ? ` · ${current.competition}` : ''}</p>
             <h3 className="potw-name">{current.playerName}</h3>
             <p className="potw-opponent">{copy.versus} <b>{current.opponent}</b></p>
-            {stats.length > 0 && (
-              <div className={stats.length > 3 ? 'potw-stats potw-stats--grid' : 'potw-stats'}>
-                {stats.map((stat, index) => (
-                  <div className={`stat-block${index === 0 ? ' stat-block--accent' : ''}`} key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>
-                ))}
-              </div>
-            )}
             {current.caption && <p className="potw-caption">{current.caption}</p>}
             <div className="potw-actions">
               {onViewProfile && <button className="button button--primary" type="button" onClick={onViewProfile}>{copy.viewProfile} <ArrowUpRight size={15} /></button>}
