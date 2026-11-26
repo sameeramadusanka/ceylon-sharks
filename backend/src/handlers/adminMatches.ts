@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandlerV2, APIGatewayProxyStructuredResultV2 } from 'aws-lambda';
 import type { Availability, InvitationRecord } from '../repositories/matchAvailabilityRepository.js';
 import { resolveAdminSession } from '../adminAuth.js';
-import { loadConfig } from '../config.js';
+import { canPublishPlayerOfTheWeek, loadConfig } from '../config.js';
 import { logger } from '../logger.js';
 import { scanAllInvitations } from '../repositories/matchAvailabilityRepository.js';
 import { createDocumentClient } from '../repositories/scheduledActionsRepository.js';
@@ -59,7 +59,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
 
     const records = await scanAllInvitations(docClient, config.matchAvailabilityTable);
-    return jsonResponse(200, { success: true, matches: summarize(records) });
+    return jsonResponse(200, { success: true, matches: summarize(records), canPublishPlayerOfTheWeek: canPublishPlayerOfTheWeek(config, session.email) });
   } catch (error) {
     logger.error('admin matches endpoint failed', {
       route: event.rawPath,

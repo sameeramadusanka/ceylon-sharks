@@ -1,6 +1,10 @@
 ---
 import AdminPanel from '../../components/admin/AdminPanel';
+import { loadPlayerOfTheWeekAdminData } from '../../lib/playerOfTheWeekAdminData';
 import '../../styles/admin.css';
+
+// Scorecards + squads, read at build time, so the Player of the Week form can prefill figures without a backend call.
+const potwData = loadPlayerOfTheWeekAdminData();
 ---
 
 <!doctype html>
@@ -13,6 +17,6 @@ import '../../styles/admin.css';
     <title>Admin | Ceylon Sharks</title>
   </head>
   <body>
-    <AdminPanel client:load />
+    <AdminPanel client:load potwData={potwData} />
   </body>
 </html>

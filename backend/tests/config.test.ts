@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { configPresence, loadConfig } from '../src/config.js';
+import { canPublishPlayerOfTheWeek, configPresence, loadConfig, loadPublishConfig } from '../src/config.js';
 
 const VALID_ENV: NodeJS.ProcessEnv = {
   TEAM_MEMBERS_TABLE: 'TeamMembers',
@@ -57,5 +57,27 @@ describe('configPresence', () => {
     expect(presence.TEAM_MEMBERS_TABLE).toBe(true);
     expect(presence.CAPTAIN_EMAIL).toBe(false);
     expect(Object.values(presence).every((value) => typeof value === 'boolean')).toBe(true);
+  });
+});
+
+describe('Player of the Week publishing access', () => {
+  it('allows only the captain, vice-captain and site owner, ignoring case', () => {
+    const config = loadConfig({ ...VALID_ENV, POTW_OWNER_EMAIL: 'Owner@Example.com' });
+    expect(canPublishPlayerOfTheWeek(config, VALID_ENV.CAPTAIN_EMAIL!)).toBe(true);
+    expect(canPublishPlayerOfTheWeek(config, VALID_ENV.VICE_CAPTAIN_EMAIL!.toUpperCase())).toBe(true);
+    expect(canPublishPlayerOfTheWeek(config, 'owner@example.com')).toBe(true);
+    expect(canPublishPlayerOfTheWeek(config, 'someone@example.com')).toBe(false);
+  });
+
+  it('treats an unset owner ("none") as nobody', () => {
+    const config = loadConfig({ ...VALID_ENV, POTW_OWNER_EMAIL: 'none' });
+    expect(config.playerOfTheWeekOwnerEmail).toBe('');
+    expect(canPublishPlayerOfTheWeek(config, '')).toBe(false);
+  });
+
+  it('loads the publish settings and requires the token parameter', () => {
+    const env = { GITHUB_REPO: 'example/repo', POTW_PUBLISH_BRANCH: 'potw-test', GITHUB_TOKEN_PARAMETER: '/x/token' };
+    expect(loadPublishConfig(env)).toEqual({ githubRepo: 'example/repo', publishBranch: 'potw-test', baseBranch: 'main', githubTokenParameter: '/x/token' });
+    expect(() => loadPublishConfig({ ...env, GITHUB_TOKEN_PARAMETER: '' })).toThrow(/GITHUB_TOKEN_PARAMETER/);
   });
 });

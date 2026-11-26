@@ -19,6 +19,8 @@ export interface AvailabilityConfig {
   teamSelectionCaptainEmail: string;
   /** When set, squad-selection emails go here instead of the real player - for testing before real captains are onboarded. */
   teamSelectionTestRecipientEmail: string;
+  /** Site owner's email; with the captain and vice-captain, the only admins allowed to publish Player of the Week. */
+  playerOfTheWeekOwnerEmail: string;
 }
 
 const REQUIRED_ENV_KEYS = [
@@ -84,7 +86,37 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AvailabilityCo
     closureLocalTime: requireEnv(env, 'CLOSURE_LOCAL_TIME'),
     teamSelectionCaptainEmail: optionalEmailEnv(env, 'TEAM_SELECTION_CAPTAIN_EMAIL'),
     teamSelectionTestRecipientEmail: optionalEmailEnv(env, 'TEAM_SELECTION_TEST_RECIPIENT_EMAIL'),
+    playerOfTheWeekOwnerEmail: optionalEmailEnv(env, 'POTW_OWNER_EMAIL'),
   };
+}
+
+/** Settings only the Player of the Week publish function needs (kept out of AvailabilityConfig so other functions don't require them). */
+export interface PublishConfig {
+  /** "owner/name" of the site's GitHub repository. */
+  githubRepo: string;
+  /** Branch the commit goes to: a test branch first, then main once verified. */
+  publishBranch: string;
+  /** Branch a missing publish branch is created from. */
+  baseBranch: string;
+  /** SSM SecureString parameter holding the fine-grained GitHub token. */
+  githubTokenParameter: string;
+}
+
+export function loadPublishConfig(env: NodeJS.ProcessEnv = process.env): PublishConfig {
+  return {
+    githubRepo: requireEnv(env, 'GITHUB_REPO'),
+    publishBranch: requireEnv(env, 'POTW_PUBLISH_BRANCH'),
+    baseBranch: env.POTW_BASE_BRANCH || 'main',
+    githubTokenParameter: requireEnv(env, 'GITHUB_TOKEN_PARAMETER'),
+  };
+}
+
+/** Captain, vice-captain and the site owner - the only admins who may publish Player of the Week. */
+export function canPublishPlayerOfTheWeek(config: AvailabilityConfig, email: string): boolean {
+  const allowed = [config.captainEmail, config.viceCaptainEmail, config.playerOfTheWeekOwnerEmail]
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  return allowed.includes(email.trim().toLowerCase());
 }
 
 export function configPresence(env: NodeJS.ProcessEnv = process.env): Record<string, boolean> {

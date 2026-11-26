@@ -100,15 +100,15 @@ export async function verifyLoginCode(email: string, code: string): Promise<{ se
   return { sessionToken: result.sessionToken, email: result.email };
 }
 
-export async function fetchMatches(sessionToken: string): Promise<MatchListItem[]> {
+export async function fetchMatches(sessionToken: string): Promise<{ matches: MatchListItem[]; canPublishPlayerOfTheWeek: boolean }> {
   let response: Response;
   try {
     response = await fetch(`${API_BASE_URL}/admin/matches`, { headers: { authorization: `Bearer ${sessionToken}` } });
   } catch {
     throw unreachableError();
   }
-  const result = await readJsonOrThrow<{ success: true; matches: MatchListItem[] }>(response);
-  return result.matches;
+  const result = await readJsonOrThrow<{ success: true; matches: MatchListItem[]; canPublishPlayerOfTheWeek?: boolean }>(response);
+  return { matches: result.matches, canPublishPlayerOfTheWeek: result.canPublishPlayerOfTheWeek === true };
 }
 
 export async function fetchMatchDetail(sessionToken: string, matchId: string): Promise<MatchDetail> {
@@ -133,4 +133,51 @@ export async function saveTeamSelection(sessionToken: string, matchId: string, s
     throw unreachableError();
   }
   return readJsonOrThrow<{ success: true } & SelectionResult>(response);
+}
+
+export interface PlayerOfTheWeekRequest {
+  season: string;
+  date: string;
+  playerId: number;
+  details: {
+    playerName: string;
+    opponent: string;
+    competition?: string;
+    batting?: string;
+    bowling?: string;
+    fielding?: string;
+    wicketKeeping?: string;
+    caption?: string;
+  };
+  /** JPEG or PNG bytes, base64 (no data: prefix). */
+  imageBase64: string;
+  replaceExisting: boolean;
+}
+
+export interface PlayerOfTheWeekResult {
+  branch: string;
+  commitUrl: string;
+  pagePath: string;
+  replaced: boolean;
+}
+
+export async function publishPlayerOfTheWeek(sessionToken: string, request: PlayerOfTheWeekRequest): Promise<PlayerOfTheWeekResult> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/player-of-the-week`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${sessionToken}` },
+      body: JSON.stringify({
+        season: request.season,
+        date: request.date,
+        playerId: request.playerId,
+        details: request.details,
+        image: { dataBase64: request.imageBase64 },
+        replaceExisting: request.replaceExisting,
+      }),
+    });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true } & PlayerOfTheWeekResult>(response);
 }
