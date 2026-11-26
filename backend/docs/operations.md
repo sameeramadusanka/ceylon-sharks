@@ -163,8 +163,9 @@ Who may publish: `CaptainEmail`, `ViceCaptainEmail` and
 They also need to be on the admin allowlist to sign in at all.
 
 Where it commits: `PlayerOfTheWeekPublishBranch`, set explicitly in
-`deploy-availability.yml`. It stays `potw-test` (created from `main` if
-missing) until a test publish has been checked, then changes to `main`.
+`deploy-availability.yml`. It's `main`, so a publish goes live. To try a
+change to the publish flow safely, set it to `potw-test` (created from
+`main` if missing; pushes there don't deploy), test, then set it back.
 
 ### The GitHub token
 

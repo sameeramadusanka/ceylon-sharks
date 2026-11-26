@@ -108,8 +108,9 @@ jobs:
             "TeamSelectionCaptainEmail=${TEAM_SELECTION_CAPTAIN_EMAIL:-none}"
             "TeamSelectionTestRecipientEmail=${TEAM_SELECTION_TEST_RECIPIENT_EMAIL:-none}"
             "PlayerOfTheWeekOwnerEmail=${POTW_OWNER_EMAIL:-none}"
-            # potw-test until a test publish is verified; then switch to main.
-            "PlayerOfTheWeekPublishBranch=potw-test"
+            # Live: publishes commit straight to main (verified first on potw-test).
+            # Set back to potw-test to try changes to the publish flow safely.
+            "PlayerOfTheWeekPublishBranch=main"
           )
 
           sam deploy --config-env ci --no-confirm-changeset --no-fail-on-empty-changeset \
