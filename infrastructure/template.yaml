@@ -76,6 +76,35 @@ Parameters:
     Default: ''
     NoEcho: true
 
+  PlayerOfTheWeekOwnerEmail:
+    Type: String
+    Description: >-
+      Site owner's email. With CaptainEmail and ViceCaptainEmail, the only
+      admins allowed to publish Player of the Week. Not defaulted so a real
+      address is never committed; "none" disables it.
+    Default: 'none'
+    NoEcho: true
+
+  PlayerOfTheWeekPublishBranch:
+    Type: String
+    Description: >-
+      Branch the Player of the Week publish commits to. A test branch
+      (created from main if missing) until the flow is verified, then main.
+    Default: potw-test
+
+  GithubRepo:
+    Type: String
+    Description: owner/name of the site repository the publish function commits to.
+    Default: sameeramadusanka/ceylon-sharks
+
+  GithubTokenParameterName:
+    Type: String
+    Description: >-
+      SSM Parameter Store SecureString (name without the leading slash) holding
+      the fine-grained GitHub token (this repo only, Contents read/write).
+      Created by hand - never in this template or the repo.
+    Default: ceylon-sharks/github-publish-token
+
 Globals:
   Function:
     Runtime: nodejs24.x
@@ -97,6 +126,7 @@ Globals:
         VICE_CAPTAIN_EMAIL: !Ref ViceCaptainEmail
         TEAM_SELECTION_CAPTAIN_EMAIL: !Ref TeamSelectionCaptainEmail
         TEAM_SELECTION_TEST_RECIPIENT_EMAIL: !Ref TeamSelectionTestRecipientEmail
+        POTW_OWNER_EMAIL: !Ref PlayerOfTheWeekOwnerEmail
         TIME_ZONE: !Ref TimeZone
         INVITATION_DAYS_BEFORE: !Ref InvitationDaysBefore
         REMINDER_DAYS_BEFORE: !Ref ReminderDaysBefore
@@ -277,6 +307,12 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-select-team
+      RetentionInDays: 30
+
+  PublishPlayerOfTheWeekLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-publish-potw
       RetentionInDays: 30
 
   # ---------------------------------------------------------------------
@@ -538,6 +574,43 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/selectTeam.ts]
+        Target: es2022
+
+  # Commits a Player of the Week poster + details to the site repo; the
+  # site's own GitHub Pages workflow then deploys it. Only the captain,
+  # vice-captain and site owner may call it (checked in the handler).
+  PublishPlayerOfTheWeekFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-publish-potw
+      CodeUri: ../backend
+      Handler: src/handlers/publishPlayerOfTheWeek.handler
+      Timeout: 30
+      MemorySize: 512
+      LoggingConfig:
+        LogGroup: !Ref PublishPlayerOfTheWeekLogGroup
+      Environment:
+        Variables:
+          GITHUB_REPO: !Ref GithubRepo
+          POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
+          POTW_BASE_BRANCH: main
+          GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref GithubTokenParameterName
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/player-of-the-week
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/publishPlayerOfTheWeek.ts]
         Target: es2022
 
 Outputs:

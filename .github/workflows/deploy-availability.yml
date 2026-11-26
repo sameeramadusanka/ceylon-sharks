@@ -97,6 +97,9 @@ jobs:
           # config.ts normalizes it back to '' (feature off).
           TEAM_SELECTION_CAPTAIN_EMAIL="${{ secrets.AVAILABILITY_TEAM_SELECTION_CAPTAIN_EMAIL }}"
           TEAM_SELECTION_TEST_RECIPIENT_EMAIL="${{ secrets.AVAILABILITY_TEAM_SELECTION_TEST_RECIPIENT_EMAIL }}"
+          # Optional too: the site owner's email, allowed (with the captain and
+          # vice-captain) to publish Player of the Week from the admin panel.
+          POTW_OWNER_EMAIL="${{ secrets.AVAILABILITY_POTW_OWNER_EMAIL }}"
           PARAMS=(
             "AvailabilityFrontendUrl=https://ceylonsharks.com"
             "SesFromEmail=${{ secrets.AVAILABILITY_SES_FROM_EMAIL }}"
@@ -104,6 +107,9 @@ jobs:
             "ViceCaptainEmail=${{ secrets.AVAILABILITY_VICE_CAPTAIN_EMAIL }}"
             "TeamSelectionCaptainEmail=${TEAM_SELECTION_CAPTAIN_EMAIL:-none}"
             "TeamSelectionTestRecipientEmail=${TEAM_SELECTION_TEST_RECIPIENT_EMAIL:-none}"
+            "PlayerOfTheWeekOwnerEmail=${POTW_OWNER_EMAIL:-none}"
+            # potw-test until a test publish is verified; then switch to main.
+            "PlayerOfTheWeekPublishBranch=potw-test"
           )
 
           sam deploy --config-env ci --no-confirm-changeset --no-fail-on-empty-changeset \

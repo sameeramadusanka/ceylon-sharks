@@ -84,6 +84,18 @@ describe('adminMatches handler', () => {
     expect(body.matches[1].counts).toEqual({ AVAILABLE: 1, UNAVAILABLE: 1, MAYBE: 0, NOT_SUBMITTED: 0 });
   });
 
+  it('tells the page whether the signed-in admin may publish Player of the Week', async () => {
+    ddbMock.on(ScanCommand).resolves({ Items: [] });
+
+    ddbMock.on(GetCommand).resolves({ Item: { ...validSession(), email: 'another-admin@example.com' } });
+    const other = (await handler(fakeEvent(`Bearer ${VALID_SESSION_TOKEN}`), {} as never, () => undefined)) as { body: string };
+    expect(parseBody(other).canPublishPlayerOfTheWeek).toBe(false);
+
+    ddbMock.on(GetCommand).resolves({ Item: { ...validSession(), email: 'vice@example.com' } });
+    const vice = (await handler(fakeEvent(`Bearer ${VALID_SESSION_TOKEN}`), {} as never, () => undefined)) as { body: string };
+    expect(parseBody(vice).canPublishPlayerOfTheWeek).toBe(true);
+  });
+
   it('returns 500 without leaking internal error details when the scan throws', async () => {
     ddbMock.on(GetCommand).resolves({ Item: validSession() });
     ddbMock.on(ScanCommand).rejects(new Error('ProvisionedThroughputExceededException: internal detail'));

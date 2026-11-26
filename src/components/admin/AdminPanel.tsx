@@ -10,8 +10,10 @@ import {
   type MatchDetail,
   type MatchListItem,
 } from '../../services/adminApi';
+import type { AdminPotwData } from '../../lib/playerOfTheWeekAdminData';
+import PlayerOfTheWeekPublisher from './PlayerOfTheWeekPublisher';
 
-type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
+type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'potw' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
 
 const REDIRECT_SECONDS = 5;
 
@@ -58,7 +60,12 @@ function clearStoredSession(): void {
   localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
-export default function AdminPanel() {
+interface AdminPanelProps {
+  /** Build-time scorecard/squad data for the Player of the Week form. */
+  potwData: AdminPotwData;
+}
+
+export default function AdminPanel({ potwData }: AdminPanelProps) {
   const [phase, setPhase] = useState<Phase>('email');
   const [session, setSession] = useState<Session | null>(null);
   const [emailInput, setEmailInput] = useState('');
@@ -71,6 +78,7 @@ export default function AdminPanel() {
   const [squadSelection, setSquadSelection] = useState<Set<string>>(new Set());
   const [savingSquad, setSavingSquad] = useState(false);
   const [squadMessage, setSquadMessage] = useState('');
+  const [canPublishPotw, setCanPublishPotw] = useState(false);
 
   useEffect(() => {
     if (phase !== 'signed-out') return;
@@ -91,7 +99,8 @@ export default function AdminPanel() {
     setPhase('loading-matches');
     try {
       const result = await fetchMatches(activeSession.token);
-      setMatches(result);
+      setMatches(result.matches);
+      setCanPublishPotw(result.canPublishPlayerOfTheWeek);
       setPhase('matches');
     } catch (error) {
       const apiError = error as AdminApiError;
@@ -214,12 +223,20 @@ export default function AdminPanel() {
     }
   }
 
+  function expireSession() {
+    clearStoredSession();
+    setSession(null);
+    setErrorMessage('Your session has expired - please sign in again.');
+    setPhase('email');
+  }
+
   function signOut() {
     clearStoredSession();
     setSession(null);
     setEmailInput('');
     setCodeInput('');
     setMatches([]);
+    setCanPublishPotw(false);
     setSelectedMatch(null);
     setInfoMessage('');
     setErrorMessage('');
@@ -324,6 +341,19 @@ export default function AdminPanel() {
             Loading matches…
           </p>
         )}
+
+        {canPublishPotw && (phase === 'matches' || phase === 'potw') && (
+          <div className="ad-tabs" role="tablist">
+            <button type="button" role="tab" aria-selected={phase === 'matches'} className={phase === 'matches' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('matches')}>
+              Availability
+            </button>
+            <button type="button" role="tab" aria-selected={phase === 'potw'} className={phase === 'potw' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('potw')}>
+              Player of the Week
+            </button>
+          </div>
+        )}
+
+        {phase === 'potw' && session && canPublishPotw && <PlayerOfTheWeekPublisher data={potwData} sessionToken={session.token} onSessionExpired={expireSession} />}
 
         {phase === 'matches' && (
           <>

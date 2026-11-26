@@ -148,6 +148,48 @@ CloudFormation keeps full stack history too -
 `aws cloudformation describe-stack-events` shows what changed in the
 last deploy if a rollback needs investigating first.
 
+## Publishing Player of the Week from the admin panel
+
+The admin panel's **Player of the Week** tab (only shown to the captain,
+vice-captain and site owner) sends the poster and details to
+`POST /admin/player-of-the-week`. The `publish-potw` Lambda checks the
+session and the publisher list, validates the date, player and image, then
+commits `{date}__{playerId}.{jpg|png}` + `.json` to
+`src/assets/player_of_the_week/{season}/` as one commit. That commit runs the
+site's normal **Deploy** workflow, so the change is live about 3 minutes later.
+
+Who may publish: `CaptainEmail`, `ViceCaptainEmail` and
+`PlayerOfTheWeekOwnerEmail` (GitHub secret `AVAILABILITY_POTW_OWNER_EMAIL`).
+They also need to be on the admin allowlist to sign in at all.
+
+Where it commits: `PlayerOfTheWeekPublishBranch`, set explicitly in
+`deploy-availability.yml`. It stays `potw-test` (created from `main` if
+missing) until a test publish has been checked, then changes to `main`.
+
+### The GitHub token
+
+A fine-grained personal access token from the repo owner's account, limited
+to this repository with **Contents: Read and write** only. It's stored as an
+SSM SecureString and never appears in the repo or the template:
+
+```bash
+aws ssm put-parameter --region ap-southeast-1 --name /ceylon-sharks/github-publish-token \
+  --type SecureString --value "<token>" --overwrite
+```
+
+It acts as the repo owner, so it passes `main`'s branch protection the same
+way the owner's own merges do (admins aren't subject to the rules). Tokens
+expire: when publishing fails with "The GitHub token may have expired", create
+a new token on GitHub and run the command above again. A warm Lambda caches
+the old token, but drops it automatically after GitHub rejects it, so the
+next try uses the new one.
+
+### Logs
+
+```bash
+aws logs tail /aws/lambda/ceylon-sharks-availability-publish-potw --since 1h --region ap-southeast-1
+```
+
 ## Common troubleshooting
 
 | Symptom in logs | Likely cause | Fix |
