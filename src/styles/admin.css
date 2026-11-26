@@ -419,6 +419,10 @@
   margin-top: 20px;
 }
 
+.ad-potw-message--top {
+  margin: 0 0 20px;
+}
+
 .ad-success {
   background: rgba(76, 175, 110, 0.14);
   border: 1px solid rgba(76, 175, 110, 0.4);
