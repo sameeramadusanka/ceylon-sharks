@@ -136,10 +136,13 @@ a { color: inherit; text-decoration: none; }
   .potw-poster { margin: 0 auto; max-width: 360px; width: 100%; }
   .potw-stats .stat-block strong { font-size: 26px; }
   .potw-archive { margin-top: 56px; }
+  /* Previous winners: one swipeable row instead of a stacked grid. The row bleeds to the screen edges and a part of the next poster peeks in to show it scrolls. */
+  .potw-archive-list { display: flex; gap: 12px; margin: 0 -20px; overflow-x: auto; overscroll-behavior-x: contain; padding: 0 20px 6px; scroll-padding-inline: 20px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .potw-archive-list::-webkit-scrollbar { display: none; }
+  .potw-archive-item { align-content: start; flex: 0 0 min(42%, 180px); scroll-snap-align: start; }
 }
 @media (max-width: 470px) {
   .potw-actions .button { flex: 1 1 100%; justify-content: center; }
-  .potw-archive-list { grid-template-columns: repeat(2, 1fr); }
 }
 .main-nav a { white-space: nowrap; }
 .potw-stats strong, .potw-page-stats strong { white-space: nowrap; }
