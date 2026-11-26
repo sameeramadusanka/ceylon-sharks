@@ -153,6 +153,10 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<PlayerOfTheWeekResult | null>(null);
+  // Dates published in this visit: the build-time `existing` list only refreshes after the next deploy.
+  const [publishedKeys, setPublishedKeys] = useState<string[]>([]);
+  // Changing the key remounts the file input, which is the only way to empty it.
+  const [posterInputKey, setPosterInputKey] = useState(0);
 
   const match = useMemo(() => (source === 'scorecard' ? data.matches.find((entry) => `${entry.season}/${entry.date}` === matchKey) ?? null : null), [data.matches, matchKey, source]);
   const season = source === 'scorecard' ? match?.season ?? '' : manualSeason;
@@ -160,7 +164,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
   const players = source === 'scorecard' ? match?.players ?? [] : data.squads.find((squad) => squad.season === manualSeason)?.players ?? [];
   const player = players.find((entry) => String(entry.id) === playerId) ?? null;
   const scorecardStats = source === 'scorecard' ? match?.players.find((entry) => String(entry.id) === playerId)?.stats ?? null : null;
-  const alreadyExists = Boolean(season && date && data.existing.includes(`${season}/${date}`));
+  const alreadyExists = Boolean(season && date && (data.existing.includes(`${season}/${date}`) || publishedKeys.includes(`${season}/${date}`)));
   const targetChosen = Boolean(season && date);
 
   useEffect(
@@ -173,6 +177,22 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
   function applyStats(next: PotwStats) {
     setStats(next);
     setFigures(figuresFor(next));
+  }
+
+  /** Empties both the scorecard and manual forms after a publish, keeping the chosen mode and season. */
+  function clearForm() {
+    setMatchKey('');
+    setManualDate('');
+    setPlayerId('');
+    setOpponent('');
+    setCompetition(data.defaultCompetition);
+    applyStats(emptyStats());
+    setCaption('');
+    setPoster(null);
+    setPosterError('');
+    setPosterInputKey((key) => key + 1);
+    setReplaceExisting(false);
+    setError('');
   }
 
   function resetPlayer() {
@@ -254,7 +274,10 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
         imageBase64: poster.base64,
         replaceExisting,
       });
+      setPublishedKeys((keys) => [...keys, `${season}/${date}`]);
+      clearForm();
       setResult(published);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (caught) {
       const apiError = caught as AdminApiError;
       if (apiError.status === 401) {
@@ -276,6 +299,25 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
       <p className="ad-subtitle">Fill the figures from a scorecard or type them in yourself, add the poster and publish. The site updates about 3 minutes later.</p>
 
       <form onSubmit={publish} className="ad-potw-form">
+        {result && (
+          <div className="ad-success ad-potw-message ad-potw-message--top" role="status">
+            {isLive ? (
+              <>
+                Published! The site will update in about 3 minutes:{' '}
+                <a href={result.pagePath} target="_blank" rel="noreferrer">
+                  view the share page
+                </a>
+                .
+              </>
+            ) : (
+              <>Saved to the test branch "{result.branch}" - not live yet. </>
+            )}{' '}
+            <a href={result.commitUrl} target="_blank" rel="noreferrer">
+              See the commit
+            </a>
+            .
+          </div>
+        )}
         <div className="ad-segmented" role="radiogroup" aria-label="Where the figures come from">
           <button type="button" role="radio" aria-checked={source === 'scorecard'} className={source === 'scorecard' ? 'is-active' : ''} onClick={() => chooseSource('scorecard')} disabled={data.matches.length === 0}>
             From scorecard
@@ -414,7 +456,7 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
 
             <div className="ad-field">
               <label htmlFor="ad-potw-poster">Poster (9:16 image)</label>
-              <input id="ad-potw-poster" type="file" accept="image/*" required onChange={choosePoster} />
+              <input key={posterInputKey} id="ad-potw-poster" type="file" accept="image/*" required onChange={choosePoster} />
             </div>
             {preparing && (
               <p className="ad-status" role="status">
@@ -450,25 +492,6 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
           <p className="ad-error ad-potw-message" role="alert">
             {error}
           </p>
-        )}
-        {result && (
-          <div className="ad-success ad-potw-message" role="status">
-            {isLive ? (
-              <>
-                Published! The site will update in about 3 minutes:{' '}
-                <a href={result.pagePath} target="_blank" rel="noreferrer">
-                  view the share page
-                </a>
-                .
-              </>
-            ) : (
-              <>Saved to the test branch "{result.branch}" - not live yet. </>
-            )}{' '}
-            <a href={result.commitUrl} target="_blank" rel="noreferrer">
-              See the commit
-            </a>
-            .
-          </div>
         )}
       </form>
     </>

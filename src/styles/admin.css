@@ -109,6 +109,75 @@
   width: 100%;
 }
 
+/* One height for every single-line control, so selects, date and file
+   pickers line up with text inputs (browsers size them differently). */
+.ad-field input:not([type='checkbox']):not([type='file']),
+.ad-field select {
+  display: block;
+  height: 42px;
+  line-height: 20px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ad-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23a8aaa4' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  padding-right: 36px;
+  text-overflow: ellipsis;
+}
+
+/* iOS Safari gives date inputs a fixed intrinsic width that ignores width: 100%
+   and overflows the form; dropping the native look lets them shrink. */
+.ad-field input[type='date'] {
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: dark;
+  text-align: left;
+}
+
+.ad-field input[type='date']::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
+}
+
+.ad-field input[type='file'] {
+  align-items: center;
+  color: var(--ad-muted);
+  cursor: pointer;
+  display: flex;
+  font-size: 13px;
+  height: 42px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0 12px 0 5px;
+}
+
+.ad-field input[type='file']::file-selector-button {
+  background: rgba(248, 249, 247, 0.1);
+  border: 0;
+  border-radius: 3px;
+  color: var(--ad-paper);
+  cursor: pointer;
+  font-family: var(--ad-mono);
+  font-size: 10px;
+  height: 30px;
+  letter-spacing: 0.06em;
+  margin-right: 12px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+/* Grid children default to min-width: auto, which lets a wide control push past the form edge. */
+.ad-field,
+.ad-field-row > *,
+.ad-stat-inputs > * {
+  min-width: 0;
+}
+
 .ad-field input:focus,
 .ad-field select:focus,
 .ad-field textarea:focus,
@@ -361,10 +430,6 @@
   resize: vertical;
 }
 
-.ad-field input[type='file'] {
-  padding: 8px;
-}
-
 .ad-field-row {
   display: grid;
   gap: 0 14px;
@@ -417,6 +482,10 @@
 
 .ad-potw-message {
   margin-top: 20px;
+}
+
+.ad-potw-message--top {
+  margin: 0 0 20px;
 }
 
 .ad-success {
@@ -519,6 +588,13 @@
 }
 
 @media (max-width: 560px) {
+  /* 16px stops iPhones zooming into the page when a field is tapped. */
+  .ad-field input,
+  .ad-field select,
+  .ad-field textarea {
+    font-size: 16px;
+  }
+
   .ad-field-row,
   .ad-field-row--three {
     grid-template-columns: 1fr;
