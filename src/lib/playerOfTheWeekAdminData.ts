@@ -40,7 +40,7 @@ export interface AdminPotwData {
 }
 
 type Dismissal = { type?: string | null; fielder?: string | null; bowler?: string | null } | null;
-type Batter = { player: string; dismissal?: Dismissal; runs?: number; balls?: number };
+type Batter = { player: string; dismissal?: Dismissal; runs?: number; balls?: number; fours?: number; sixes?: number };
 type Bowler = { player: string; overs?: string | number; maidens?: number; runs?: number; wickets?: number };
 type Innings = { team: string; batting?: Batter[]; bowling?: Bowler[] };
 type ScoreCard = { match?: { date?: string; teams?: { home?: { name?: string }; away?: { name?: string } } }; innings?: Innings[] };
@@ -74,6 +74,8 @@ function playerStats(ours: Innings[], theirs: Innings[], name: string): PotwStat
     if ((type !== null && type !== 'NOT_OUT') || balls > 0) {
       stats.runs = text(batter.runs ?? 0);
       stats.balls = text(balls);
+      stats.fours = batter.fours ? text(batter.fours) : '';
+      stats.sixes = batter.sixes ? text(batter.sixes) : '';
       stats.notOut = type === 'NOT_OUT' || type === null;
     }
     break;
