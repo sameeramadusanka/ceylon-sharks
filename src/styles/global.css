@@ -145,7 +145,7 @@ a { color: inherit; text-decoration: none; }
   .potw-actions .button { flex: 1 1 100%; justify-content: center; }
 }
 .main-nav a { white-space: nowrap; }
-.potw-stats strong, .potw-page-stats strong { white-space: nowrap; }
+.potw-stats strong { white-space: nowrap; }
 /* Four Player of the Week figures (batting, bowling, fielding, wicket keeping) sit in a 2x2 grid instead of one crowded row */
 .potw-stats--grid { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .potw-stats--grid .stat-block:nth-child(2n) { border-right: 0; }
