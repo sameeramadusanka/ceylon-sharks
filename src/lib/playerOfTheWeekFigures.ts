@@ -1,11 +1,14 @@
 // Player of the Week figures as separate numbers (what the admin form edits)
-// and the short text the site shows, e.g. "45* (32)" or "3/12 (3)".
+// and the short text stored in the winner's .json, e.g. "45* (32, 4×4, 2×6)" or "3/12 (3)".
+// The site hides the 4s/6s when it shows a batting line (displayBatting in playerOfTheWeek.ts).
 // Browser-safe: used by the admin form and the build-time scorecard loader.
 
 export interface PotwStats {
   // Batting
   runs: string;
   balls: string;
+  fours: string;
+  sixes: string;
   notOut: boolean;
   // Bowling
   overs: string;
@@ -23,7 +26,7 @@ export interface PotwStats {
 export type PotwStatGroup = 'batting' | 'bowling' | 'fielding' | 'wicketKeeping';
 
 export function emptyStats(): PotwStats {
-  return { runs: '', balls: '', notOut: false, overs: '', maidens: '', runsConceded: '', wickets: '', catches: '', runOuts: '', keeperCatches: '', stumpings: '' };
+  return { runs: '', balls: '', fours: '', sixes: '', notOut: false, overs: '', maidens: '', runsConceded: '', wickets: '', catches: '', runOuts: '', keeperCatches: '', stumpings: '' };
 }
 
 const count = (value: string) => {
@@ -38,7 +41,8 @@ const counted = (value: string, singular: string, pluralForm: string) => {
 
 export function battingFigure(stats: PotwStats): string {
   if (!has(stats.runs)) return '';
-  return `${stats.runs.trim()}${stats.notOut ? '*' : ''}${has(stats.balls) ? ` (${stats.balls.trim()})` : ''}`;
+  const extras = [has(stats.balls) ? stats.balls.trim() : '', count(stats.fours) ? `${count(stats.fours)}×4` : '', count(stats.sixes) ? `${count(stats.sixes)}×6` : ''].filter(Boolean);
+  return `${stats.runs.trim()}${stats.notOut ? '*' : ''}${extras.length ? ` (${extras.join(', ')})` : ''}`;
 }
 
 export function bowlingFigure(stats: PotwStats): string {

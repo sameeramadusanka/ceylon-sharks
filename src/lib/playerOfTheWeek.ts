@@ -82,6 +82,11 @@ export function loadPlayerOfTheWeek(): Promise<PlayerOfTheWeekEntry[]> {
   return cachedEntries;
 }
 
+/** The stored batting line may list boundaries ("41 (23, 1×4, 5×6)"); the site shows only runs and balls ("41 (23)"). */
+export function displayBatting(batting: string | undefined): string | undefined {
+  return batting?.replace(/\s*,\s*\d+\s*[×xX]\s*[46]\b/g, '').trim();
+}
+
 async function buildEntries(): Promise<PlayerOfTheWeekEntry[]> {
   const posters = new Map<string, { image: ImageMetadata; season: string }>();
   const shareImages = new Map<string, ImageMetadata>();
@@ -118,6 +123,7 @@ async function buildEntries(): Promise<PlayerOfTheWeekEntry[]> {
 
     return {
       ...info,
+      batting: displayBatting(info.batting),
       season,
       date,
       displayDate: formatPlayerOfTheWeekDate(date),
