@@ -114,12 +114,9 @@ a { color: inherit; text-decoration: none; }
 .potw-poster { box-shadow: 0 30px 60px -30px rgba(17, 27, 79, .55); display: block; overflow: hidden; }
 .potw-poster img { aspect-ratio: 9 / 16; display: block; height: auto; object-fit: cover; transition: transform .35s; width: 100%; }
 .potw-poster:hover img { transform: scale(1.02); }
-.potw-kicker { color: var(--orange); font-family: var(--mono); font-size: 10px; letter-spacing: .14em; margin: 0; text-transform: uppercase; }
-.potw-name { font-family: var(--serif); font-size: clamp(2.6rem, 5vw, 4.6rem); font-weight: 500; letter-spacing: -.07em; line-height: .95; margin: 18px 0 14px; }
+.potw-name { font-family: var(--serif); font-size: clamp(2.6rem, 5vw, 4.6rem); font-weight: 500; letter-spacing: -.07em; line-height: .95; margin: 0 0 14px; }
 .potw-opponent { color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: .06em; margin: 0; text-transform: uppercase; }
 .potw-opponent b { color: var(--ink); font-weight: 500; }
-.potw-stats { border-top: 1px solid var(--line); display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; margin-top: 38px; max-width: 520px; }
-.potw-stats .stat-block:last-child { border-right: 0; }
 .potw-caption { color: #5f6470; font-size: 14px; line-height: 1.8; margin: 32px 0 0; max-width: 460px; }
 .potw-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 .potw-archive { border-top: 1px solid var(--line); margin-top: 80px; padding-top: 34px; }
@@ -134,7 +131,6 @@ a { color: inherit; text-decoration: none; }
   .potw { padding-bottom: 80px; padding-top: 80px; }
   .potw-feature { gap: 36px; grid-template-columns: 1fr; margin-top: 48px; }
   .potw-poster { margin: 0 auto; max-width: 360px; width: 100%; }
-  .potw-stats .stat-block strong { font-size: 26px; }
   .potw-archive { margin-top: 56px; }
   /* Previous winners: one swipeable row instead of a stacked grid. The row bleeds to the screen edges and a part of the next poster peeks in to show it scrolls. */
   .potw-archive-list { display: flex; gap: 12px; margin: 0 -20px; overflow-x: auto; overscroll-behavior-x: contain; padding: 0 20px 6px; scroll-padding-inline: 20px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -145,9 +141,3 @@ a { color: inherit; text-decoration: none; }
   .potw-actions .button { flex: 1 1 100%; justify-content: center; }
 }
 .main-nav a { white-space: nowrap; }
-.potw-stats strong { white-space: nowrap; }
-/* Four Player of the Week figures (batting, bowling, fielding, wicket keeping) sit in a 2x2 grid instead of one crowded row */
-.potw-stats--grid { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.potw-stats--grid .stat-block:nth-child(2n) { border-right: 0; }
-.potw-stats--grid .stat-block:nth-child(n+3) { border-top: 1px solid var(--line); }
-.potw-stats--grid .stat-block:nth-child(2n + 1) { padding-left: 0; }
