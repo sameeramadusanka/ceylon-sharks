@@ -8,13 +8,6 @@
 .potw-page h1 { font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.4rem); font-weight: 500; letter-spacing: -.07em; line-height: .93; margin: 20px 0 18px; }
 .potw-page-match { color: #a8aaa4; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; line-height: 1.9; margin: 0; text-transform: uppercase; }
 .potw-page-match b { color: var(--paper); font-weight: 500; }
-.potw-page-stats { border-top: 1px solid var(--dark-line); display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; margin-top: 36px; max-width: 500px; }
-.potw-page-stats div { border-right: 1px solid var(--dark-line); display: flex; flex-direction: column; gap: 7px; padding: 20px 20px 0; }
-.potw-page-stats div:first-child { padding-left: 0; }
-.potw-page-stats div:last-child { border-right: 0; }
-.potw-page-stats strong { font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 500; letter-spacing: -.06em; line-height: 1; }
-.potw-page-stats div:first-child strong { color: var(--amber); }
-.potw-page-stats span { color: #8d8f88; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
 .potw-page-caption { color: #c4c6c0; font-size: 15px; line-height: 1.8; margin: 30px 0 0; max-width: 460px; }
 .potw-page-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 .potw-page-secondary { background: transparent; border: 1px solid var(--dark-line); color: var(--paper); transition: border-color .2s, color .2s; }
@@ -39,11 +32,6 @@
 @media (max-width: 470px) {
   .potw-page-header .header-cta { display: none; }
   .potw-page-actions .button { flex: 1 1 100%; justify-content: center; }
-  .potw-page-stats div { padding-left: 12px; }
   .potw-page-archive-list { grid-template-columns: repeat(2, 1fr); }
 }
 /* Four figures: 2x2 grid instead of one crowded row */
-.potw-page-stats--grid { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.potw-page-stats--grid div:nth-child(2n) { border-right: 0; }
-.potw-page-stats--grid div:nth-child(2n + 1) { padding-left: 0; }
-.potw-page-stats--grid div:nth-child(n+3) { padding-top: 20px; }

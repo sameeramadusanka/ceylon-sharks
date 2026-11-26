@@ -30,12 +30,6 @@ const pageUrl = absolute(sitePath(pagePath));
 const canonicalUrl = entry ? absolute(sitePath(entry.pagePath)) : pageUrl;
 const image = entry ? { url: absolute(entry.shareImage.src), ...entry.shareImage } : { url: absolute(sitePath('/brand/Open-graph-image.png')), width: 1200, height: 675, type: 'image/png' };
 const imageAlt = entry ? posterAlt(entry) : `${team.name} logo`;
-const stats = entry ? [
-  { label: copy.batting, value: entry.batting },
-  { label: copy.bowling, value: entry.bowling },
-  { label: copy.fielding, value: entry.fielding },
-  { label: copy.wicketKeeping, value: entry.wicketKeeping },
-].filter((stat) => stat.value) : [];
 ---
 
 <!doctype html>
@@ -81,12 +75,7 @@ const stats = entry ? [
           <div class="potw-page-details">
             <p class="potw-page-kicker">{fill(copy.pageKicker, { team: team.name })}</p>
             <h1>{entry.playerName}</h1>
-            <p class="potw-page-match">{copy.versus} <b>{entry.opponent}</b><br />{entry.displayDate}{entry.competition ? ` · ${entry.competition}` : ''}</p>
-            {stats.length > 0 && (
-              <div class:list={['potw-page-stats', { 'potw-page-stats--grid': stats.length > 3 }]}>
-                {stats.map((stat) => <div><strong>{stat.value}</strong><span>{stat.label}</span></div>)}
-              </div>
-            )}
+            <p class="potw-page-match">{copy.versus} <b>{entry.opponent}</b></p>
             {entry.caption && <p class="potw-page-caption">{entry.caption}</p>}
             <div class="potw-page-actions">
               {entry.hasScoreCard && <a class="button button--primary" href={`${sitePath('/')}?scorecard=${entry.date}`}>{copy.viewScoreCard} →</a>}
