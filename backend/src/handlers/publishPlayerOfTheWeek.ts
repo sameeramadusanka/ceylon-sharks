@@ -4,6 +4,7 @@ import { resolveAdminSession } from '../adminAuth.js';
 import { canPublishPlayerOfTheWeek, loadConfig, loadPublishConfig } from '../config.js';
 import { createGithubClient, GithubApiError, type FileToCommit } from '../github/githubClient.js';
 import { getGithubToken, resetGithubTokenCache } from '../github/githubToken.js';
+import { imageExtension, MAX_IMAGE_BYTES } from '../images.js';
 import { logger } from '../logger.js';
 import { createDocumentClient } from '../repositories/scheduledActionsRepository.js';
 import { startPlayerOfTheWeekNotification } from './notifyTrigger.js';
@@ -13,7 +14,7 @@ import { startPlayerOfTheWeekNotification } from './notifyTrigger.js';
 // The commit triggers the site's normal GitHub Pages deploy - this function
 // never touches the live site directly.
 
-export const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+export { imageExtension, MAX_IMAGE_BYTES };
 
 const optionalText = (max: number) =>
   z
@@ -48,13 +49,6 @@ const RequestSchema = z.object({
 
 function jsonResponse(statusCode: number, body: unknown): APIGatewayProxyStructuredResultV2 {
   return { statusCode, headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) };
-}
-
-/** File extension from the image's magic bytes; null if it isn't a JPEG or PNG. */
-export function imageExtension(bytes: Buffer): 'jpg' | 'png' | null {
-  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'jpg';
-  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'png';
-  return null;
 }
 
 type SquadFile = { season?: { players?: { id: number; name: string }[] } };

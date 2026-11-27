@@ -95,6 +95,45 @@ describe('githubClient', () => {
     ]);
   });
 
+  it('reuses an existing blob instead of uploading again (renames, earlier uploads)', async () => {
+    const { fetchImpl, calls } = fakeFetch({
+      'POST /git/blobs': () => ({ status: 201, json: { sha: 'blob-new' } }),
+      'GET /git/ref/heads/main': () => ({ status: 200, json: { object: { sha: 'head-1' } } }),
+      'GET /git/commits/head-1': () => ({ status: 200, json: { tree: { sha: 'tree-1' } } }),
+      'POST /git/trees': () => ({ status: 201, json: { sha: 'new-tree' } }),
+      'POST /git/commits': () => ({ status: 201, json: { sha: 'c1', html_url: 'u1' } }),
+      'PATCH /git/refs/heads/main': () => ({ status: 200, json: {} }),
+    });
+    const client = createGithubClient({ token: 't', repo: 'example/repo', fetchImpl });
+
+    await client.commitFiles({ branch: 'main', message: 'm', files: [{ path: 'b/010__a.jpg', blobSha: 'existing-sha' }, { path: 'b/x.json', contentBase64: 'e30=' }], deletePaths: ['b/a.jpg'] });
+
+    expect(calls.filter((call) => call.path === '/git/blobs')).toHaveLength(1);
+    expect(calls.find((call) => call.path === '/git/trees')?.body).toMatchObject({
+      tree: [
+        { path: 'b/010__a.jpg', sha: 'existing-sha' },
+        { path: 'b/x.json', sha: 'blob-new' },
+        { path: 'b/a.jpg', sha: null },
+      ],
+    });
+  });
+
+  it('creates a blob and checks whether one commit contains another', async () => {
+    const { fetchImpl } = fakeFetch({
+      'POST /git/blobs': () => ({ status: 201, json: { sha: 'blob-1' } }),
+      'GET /compare/ours...newer': () => ({ status: 200, json: { status: 'ahead' } }),
+      'GET /compare/ours...older': () => ({ status: 200, json: { status: 'behind' } }),
+      'GET /compare/ours...gone': () => ({ status: 404, json: { message: 'Not Found' } }),
+    });
+    const client = createGithubClient({ token: 't', repo: 'example/repo', fetchImpl });
+
+    expect(await client.createBlob('AAAA')).toBe('blob-1');
+    expect(await client.containsCommit('ours', 'ours')).toBe(true);
+    expect(await client.containsCommit('ours', 'newer')).toBe(true);
+    expect(await client.containsCommit('ours', 'older')).toBe(false);
+    expect(await client.containsCommit('ours', 'gone')).toBe(false);
+  });
+
   it('throws GithubApiError with the status on failure', async () => {
     const { fetchImpl } = fakeFetch({ 'GET /contents/a?ref=main': () => ({ status: 401, json: { message: 'Bad credentials' } }) });
     const client = createGithubClient({ token: 't', repo: 'example/repo', fetchImpl });

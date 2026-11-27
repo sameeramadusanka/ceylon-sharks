@@ -11,9 +11,11 @@ import {
   type MatchListItem,
 } from '../../services/adminApi';
 import type { AdminPotwData } from '../../lib/playerOfTheWeekAdminData';
+import type { AdminSitePhotosData } from '../../lib/sitePhotosAdminData';
 import PlayerOfTheWeekPublisher from './PlayerOfTheWeekPublisher';
+import SitePhotosManager from './SitePhotosManager';
 
-type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'potw' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
+type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'potw' | 'photos' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
 
 const REDIRECT_SECONDS = 5;
 
@@ -63,9 +65,11 @@ function clearStoredSession(): void {
 interface AdminPanelProps {
   /** Build-time scorecard/squad data for the Player of the Week form. */
   potwData: AdminPotwData;
+  /** Build-time thumbnails and season squads for the Site photos tab. */
+  photosData: AdminSitePhotosData;
 }
 
-export default function AdminPanel({ potwData }: AdminPanelProps) {
+export default function AdminPanel({ potwData, photosData }: AdminPanelProps) {
   const [phase, setPhase] = useState<Phase>('email');
   const [session, setSession] = useState<Session | null>(null);
   const [emailInput, setEmailInput] = useState('');
@@ -342,7 +346,7 @@ export default function AdminPanel({ potwData }: AdminPanelProps) {
           </p>
         )}
 
-        {canPublishPotw && (phase === 'matches' || phase === 'potw') && (
+        {canPublishPotw && (phase === 'matches' || phase === 'potw' || phase === 'photos') && (
           <div className="ad-tabs" role="tablist">
             <button type="button" role="tab" aria-selected={phase === 'matches'} className={phase === 'matches' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('matches')}>
               Availability
@@ -350,10 +354,14 @@ export default function AdminPanel({ potwData }: AdminPanelProps) {
             <button type="button" role="tab" aria-selected={phase === 'potw'} className={phase === 'potw' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('potw')}>
               Player of the Week
             </button>
+            <button type="button" role="tab" aria-selected={phase === 'photos'} className={phase === 'photos' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('photos')}>
+              Site photos
+            </button>
           </div>
         )}
 
         {phase === 'potw' && session && canPublishPotw && <PlayerOfTheWeekPublisher data={potwData} sessionToken={session.token} onSessionExpired={expireSession} />}
+        {phase === 'photos' && session && canPublishPotw && <SitePhotosManager data={photosData} sessionToken={session.token} onSessionExpired={expireSession} />}
 
         {phase === 'matches' && (
           <>

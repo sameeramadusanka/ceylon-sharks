@@ -432,3 +432,48 @@ export function playerOfTheWeekNotLiveAdminEmail(params: Omit<PlayerOfTheWeekAdm
 
   return { subject, text, html: emailShell(params.logoUrl, body) };
 }
+
+export interface SitePhotosEmailParams {
+  publishedBy: string;
+  /** One line per section, e.g. "Banner: 2 added, reordered". */
+  summary: string[];
+  siteUrl: string;
+  commitUrl: string;
+  logoUrl: string;
+}
+
+function summaryList(summary: string[]): string {
+  const items = summary.map((line) => `<li style="margin:0 0 6px;">${escapeHtml(line)}</li>`).join('');
+  return `<ul style="margin:0 0 16px;padding:12px 14px 12px 32px;background:${COLOR_PAPER};border-radius:6px;font-size:14px;">${items}</ul>`;
+}
+
+export function sitePhotosLiveEmail(params: SitePhotosEmailParams): EmailBody {
+  const subject = 'Site photos are live';
+  const text = [`${params.publishedBy} updated the site photos. The changes are now live on the website.`, '', ...params.summary.map((line) => `- ${line}`), '', `Website: ${params.siteUrl}`, `Commit: ${params.commitUrl}`].join('\n');
+  const body = `
+    <p style="margin:0 0 16px;"><strong>${escapeHtml(params.publishedBy)}</strong> updated the site photos. The changes are now live on the website.</p>
+    ${summaryList(params.summary)}
+    ${ctaButton(params.siteUrl, 'View the website')}
+    <p style="margin:0;color:${COLOR_MUTED};font-size:13px;"><a href="${params.commitUrl}" style="color:${COLOR_MUTED};">See the commit on GitHub</a></p>
+  `;
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}
+
+export function sitePhotosNotLiveEmail(params: SitePhotosEmailParams): EmailBody {
+  const subject = "Site photos saved, but not live yet";
+  const text = [
+    `${params.publishedBy} updated the site photos, but the website still hasn't picked up the change after several minutes.`,
+    '',
+    ...params.summary.map((line) => `- ${line}`),
+    '',
+    'The site deploy may have failed. Check the "Deploy Astro site to GitHub Pages" run in the repository\'s Actions tab.',
+    `Commit: ${params.commitUrl}`,
+  ].join('\n');
+  const body = `
+    <p style="margin:0 0 16px;"><strong>${escapeHtml(params.publishedBy)}</strong> updated the site photos, but the website <strong style="color:${COLOR_AMBER};">still hasn't picked up the change</strong> after several minutes.</p>
+    ${summaryList(params.summary)}
+    <p style="margin:0 0 16px;">The site deploy may have failed. Check the <strong>Deploy Astro site to GitHub Pages</strong> run in the repository's Actions tab.</p>
+    ${ctaButton(params.commitUrl, 'See the commit')}
+  `;
+  return { subject, text, html: emailShell(params.logoUrl, body) };
+}

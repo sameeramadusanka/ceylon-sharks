@@ -190,6 +190,40 @@ because of an email problem.
 aws logs tail /aws/lambda/ceylon-sharks-availability-notify-potw --since 1h --region ap-southeast-1
 ```
 
+## Managing site photos from the admin panel
+
+The admin panel's **Site photos** tab (same people as Player of the Week)
+manages three folders: `src/assets/banner_images/` (homepage banner),
+`src/assets/history_images/` (Our Story carousel) and
+`src/assets/player_images/` (player photos, `{playerId}.{ext}`). It uses the
+`site-photos` Lambda, the same GitHub token and the same branch
+(`PlayerOfTheWeekPublishBranch`):
+
+- `GET /admin/site-photos` lists the three folders.
+- `POST /admin/site-photos/upload` stores one photo (JPEG/PNG, max 4 MB; the
+  page shrinks photos first) as a git blob. Nothing is committed yet.
+- `POST /admin/site-photos` commits the whole batch as one commit: the new
+  banner/Our Story order (files are renamed `010__…`, `020__…` so the site's
+  file-name order matches), photos left out are deleted, and player photos
+  are written as `{playerId}.{ext}` with any other file for that player
+  removed. Player changes are checked against that season's squad file.
+  The banner can't be emptied.
+
+Deleted photos stay in git history, so a mistake can be undone by restoring
+the file from an earlier commit.
+
+After the commit, `notify-site-photos` runs in the background (no retries).
+It polls `https://ceylonsharks.com/build-info.json`, which the site build
+writes with the commit it was built from (`src/pages/build-info.json.ts`),
+and asks GitHub whether that commit includes the new one. Then the captain,
+vice-captain and site owner get "Site photos are live", or after ~12 minutes
+"saved, but not live yet".
+
+```bash
+aws logs tail /aws/lambda/ceylon-sharks-availability-site-photos --since 1h --region ap-southeast-1
+aws logs tail /aws/lambda/ceylon-sharks-availability-notify-site-photos --since 1h --region ap-southeast-1
+```
+
 ### The GitHub token
 
 A fine-grained personal access token from the repo owner's account, limited
