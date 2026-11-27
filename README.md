@@ -15,7 +15,7 @@ A responsive cricket club website built with Astro, React, and TypeScript. It's 
 - Captain and vice-captain cards kept first, followed by the remaining players alphabetically by name
 - Record Book tabs for the two newest available seasons
 - Responsive navigation, match filters, history image carousel, and collapsible history timeline
-- Player of the Week: the latest winner's poster for the selected season, with a caption and links to their profile and the match scorecard; previous winners sit below (a swipeable row on phones). Batting shows runs and balls only, e.g. `45* (32)`
+- Player of the Week: the latest winner's poster for the selected season, with a caption and links to their profile and the match scorecard; earlier winners sit below under "Players of the Season" (a swipeable row on phones). Batting shows runs and balls only, e.g. `45* (32)`
 - A shareable page per winner at `/player-of-the-week/{date}/` (and `/player-of-the-week/` for the latest), with its own link preview so the poster shows when shared on WhatsApp or social media
 - Facebook link in the footer
 - Google Analytics on the dashboard and Player of the Week pages
@@ -30,8 +30,8 @@ A player-facing page and a captain/vice-captain admin panel, deployed and run co
 - Automatic daily invitations, reminders, and a closing summary email, scheduled per match
 - Captain/vice-captain admin panel: passwordless sign-in via a one-time emailed code, view every match's responses
 - Team selection: pick the playing XI from the responses and email the selected players
-- Site photos (captain, vice-captain and the site owner): add, remove and reorder the homepage banner and Our Story photos, and upload or remove player photos by season. Changes publish together as one update, and the publishers get an email when they're live
-- Player of the Week publishing (captain, vice-captain and the site owner): upload a poster, fill the figures from the match scorecard or enter them by hand, and publish. The backend commits the files straight to `main`, the site redeploys itself, and once the page is live the winner gets a congratulations email with the link and the publishers get a confirmation
+- Site photos (captain, vice-captain and the site owner): Banner, Our Story and Players tabs to add, remove and reorder the homepage banner and Our Story photos, and upload or remove player photos by season. Photos are resized on the phone before upload. Changes publish together as one update, and the publishers get an email when they're live
+- Player of the Week publishing (captain, vice-captain and the site owner): upload a poster, fill the figures from the match scorecard (pick the season, then the match) or enter them by hand, and publish. The backend commits the files straight to `main`, the site redeploys itself, and once the page is live the winner gets a congratulations email with the link and the publishers get a confirmation
 - No passwords anywhere; secret links and sign-in codes are hashed, never stored in readable form
 
 ## Tech Stack
@@ -49,7 +49,7 @@ A player-facing page and a captain/vice-captain admin panel, deployed and run co
 - AWS Lambda (Node.js + TypeScript), one function per action
 - Amazon DynamoDB, Amazon API Gateway (HTTP API), Amazon SES, Amazon EventBridge Scheduler
 - AWS SAM for infrastructure as code (`infrastructure/`)
-- GitHub API (token in AWS SSM Parameter Store) for publishing Player of the Week to the repo
+- GitHub API (token in AWS SSM Parameter Store) for publishing Player of the Week and site photos to the repo
 - Zod for request validation, Vitest for tests
 
 ## Project Structure
@@ -68,6 +68,7 @@ src/
     admin/
       AdminPanel.tsx
       PlayerOfTheWeekPublisher.tsx
+      SitePhotosManager.tsx
     availability/
       AvailabilityResponse.tsx
   data/
@@ -81,8 +82,10 @@ src/
     playerOfTheWeekAdminData.ts  # scorecard figures for the admin form
     playerOfTheWeekFigures.ts
     siteImages.ts                # build-time image resizing
+    sitePhotosAdminData.ts       # current photos and squads for the admin form
   pages/
     index.astro
+    build-info.json.ts           # deployed commit, used to tell when a publish is live
     admin/
       index.astro
     availability/
@@ -141,8 +144,8 @@ When adding a season, provide matching results, player, and statistics files usi
 - `public/season_statistics/` — batting, bowling, and fielding statistics
 - `public/score_cards/` — detailed match scorecards
 - `public/upcoming_schedules/` — scheduled fixtures
-- `src/assets/history_images/` — images for the History carousel
-- `src/assets/banner_images/` — hero banner images (banner, Our Story and player photos can also be managed from the admin panel's **Site photos** tab)
+- `src/assets/history_images/` — images for the Our Story carousel
+- `src/assets/banner_images/` — hero banner images
 - `src/assets/ground_images/` — fallback ground image
 - `src/assets/player_images/` — player photos, named `{playerId}.png` or `.jpg`
 - `src/assets/player_of_the_week/{season}/` — Player of the Week posters and details
@@ -150,7 +153,7 @@ When adding a season, provide matching results, player, and statistics files usi
 - `public/brand/favicon.png` — browser favicon
 - `public/brand/Open-graph-image.png` — Open Graph and Twitter share image
 
-Images under `src/assets/` are resized and compressed automatically at build time, so add full-size originals there. Only the compressed copies are published.
+Images under `src/assets/` are resized and compressed automatically at build time, so add full-size originals there. Only the compressed copies are published. Banner and Our Story photos show in filename order; the admin panel's **Site photos** tab manages all three folders and keeps that order with a number prefix (`010__`, `020__`, …).
 
 ## Player of the Week Files
 
@@ -207,7 +210,7 @@ A second, independently deployed feature lives alongside the dashboard:
 - **Players** get a one-time emailed link to confirm availability for an upcoming match (`/availability/respond`) — no account needed. Invitations, reminders, and a closing summary email are sent automatically on a daily schedule.
 - **Captain/vice-captain** sign in to an admin panel (`/admin`) with a one-time 6-digit emailed code (no password) to see every match's responses and email the selected team.
 - **Player of the Week** can be published from the same admin panel by the captain, vice-captain or site owner. The backend commits the poster and details to `main` through the GitHub API, which triggers the normal site deploy; a follow-up function waits until the new page is live, then emails the winner and the publishers. All emails use the Ceylon Sharks email template.
-- **Site photos** (same three people): the admin panel's Site photos tab adds, removes and reorders the banner and Our Story photos and uploads player photos (saved as `{playerId}.jpg`, picked from a season's squad). Everything publishes as one commit; once `/build-info.json` shows the site was rebuilt from it, the publishers get a "Site photos are live" email.
+- **Site photos** (same three people): the admin panel's Site photos tab adds, removes and reorders the banner and Our Story photos and uploads player photos (saved as `{playerId}.jpg`, picked from a season's squad), each section in its own tab. Everything publishes as one commit; once `/build-info.json` shows the site was rebuilt from it, the publishers get a "Site photos are live" email.
 - The backend (`backend/`) is AWS Lambda + DynamoDB + API Gateway + SES + EventBridge, defined as code in `infrastructure/` and deployed separately by `.github/workflows/deploy-availability.yml`. It shares no code, no page, and no deployment with the dashboard above (Player of the Week publishing only adds files to the repo, which the dashboard picks up on its next build) — see `CLAUDE.md` for why that boundary is deliberate.
 - See [backend/README.md](backend/README.md) for backend setup, local development, and deployment; `backend/docs/operations.md` for the operational runbook.
 
