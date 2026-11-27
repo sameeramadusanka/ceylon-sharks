@@ -186,3 +186,78 @@ export async function publishPlayerOfTheWeek(sessionToken: string, request: Play
   }
   return readJsonOrThrow<{ success: true } & PlayerOfTheWeekResult>(response);
 }
+
+// ---------------------------------------------------------------------------
+// Site photos (banner, Our Story, player photos)
+// ---------------------------------------------------------------------------
+
+export interface SitePhoto {
+  name: string;
+  /** Git blob SHA - matches the build-time thumbnail map. */
+  sha: string;
+  /** Full-size file on GitHub; used when a photo is newer than this page's build. */
+  url: string | null;
+}
+
+export interface SitePhotoLists {
+  banner: SitePhoto[];
+  history: SitePhoto[];
+  players: (SitePhoto & { playerId: number })[];
+}
+
+export type PhotoExtension = 'jpg' | 'png';
+export type PhotoOrderItem = { existing: string } | { upload: { blobSha: string; extension: PhotoExtension } };
+export type PlayerPhotoChange =
+  | { action: 'upload'; playerId: number; season: string; blobSha: string; extension: PhotoExtension }
+  | { action: 'remove'; playerId: number; season: string };
+
+export interface SitePhotosPublishRequest {
+  banner?: { order: PhotoOrderItem[] };
+  history?: { order: PhotoOrderItem[] };
+  players?: PlayerPhotoChange[];
+}
+
+export interface SitePhotosPublishResult {
+  commitUrl: string;
+  summary: string[];
+  notifications?: 'scheduled' | 'not-scheduled';
+}
+
+export async function fetchSitePhotos(sessionToken: string): Promise<SitePhotoLists> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/site-photos`, { headers: { authorization: `Bearer ${sessionToken}` } });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true } & SitePhotoLists>(response);
+}
+
+/** Uploads one photo (JPEG/PNG, base64) and returns the id to reference when publishing. */
+export async function uploadSitePhoto(sessionToken: string, imageBase64: string): Promise<{ blobSha: string; extension: PhotoExtension }> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/site-photos/upload`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${sessionToken}` },
+      body: JSON.stringify({ image: { dataBase64: imageBase64 } }),
+    });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true; blobSha: string; extension: PhotoExtension }>(response);
+}
+
+export async function publishSitePhotos(sessionToken: string, request: SitePhotosPublishRequest): Promise<SitePhotosPublishResult> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/site-photos`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${sessionToken}` },
+      body: JSON.stringify(request),
+    });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true } & SitePhotosPublishResult>(response);
+}

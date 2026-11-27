@@ -1,4 +1,5 @@
-// Minimal GitHub REST client for publishing Player of the Week: reads a few
+// Minimal GitHub REST client for publishing from the admin panel (Player of the
+// Week, site photos): reads a few
 // files from the site repository and writes several files as ONE commit via
 // the Git Data API (blobs -> tree -> commit -> move branch ref), so the site
 // never sees a poster without its details file.
@@ -27,12 +28,14 @@ export interface DirectoryEntry {
   name: string;
   path: string;
   type: string;
+  /** Git blob SHA of the file's contents. */
+  sha: string;
+  /** Raw file URL (public repos only). */
+  download_url?: string | null;
 }
 
-export interface FileToCommit {
-  path: string;
-  contentBase64: string;
-}
+/** New file contents, or an existing blob (e.g. a photo uploaded earlier, or a file being renamed). */
+export type FileToCommit = { path: string; contentBase64: string } | { path: string; blobSha: string };
 
 export interface CommitRequest {
   branch: string;
@@ -77,6 +80,11 @@ export function createGithubClient({ token, repo, fetchImpl = fetch }: GithubCli
     return { status: response.status, data: (await response.json()) as T };
   }
 
+  async function createBlob(contentBase64: string): Promise<string> {
+    const { data } = await request<{ sha: string }>('POST', '/git/blobs', { content: contentBase64, encoding: 'base64' });
+    return data!.sha;
+  }
+
   async function getBranchHead(branch: string): Promise<string | null> {
     const { data } = await request<{ object: { sha: string } }>('GET', `/git/ref/heads/${encodePath(branch)}`, undefined, [404]);
     return data ? data.object.sha : null;
@@ -97,6 +105,16 @@ export function createGithubClient({ token, repo, fetchImpl = fetch }: GithubCli
       return Buffer.from(data.content, (data.encoding as BufferEncoding | undefined) ?? 'base64').toString('utf8');
     },
 
+    /** Stores file contents in the repo without committing them; returns the blob SHA to use in a later commit. */
+    createBlob,
+
+    /** True if `head` contains commit `base` (same commit, or later on the same history). */
+    async containsCommit(base: string, head: string): Promise<boolean> {
+      if (base === head) return true;
+      const { data } = await request<{ status: string }>('GET', `/compare/${encodeURIComponent(base)}...${encodeURIComponent(head)}`, undefined, [404]);
+      return data?.status === 'ahead' || data?.status === 'identical';
+    },
+
     /** Makes sure `branch` exists, creating it from `baseBranch` if needed. */
     async ensureBranch(branch: string, baseBranch: string): Promise<void> {
       if (await getBranchHead(branch)) return;
@@ -107,12 +125,7 @@ export function createGithubClient({ token, repo, fetchImpl = fetch }: GithubCli
 
     /** Writes all files (and deletions) as a single commit on top of the branch, retrying if the branch moved meanwhile. */
     async commitFiles({ branch, message, files, deletePaths = [] }: CommitRequest): Promise<CommitResult> {
-      const blobShas = await Promise.all(
-        files.map(async (file) => {
-          const { data } = await request<{ sha: string }>('POST', '/git/blobs', { content: file.contentBase64, encoding: 'base64' });
-          return data!.sha;
-        }),
-      );
+      const blobShas = await Promise.all(files.map((file) => ('blobSha' in file ? file.blobSha : createBlob(file.contentBase64))));
 
       for (let attempt = 1; ; attempt++) {
         const headSha = await getBranchHead(branch);

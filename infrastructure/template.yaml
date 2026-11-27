@@ -321,6 +321,18 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-notify-potw
       RetentionInDays: 30
 
+  SitePhotosLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-site-photos
+      RetentionInDays: 30
+
+  NotifySitePhotosLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-notify-site-photos
+      RetentionInDays: 30
+
   # ---------------------------------------------------------------------
   # Lambda functions
   # ---------------------------------------------------------------------
@@ -651,6 +663,94 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/notifyPlayerOfTheWeek.ts]
+        Target: es2022
+
+  # Admin "Site photos" tab: lists, uploads and publishes banner, Our Story
+  # and player photos by committing to the site repo (same token and branch
+  # as Player of the Week). Captain, vice-captain and site owner only.
+  SitePhotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-site-photos
+      CodeUri: ../backend
+      Handler: src/handlers/sitePhotos.handler
+      Timeout: 30
+      MemorySize: 512
+      LoggingConfig:
+        LogGroup: !Ref SitePhotosLogGroup
+      Environment:
+        Variables:
+          GITHUB_REPO: !Ref GithubRepo
+          POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
+          POTW_BASE_BRANCH: main
+          GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+          NOTIFY_SITE_PHOTOS_FUNCTION: !Ref NotifySitePhotosFunction
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref GithubTokenParameterName
+        - LambdaInvokePolicy:
+            FunctionName: !Ref NotifySitePhotosFunction
+      Events:
+        List:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/site-photos
+            Method: GET
+        Publish:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/site-photos
+            Method: POST
+        Upload:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/site-photos/upload
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/sitePhotos.ts]
+        Target: es2022
+
+  # Started (asynchronously) by SitePhotosFunction. Waits until the live site
+  # was built from the new commit, then emails the publishers.
+  NotifySitePhotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-notify-site-photos
+      CodeUri: ../backend
+      Handler: src/handlers/notifySitePhotos.handler
+      # Polls the site for up to ~12 minutes while GitHub Pages deploys.
+      Timeout: 900
+      LoggingConfig:
+        LogGroup: !Ref NotifySitePhotosLogGroup
+      # No automatic retries: a retry would email people twice.
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      Environment:
+        Variables:
+          GITHUB_REPO: !Ref GithubRepo
+          POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
+          GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref GithubTokenParameterName
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  ses:FromAddress: !Ref SesFromEmail
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/notifySitePhotos.ts]
         Target: es2022
 
 Outputs:

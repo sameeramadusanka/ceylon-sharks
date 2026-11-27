@@ -93,7 +93,7 @@ export function findWinner(members: TeamMember[], playerId: number, playerName: 
   return members.find((member) => member.name.trim().toLowerCase() === name);
 }
 
-export function publisherEmails(config: NotifyDeps['config']): string[] {
+export function publisherEmails(config: Pick<AvailabilityConfig, 'captainEmail' | 'viceCaptainEmail' | 'playerOfTheWeekOwnerEmail'>): string[] {
   const emails = [config.captainEmail, config.viceCaptainEmail, config.playerOfTheWeekOwnerEmail].map((email) => email.trim().toLowerCase()).filter((email) => email && email !== 'none');
   return Array.from(new Set(emails));
 }

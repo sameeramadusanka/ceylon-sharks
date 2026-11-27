@@ -111,7 +111,7 @@ export function loadPublishConfig(env: NodeJS.ProcessEnv = process.env): Publish
   };
 }
 
-/** Captain, vice-captain and the site owner - the only admins who may publish Player of the Week. */
+/** Captain, vice-captain and the site owner - the only admins who may publish Player of the Week or change site photos. */
 export function canPublishPlayerOfTheWeek(config: AvailabilityConfig, email: string): boolean {
   const allowed = [config.captainEmail, config.viceCaptainEmail, config.playerOfTheWeekOwnerEmail]
     .map((value) => value.trim().toLowerCase())

@@ -3,7 +3,8 @@
 //
 // The folders live under src/assets/ (not public/) so Astro resizes and compresses
 // every image at build time. Drop full-size originals in; only the compressed copies
-// are published. Files are used in alphabetical order, with no manifest.
+// are published. Files are used in alphabetical order, with no manifest. The admin
+// panel's Site photos tab sets the banner/Our Story order by naming files 010__..., 020__...
 //   src/assets/banner_images/    hero banner rotation
 //   src/assets/history_images/   Our Story carousel
 //   src/assets/ground_images/    fallback Our Story image (first file only)

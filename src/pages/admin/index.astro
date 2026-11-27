@@ -1,10 +1,13 @@
 ---
 import AdminPanel from '../../components/admin/AdminPanel';
 import { loadPlayerOfTheWeekAdminData } from '../../lib/playerOfTheWeekAdminData';
+import { loadSitePhotosAdminData } from '../../lib/sitePhotosAdminData';
 import '../../styles/admin.css';
 
 // Scorecards + squads, read at build time, so the Player of the Week form can prefill figures without a backend call.
 const potwData = loadPlayerOfTheWeekAdminData();
+// Thumbnails of the current banner, Our Story and player photos, plus season squads, for the Site photos tab.
+const photosData = await loadSitePhotosAdminData();
 ---
 
 <!doctype html>
@@ -17,6 +20,6 @@ const potwData = loadPlayerOfTheWeekAdminData();
     <title>Admin | Ceylon Sharks</title>
   </head>
   <body>
-    <AdminPanel client:load potwData={potwData} />
+    <AdminPanel client:load potwData={potwData} photosData={photosData} />
   </body>
 </html>

@@ -154,7 +154,7 @@ describe('helpers', () => {
   });
 
   it('de-duplicates publishers and drops unset ones', () => {
-    expect(publisherEmails({ availabilityFrontendUrl: '', sesFromEmail: '', teamMembersTable: '', captainEmail: 'Same@example.com', viceCaptainEmail: 'same@example.com', playerOfTheWeekOwnerEmail: '' })).toEqual(['same@example.com']);
+    expect(publisherEmails({ captainEmail: 'Same@example.com', viceCaptainEmail: 'same@example.com', playerOfTheWeekOwnerEmail: '' })).toEqual(['same@example.com']);
   });
 
   it('formats dates like the site', () => {
