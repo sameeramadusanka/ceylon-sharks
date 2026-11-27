@@ -19,6 +19,7 @@ import type { AdminSitePhotosData } from '../../lib/sitePhotosAdminData';
 // the site until "Publish changes", which sends everything as one commit.
 
 type OrderedSection = 'banner' | 'history';
+type Tab = OrderedSection | 'players';
 
 type NewPhoto = { status: 'uploading' } | { status: 'ready'; blobSha: string; extension: PhotoExtension } | { status: 'failed'; error: string };
 
@@ -47,6 +48,12 @@ const SECTIONS: { id: OrderedSection; title: string; hint: string; maxEdge: numb
     maxEdge: 2000,
     shape: 'ad-photo-tile--story',
   },
+];
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'banner', label: 'Banner' },
+  { id: 'history', label: 'Our Story' },
+  { id: 'players', label: 'Players' },
 ];
 
 const PLAYER_MAX_EDGE = 1200;
@@ -98,6 +105,7 @@ export default function SitePhotosManager({ data, sessionToken, onSessionExpired
   const [items, setItems] = useState<Record<OrderedSection, Item[]>>({ banner: [], history: [] });
   const [playerChanges, setPlayerChanges] = useState<Record<number, PlayerPending>>({});
   const [season, setSeason] = useState(data.squads[0]?.season ?? '');
+  const [tab, setTab] = useState<Tab>('banner');
   const [publishing, setPublishing] = useState(false);
   const [result, setResult] = useState<SitePhotosPublishResult | null>(null);
   const [error, setError] = useState('');
@@ -275,9 +283,21 @@ export default function SitePhotosManager({ data, sessionToken, onSessionExpired
       )}
 
       <h1 className="ad-title">Site photos</h1>
-      <p className="ad-hint ad-photos-intro">Add, remove and reorder photos, then press <strong>Publish changes</strong> at the bottom. Nothing changes on the website until you publish.</p>
+      <p className="ad-hint ad-photos-intro">Add, remove and reorder photos, then press <strong>Publish changes</strong> at the bottom. Changes in all three tabs publish together, and nothing changes on the website until you publish.</p>
 
-      {SECTIONS.map(({ id, title, hint, maxEdge, shape }) => (
+      <div className="ad-segmented ad-segmented--three" role="tablist" aria-label="Which photos">
+        {TABS.map(({ id, label }) => {
+          const pending = id === 'players' ? pendingPlayers.length : sectionChanged(id) ? 1 : 0;
+          return (
+            <button type="button" role="tab" key={id} aria-selected={tab === id} className={tab === id ? 'is-active' : ''} onClick={() => setTab(id)}>
+              {label}
+              {pending > 0 && <span className="ad-segmented__dot" aria-label={id === 'players' ? `${pending} unpublished` : 'unpublished changes'}>{id === 'players' ? pending : ''}</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {SECTIONS.filter((section) => section.id === tab).map(({ id, title, hint, maxEdge, shape }) => (
         <section className="ad-photo-section" key={id} aria-labelledby={`ad-photos-${id}`}>
           <div className="ad-photo-section__head">
             <h2 id={`ad-photos-${id}`}>{title}</h2>
@@ -322,72 +342,74 @@ export default function SitePhotosManager({ data, sessionToken, onSessionExpired
         </section>
       ))}
 
-      <section className="ad-photo-section" aria-labelledby="ad-photos-players">
-        <div className="ad-photo-section__head">
-          <h2 id="ad-photos-players">Player photos</h2>
-        </div>
-        <p className="ad-hint">Pick a season to see its squad. Each player has one photo, used in every season they play. Uploads are saved under the player's ID automatically.</p>
-        <div className="ad-field">
-          <label htmlFor="ad-photos-season">Season</label>
-          <select id="ad-photos-season" value={season} onChange={(event) => setSeason(event.target.value)}>
-            {data.squads.map((entry) => (
-              <option key={entry.season} value={entry.season}>
-                {seasonLabel(entry.season)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <ul className="ad-player-photos">
-          {(squad?.players ?? []).map((player) => {
-            const current = playerPhotos.get(player.id);
-            const pending = playerChanges[player.id];
-            const src = pending?.action === 'upload' ? pending.previewUrl : pending?.action === 'remove' ? '' : current ? thumbnail(current) : '';
-            const status =
-              pending?.action === 'remove'
-                ? 'Will be removed'
-                : pending?.action === 'upload'
-                  ? pending.status === 'uploading'
-                    ? 'Uploading…'
-                    : pending.status === 'failed'
-                      ? pending.error
-                      : current
-                        ? 'New photo, not published yet'
-                        : 'Photo added, not published yet'
-                  : current
-                    ? ''
-                    : 'No photo';
-            return (
-              <li className="ad-player-photo" key={player.id}>
-                <div className="ad-player-photo__image">{src ? <img src={src} alt="" loading="lazy" decoding="async" /> : <span>{player.name.charAt(0)}</span>}</div>
-                <div className="ad-player-photo__info">
-                  <strong>{player.name}</strong>
-                  {ROLE_LABELS[player.role] && <small>{ROLE_LABELS[player.role]}</small>}
-                  {status && <em className={pending && pending.action === 'upload' && pending.status === 'failed' ? 'ad-photo-error' : undefined}>{status}</em>}
-                </div>
-                <div className="ad-player-photo__actions">
-                  {pending ? (
-                    <button type="button" className="ad-link-button" onClick={() => undoPlayer(player.id)}>
-                      Undo
-                    </button>
-                  ) : (
-                    <>
-                      <label className="ad-link-button ad-photo-upload-link">
-                        <input type="file" accept="image/*" onChange={(event) => choosePlayerPhoto(player.id, event)} />
-                        {current ? 'Replace' : 'Upload'}
-                      </label>
-                      {current && (
-                        <button type="button" className="ad-link-button" onClick={() => removePlayerPhoto(player.id)}>
-                          Remove
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
+      {tab === 'players' && (
+        <section className="ad-photo-section" aria-labelledby="ad-photos-players">
+          <div className="ad-photo-section__head">
+            <h2 id="ad-photos-players">Player photos</h2>
+          </div>
+          <p className="ad-hint">Pick a season to see its squad. Each player has one photo, used in every season they play. Uploads are saved under the player's ID automatically.</p>
+          <div className="ad-field">
+            <label htmlFor="ad-photos-season">Season</label>
+            <select id="ad-photos-season" value={season} onChange={(event) => setSeason(event.target.value)}>
+              {data.squads.map((entry) => (
+                <option key={entry.season} value={entry.season}>
+                  {seasonLabel(entry.season)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <ul className="ad-player-photos">
+            {(squad?.players ?? []).map((player) => {
+              const current = playerPhotos.get(player.id);
+              const pending = playerChanges[player.id];
+              const src = pending?.action === 'upload' ? pending.previewUrl : pending?.action === 'remove' ? '' : current ? thumbnail(current) : '';
+              const status =
+                pending?.action === 'remove'
+                  ? 'Will be removed'
+                  : pending?.action === 'upload'
+                    ? pending.status === 'uploading'
+                      ? 'Uploading…'
+                      : pending.status === 'failed'
+                        ? pending.error
+                        : current
+                          ? 'New photo, not published yet'
+                          : 'Photo added, not published yet'
+                    : current
+                      ? ''
+                      : 'No photo';
+              return (
+                <li className="ad-player-photo" key={player.id}>
+                  <div className="ad-player-photo__image">{src ? <img src={src} alt="" loading="lazy" decoding="async" /> : <span>{player.name.charAt(0)}</span>}</div>
+                  <div className="ad-player-photo__info">
+                    <strong>{player.name}</strong>
+                    {ROLE_LABELS[player.role] && <small>{ROLE_LABELS[player.role]}</small>}
+                    {status && <em className={pending && pending.action === 'upload' && pending.status === 'failed' ? 'ad-photo-error' : undefined}>{status}</em>}
+                  </div>
+                  <div className="ad-player-photo__actions">
+                    {pending ? (
+                      <button type="button" className="ad-link-button" onClick={() => undoPlayer(player.id)}>
+                        Undo
+                      </button>
+                    ) : (
+                      <>
+                        <label className="ad-link-button ad-photo-upload-link">
+                          <input type="file" accept="image/*" onChange={(event) => choosePlayerPhoto(player.id, event)} />
+                          {current ? 'Replace' : 'Upload'}
+                        </label>
+                        {current && (
+                          <button type="button" className="ad-link-button" onClick={() => removePlayerPhoto(player.id)}>
+                            Remove
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <div className="ad-photo-publish">
         {error && (

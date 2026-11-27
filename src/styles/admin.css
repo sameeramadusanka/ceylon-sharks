@@ -610,10 +610,37 @@
   margin: 0 0 28px;
 }
 
+.ad-segmented--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 24px;
+}
+
+.ad-segmented__dot {
+  background: var(--ad-amber);
+  border-radius: 999px;
+  color: var(--ad-ink);
+  display: inline-block;
+  font-size: 9px;
+  line-height: 16px;
+  margin-left: 6px;
+  min-width: 8px;
+  padding: 0 4px;
+  vertical-align: 1px;
+}
+
+.ad-segmented__dot:empty {
+  height: 8px;
+  padding: 0;
+  width: 8px;
+}
+
+.ad-segmented button.is-active .ad-segmented__dot {
+  background: var(--ad-ink);
+  color: var(--ad-amber);
+}
+
 .ad-photo-section {
-  border-top: 1px solid var(--ad-line);
   margin: 0 0 32px;
-  padding-top: 24px;
 }
 
 .ad-photo-section__head {
