@@ -137,6 +137,14 @@ const seasonLabel = (season: string) =>
 
 export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSessionExpired }: Props) {
   const [source, setSource] = useState<Source>(data.matches.length > 0 ? 'scorecard' : 'manual');
+  // Seasons that have scorecards, newest first (same order as the squads list), so the match list stays short.
+  const scorecardSeasons = useMemo(() => {
+    const withMatches = new Set(data.matches.map((entry) => entry.season));
+    const ordered = data.squads.map((squad) => squad.season).filter((value) => withMatches.has(value));
+    return [...ordered, ...[...withMatches].filter((value) => !ordered.includes(value))];
+  }, [data.matches, data.squads]);
+  const [scorecardSeason, setScorecardSeason] = useState(scorecardSeasons[0] ?? '');
+  const seasonMatches = useMemo(() => data.matches.filter((entry) => entry.season === scorecardSeason), [data.matches, scorecardSeason]);
   const [matchKey, setMatchKey] = useState('');
   const [manualSeason, setManualSeason] = useState(data.squads[0]?.season ?? '');
   const [manualDate, setManualDate] = useState('');
@@ -336,16 +344,36 @@ export default function PlayerOfTheWeekPublisher({ data, sessionToken, onSession
         </p>
 
         {source === 'scorecard' ? (
-          <div className="ad-field">
-            <label htmlFor="ad-potw-match">Match</label>
-            <select id="ad-potw-match" required value={matchKey} onChange={(event) => chooseMatch(event.target.value)}>
-              <option value="">Choose a match…</option>
-              {data.matches.map((entry) => (
-                <option key={`${entry.season}/${entry.date}`} value={`${entry.season}/${entry.date}`}>
-                  {formatDate(entry.date)} · vs {entry.opponent}
-                </option>
-              ))}
-            </select>
+          <div className="ad-field-row">
+            <div className="ad-field">
+              <label htmlFor="ad-potw-scorecard-season">Season</label>
+              <select
+                id="ad-potw-scorecard-season"
+                required
+                value={scorecardSeason}
+                onChange={(event) => {
+                  setScorecardSeason(event.target.value);
+                  chooseMatch('');
+                }}
+              >
+                {scorecardSeasons.map((value) => (
+                  <option key={value} value={value}>
+                    {seasonLabel(value)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="ad-field">
+              <label htmlFor="ad-potw-match">Match</label>
+              <select id="ad-potw-match" required value={matchKey} onChange={(event) => chooseMatch(event.target.value)}>
+                <option value="">Choose a match…</option>
+                {seasonMatches.map((entry) => (
+                  <option key={`${entry.season}/${entry.date}`} value={`${entry.season}/${entry.date}`}>
+                    {formatDate(entry.date)} · vs {entry.opponent}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         ) : (
           <div className="ad-field-row">
