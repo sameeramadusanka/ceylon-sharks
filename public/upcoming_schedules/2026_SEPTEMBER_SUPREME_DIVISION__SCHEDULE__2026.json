@@ -213,6 +213,25 @@
       "scorer2": "",
       "status": "Scheduled",
       "result": null
+    },
+    {
+      "series": "2026_SEPTEMBER_SUPREME_DIVISION",
+      "division": "2026_SEPTEMBER_SUPREME_DIVISION",
+      "matchType": "QF1",
+      "date": "2026-12-20",
+      "time": "12:00 PM",
+      "teamOne": "Ceylon Sharks",
+      "teamTwo": "Sengkang Tigers",
+      "ground": "SCL2",
+      "umpireOne": "",
+      "umpireTwo": "",
+      "umpireThree": "",
+      "umpireFour": "",
+      "matchManager": "",
+      "scorer1": "",
+      "scorer2": "",
+      "status": "Scheduled",
+      "result": null
     }
   ]
 }
