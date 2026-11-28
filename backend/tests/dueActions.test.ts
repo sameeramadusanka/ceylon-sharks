@@ -82,4 +82,11 @@ describe('determineDueActions', () => {
     const due = determineDueActions({ ...BASE, daysUntilMatch: 4, invitationClaimed: false });
     expect(due).toEqual([{ actionType: 'INVITATION', late: true }]);
   });
+
+  it('closes a hand-sent invitation at its own closing time, not by days', () => {
+    const handSent = { ...BASE, daysUntilMatch: 1, invitationClaimed: true };
+    expect(determineDueActions({ ...handSent, customClosing: { passed: false } })).toEqual([]);
+    expect(determineDueActions({ ...handSent, customClosing: { passed: true } })).toEqual([{ actionType: 'CLOSURE', late: false }]);
+    expect(determineDueActions({ ...handSent, closureClaimed: true, customClosing: { passed: true } })).toEqual([]);
+  });
 });

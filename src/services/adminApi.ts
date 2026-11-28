@@ -277,6 +277,22 @@ export interface ScheduleItem {
   time: string;
   ground: string;
   status: string;
+  /** Availability invitations; only on fixtures that haven't been played. */
+  invitations?: ScheduleInvitations;
+}
+
+/**
+ * Where a fixture's availability invitations stand. When `sendable`, a captain
+ * may send them now (the match was added too late for the daily job).
+ */
+export interface ScheduleInvitations {
+  status: 'not-sent' | 'sending' | 'sent' | 'failed';
+  sendable: boolean;
+  /** ISO instant availability closes (or would close, if sent now). */
+  closesAt?: string;
+  /** YYYY-MM-DD the daily job will send them, when it's too early. */
+  automaticDate?: string;
+  tooLate?: boolean;
 }
 
 export interface ScheduleOverview {
@@ -298,7 +314,8 @@ export interface ScheduleMatchInput {
 export type ScheduleChange =
   | { action: 'add'; season: string; match: ScheduleMatchInput }
   | { action: 'update'; season: string; key: string; match: ScheduleMatchInput }
-  | { action: 'delete'; season: string; key: string };
+  | { action: 'delete'; season: string; key: string }
+  | { action: 'invite'; season: string; key: string };
 
 export async function fetchSchedule(sessionToken: string): Promise<ScheduleOverview> {
   let response: Response;
@@ -310,7 +327,8 @@ export async function fetchSchedule(sessionToken: string): Promise<ScheduleOverv
   return readJsonOrThrow<{ success: true } & ScheduleOverview>(response);
 }
 
-export async function changeSchedule(sessionToken: string, change: ScheduleChange): Promise<ScheduleOverview & { commitUrl: string; summary: string }> {
+/** `commitUrl` is absent for "invite", which sends emails and changes no file. */
+export async function changeSchedule(sessionToken: string, change: ScheduleChange): Promise<ScheduleOverview & { commitUrl?: string; summary: string }> {
   let response: Response;
   try {
     response = await fetch(`${API_BASE_URL}/admin/schedule`, {
@@ -321,5 +339,5 @@ export async function changeSchedule(sessionToken: string, change: ScheduleChang
   } catch {
     throw unreachableError();
   }
-  return readJsonOrThrow<{ success: true; commitUrl: string; summary: string } & ScheduleOverview>(response);
+  return readJsonOrThrow<{ success: true; commitUrl?: string; summary: string } & ScheduleOverview>(response);
 }

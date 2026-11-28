@@ -1,5 +1,6 @@
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { hashToken } from '../src/token.js';
@@ -19,8 +20,10 @@ vi.mock('../src/github/githubClient.js', async (importOriginal) => {
   return { ...original, createGithubClient: vi.fn(() => github) };
 });
 vi.mock('../src/github/githubToken.js', () => ({ getGithubToken, resetGithubTokenCache }));
+const startAsyncInvoke = vi.fn();
+vi.mock('../src/handlers/notifyTrigger.js', () => ({ startAsyncInvoke }));
 
-const { handler, applyChange, knownOpponents, seasonsNewestFirst, sortMatches } = await import('../src/handlers/adminSchedule.js');
+const { handler, toInvitationMatch, applyChange, knownOpponents, seasonsNewestFirst, sortMatches } = await import('../src/handlers/adminSchedule.js');
 const { GithubApiError } = await import('../src/github/githubClient.js');
 
 const ENV = {
@@ -75,8 +78,15 @@ const scheduleFile = () => ({
 
 const semiFinal = { format: 'Semi Final', opponent: 'Cool Stars', date: '2026-12-19', time: '2:15 PM', ground: 'KRJ' } as const;
 
+/** Invitation records by action ID, as the ScheduledActions table would return them. */
+let actions: Record<string, Record<string, unknown>> = {};
+
 function signIn(email: string) {
-  ddbMock.on(GetCommand).resolves({ Item: { sessionTokenHash: hashToken(SESSION_TOKEN), email, expiresAt: Math.floor(Date.now() / 1000) + 3600 } });
+  ddbMock.on(GetCommand).callsFake((input: { TableName: string; Key: Record<string, string> }) => {
+    if (input.TableName === 'AdminSessions') return { Item: { sessionTokenHash: hashToken(SESSION_TOKEN), email, expiresAt: Math.floor(Date.now() / 1000) + 3600 } };
+    const item = actions[input.Key.actionId];
+    return item ? { Item: item } : {};
+  });
 }
 
 function fakeEvent(method: string, body?: unknown, authorization: string | undefined = `Bearer ${SESSION_TOKEN}`): APIGatewayProxyEventV2 {
@@ -115,10 +125,17 @@ beforeEach(() => {
   });
   github.readTextFile.mockImplementation(async (path: string) => (path === SCHEDULE_PATH ? JSON.stringify(scheduleFile()) : null));
   github.commitFiles.mockResolvedValue({ commitSha: 'abc123', commitUrl: 'https://github.com/example/ceylon-sharks/commit/abc123' });
+  actions = {};
+  startAsyncInvoke.mockReset().mockResolvedValue(undefined);
+  process.env.COORDINATOR_FUNCTION = 'ceylon-sharks-availability-coordinator';
+  ddbMock.on(UpdateCommand).resolves({});
   signIn('captain@example.com');
 });
 
-afterEach(() => ddbMock.reset());
+afterEach(() => {
+  ddbMock.reset();
+  vi.useRealTimers();
+});
 
 describe('adminSchedule handler', () => {
   it('requires a session and the captain, vice-captain or owner', async () => {
@@ -200,6 +217,79 @@ describe('adminSchedule handler', () => {
     expect(status).toBe(502);
     expect(body.message).toContain('token may have expired');
     expect(resetGithubTokenCache).toHaveBeenCalled();
+  });
+});
+
+describe('sending availability invitations by hand', () => {
+  const tigers = '2026-12-05|Sengkang Tigers|Ceylon Sharks';
+  const tigersId = () => toInvitationMatch(scheduleFile(), scheduleFile().matches[0]).matchId;
+  const now = (iso: string) => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(iso));
+  };
+  const invitationsOf = (body: Record<string, unknown>) => (body.seasons as { matches: { invitations?: Record<string, unknown> }[] }[])[0].matches.map((match) => match.invitations);
+
+  it('shows where each upcoming match stands', async () => {
+    now('2026-12-03T10:00:00+08:00');
+    const { body } = await invoke('GET');
+    expect(invitationsOf(body)).toEqual([
+      { status: 'not-sent', sendable: true, closesAt: '2026-12-04T23:59:00.000+08:00' },
+      { status: 'not-sent', sendable: false, automaticDate: '2026-12-07' },
+    ]);
+
+    actions[`INVITATION#${tigersId()}`] = { status: 'COMPLETED', closesAt: '2026-12-04T23:59:00.000+08:00' };
+    expect(invitationsOf((await invoke('GET')).body)[0]).toEqual({ status: 'sent', sendable: false, closesAt: '2026-12-04T23:59:00.000+08:00' });
+  });
+
+  it('claims the invitation, starts the coordinator and commits nothing', async () => {
+    now('2026-12-03T10:00:00+08:00');
+    const { status, body } = await invoke('POST', { action: 'invite', season: SEASON, key: tigers });
+    expect(status).toBe(200);
+    expect(body.summary).toBe('Sending availability invitations for League vs Sengkang Tigers on 2026-12-05');
+
+    const claim = ddbMock.commandCalls(UpdateCommand)[0].args[0].input;
+    expect(claim.Key).toEqual({ actionId: `INVITATION#${tigersId()}` });
+    expect(claim.ConditionExpression).toBe('attribute_not_exists(actionId) OR #status = :failed');
+    expect(claim.ExpressionAttributeValues).toMatchObject({ ':closesAt': '2026-12-04T23:59:00.000+08:00', ':requestedBy': 'captain@example.com', ':manual': 'MANUAL' });
+
+    expect(startAsyncInvoke).toHaveBeenCalledWith('ceylon-sharks-availability-coordinator', {
+      mode: 'manual-invitation',
+      match: { matchId: tigersId(), seasonId: SEASON, matchDate: '2026-12-05', time: '4:30 PM', opponent: 'Sengkang Tigers', competition: 'League', ground: 'BCG' },
+      closesAt: '2026-12-04T23:59:00.000+08:00',
+    });
+    expect(github.commitFiles).not.toHaveBeenCalled();
+    expect(github.ensureBranch).not.toHaveBeenCalled();
+  });
+
+  it('keeps the normal deadline when it is still ahead', async () => {
+    now('2026-12-01T10:00:00+08:00');
+    await invoke('POST', { action: 'invite', season: SEASON, key: tigers });
+    expect(ddbMock.commandCalls(UpdateCommand)[0].args[0].input.UpdateExpression).toContain('REMOVE closesAt');
+    expect(startAsyncInvoke.mock.calls[0][1]).toMatchObject({ closesAt: null });
+  });
+
+  it('refuses too early, too late, already sent and a stale key', async () => {
+    now('2026-11-28T10:00:00+08:00');
+    expect((await invoke('POST', { action: 'invite', season: SEASON, key: tigers })).body.message).toContain('automatically on 2026-11-30');
+    now('2026-12-05T15:00:00+08:00');
+    expect((await invoke('POST', { action: 'invite', season: SEASON, key: tigers })).body.message).toContain('too close to the start');
+    now('2026-12-03T10:00:00+08:00');
+    expect((await invoke('POST', { action: 'invite', season: SEASON, key: '2026-01-01|A|B' })).status).toBe(409);
+    ddbMock.on(UpdateCommand).rejects(new ConditionalCheckFailedException({ message: 'taken', $metadata: {} }));
+    const taken = await invoke('POST', { action: 'invite', season: SEASON, key: tigers });
+    expect(taken.status).toBe(409);
+    expect(taken.body.message).toContain('already been sent');
+    expect(startAsyncInvoke).not.toHaveBeenCalled();
+  });
+
+  it('marks the invitation failed when the coordinator cannot be started, so it can be retried', async () => {
+    now('2026-12-03T10:00:00+08:00');
+    startAsyncInvoke.mockRejectedValue(new Error('throttled'));
+    const { status } = await invoke('POST', { action: 'invite', season: SEASON, key: tigers });
+    expect(status).toBe(502);
+    const updates = ddbMock.commandCalls(UpdateCommand);
+    expect(updates).toHaveLength(2);
+    expect(updates[1].args[0].input.ExpressionAttributeValues?.[':failed']).toBe('FAILED');
   });
 });
 

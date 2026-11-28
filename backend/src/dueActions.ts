@@ -8,6 +8,12 @@ export interface DueActionsInput {
   invitationDaysBefore: number;
   reminderDaysBefore: number;
   closureDaysBefore: number;
+  /**
+   * Set when a captain sent the invitations by hand with their own closing
+   * time (a match added too late for the normal rules). Closure then waits
+   * for that time instead of counting days.
+   */
+  customClosing?: { passed: boolean };
 }
 
 export interface DueAction {
@@ -30,7 +36,7 @@ export interface DueAction {
  *  - Nothing is due once the match date itself has passed.
  */
 export function determineDueActions(input: DueActionsInput): DueAction[] {
-  const { daysUntilMatch, invitationClaimed, reminderClaimed, closureClaimed, invitationDaysBefore, reminderDaysBefore, closureDaysBefore } = input;
+  const { daysUntilMatch, invitationClaimed, reminderClaimed, closureClaimed, invitationDaysBefore, reminderDaysBefore, closureDaysBefore, customClosing } = input;
 
   if (daysUntilMatch < 0) return [];
 
@@ -48,7 +54,9 @@ export function determineDueActions(input: DueActionsInput): DueAction[] {
     due.push({ actionType: 'REMINDER', late: false });
   }
 
-  if (invitationClaimed && !closureClaimed) {
+  if (invitationClaimed && !closureClaimed && customClosing) {
+    if (customClosing.passed) due.push({ actionType: 'CLOSURE', late: false });
+  } else if (invitationClaimed && !closureClaimed) {
     if (daysUntilMatch === closureDaysBefore) {
       due.push({ actionType: 'CLOSURE', late: false });
     } else if (daysUntilMatch < closureDaysBefore) {

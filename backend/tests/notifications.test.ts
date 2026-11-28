@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const loadConfigMock = vi.fn();
@@ -102,6 +103,13 @@ describe('sendInvitations', () => {
     await invoke();
     expect(sendEmailMock).toHaveBeenCalledTimes(2);
     expect(createInvitationMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('uses a given closing time for the link expiry and the email instead of the normal deadline', async () => {
+    const closesAt = DateTime.fromISO('2026-11-28T07:45:00', { zone: 'Asia/Singapore' });
+    await invoke((match) => sendInvitations(match, closesAt));
+    expect(createInvitationMock.mock.calls[0][2].tokenExpiry).toBe(Math.floor(closesAt.toSeconds()));
+    expect(sendEmailMock.mock.calls[0][1].text).toContain('28 Nov 2026 07:45');
   });
 
   it('carries the match time and ground through into the stored invitation record', async () => {

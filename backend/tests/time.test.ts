@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
-import { calendarDaysUntil, closureDeadline } from '../src/time.js';
+import { calendarDaysUntil, closureDeadline, localHour } from '../src/time.js';
 
 const SGT = 'Asia/Singapore';
 
@@ -37,5 +37,11 @@ describe('closureDeadline', () => {
 
   it('throws on a malformed closureLocalTime', () => {
     expect(() => closureDeadline('2026-11-28', SGT, 2, 'not-a-time')).toThrow();
+  });
+});
+
+describe('localHour', () => {
+  it('reads the hour on the club clock, not UTC', () => {
+    expect(localHour('Asia/Singapore', DateTime.fromISO('2026-11-28T00:30:00Z'))).toBe(8);
   });
 });
