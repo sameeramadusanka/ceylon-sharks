@@ -36,6 +36,14 @@ function todayIso(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
+/** "Sat 5 Dec, 11:59 pm" on the club's clock (Singapore), whatever the device's timezone. */
+function displayClosing(iso: string): string {
+  const parsed = new Date(iso);
+  return Number.isNaN(parsed.getTime())
+    ? iso
+    : parsed.toLocaleString('en-GB', { timeZone: 'Asia/Singapore', weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
 function emptyDraft(overview: ScheduleOverview): Draft {
   return { format: overview.formats.find((format) => format !== 'League') ?? overview.formats[0] ?? '', opponent: '', otherOpponent: '', date: '', time: TIME_SLOTS[1], ground: overview.grounds[0] ?? '' };
 }
@@ -49,7 +57,7 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
-  const [result, setResult] = useState<{ summary: string; commitUrl: string } | null>(null);
+  const [result, setResult] = useState<{ summary: string; commitUrl?: string } | null>(null);
 
   function handleError(error: unknown, show: (message: string) => void) {
     const apiError = error as AdminApiError;
@@ -72,6 +80,14 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
     load();
     // Load once per sign-in.
   }, [sessionToken]);
+
+  // Invitations take about a second per player; check back once they've had time to go out.
+  const anySending = overview?.seasons.some((item) => item.matches.some((match) => match.invitations?.status === 'sending')) ?? false;
+  useEffect(() => {
+    if (!anySending) return undefined;
+    const timer = window.setTimeout(() => load(), 45_000);
+    return () => window.clearTimeout(timer);
+  }, [anySending, overview]);
 
   const matches = useMemo(() => overview?.seasons.find((item) => item.season === season)?.matches ?? [], [overview, season]);
   const opponentChoices = useMemo(() => {
@@ -122,6 +138,14 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
     submit(editing === 'new' ? { action: 'add', season, match } : { action: 'update', season, key: editing.key, match });
   }
 
+  function sendInvitations(match: ScheduleItem) {
+    const closes = match.invitations?.closesAt ? ` Availability closes ${displayClosing(match.invitations.closesAt)}.` : '';
+    if (!window.confirm(`Email availability invitations for ${match.format} vs ${match.opponent} on ${displayDate(match.date)} to every active player now?${closes}`)) return;
+    setResult(null);
+    closeForm();
+    submit({ action: 'invite', season, key: match.key });
+  }
+
   function remove(match: ScheduleItem) {
     if (!window.confirm(`Remove ${match.format} vs ${match.opponent} on ${displayDate(match.date)} from the schedule?`)) return;
     setResult(null);
@@ -134,6 +158,30 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
   const upcoming = matches.filter((match) => !isCompleted(match));
   const completed = matches.filter(isCompleted).reverse();
 
+  // Availability invitations: the daily job sends them 5 days before; for a match added later
+  // than that, a captain can send them here (with a closing time that still works).
+  const renderInvitations = (match: ScheduleItem) => {
+    const invitations = match.invitations;
+    if (!invitations) return null;
+    if (invitations.status === 'sent') {
+      return <span className="ad-schedule-invite ad-schedule-invite--sent">Availability invitations sent{invitations.closesAt ? ` · closes ${displayClosing(invitations.closesAt)}` : ''}</span>;
+    }
+    if (invitations.status === 'sending') return <span className="ad-schedule-invite">Sending availability invitations…</span>;
+    if (invitations.sendable) {
+      return (
+        <span className="ad-schedule-invite">
+          {invitations.status === 'failed' ? 'Sending failed last time. ' : 'Too late for the automatic invitations. '}
+          <button type="button" className="ad-link-button" onClick={() => sendInvitations(match)} disabled={saving}>
+            Send availability invitations
+          </button>
+        </span>
+      );
+    }
+    if (invitations.automaticDate) return <span className="ad-schedule-invite">Availability invitations go out automatically on {displayDate(invitations.automaticDate)}</span>;
+    if (invitations.tooLate) return <span className="ad-schedule-invite">Too close to the start to send availability invitations</span>;
+    return null;
+  };
+
   // Completed matches are read-only: only upcoming ones get Edit and Remove.
   const renderRow = (match: ScheduleItem, editable: boolean) => (
     <li key={match.key} className={editing !== 'new' && editing?.key === match.key ? 'ad-schedule-row ad-schedule-row--editing' : 'ad-schedule-row'}>
@@ -145,6 +193,7 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
         <span className="ad-match-row__meta">
           {displayDate(match.date)} · {match.time} · {match.ground}
         </span>
+        {editable && renderInvitations(match)}
       </div>
       {editable && (
         <div className="ad-schedule-row__actions">
@@ -190,11 +239,17 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
 
       {result && (
         <div className="ad-success ad-potw-message ad-potw-message--top" role="status">
-          Saved: {result.summary}. The site will update in about 3 minutes.{' '}
-          <a href={result.commitUrl} target="_blank" rel="noreferrer">
-            See the commit
-          </a>
-          .
+          {result.commitUrl ? (
+            <>
+              Saved: {result.summary}. The site will update in about 3 minutes.{' '}
+              <a href={result.commitUrl} target="_blank" rel="noreferrer">
+                See the commit
+              </a>
+              .
+            </>
+          ) : (
+            <>{result.summary}. Players get their emails over the next minute or so.</>
+          )}
         </div>
       )}
 

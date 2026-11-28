@@ -27,3 +27,8 @@ export function closureDeadline(matchDate: string, timeZone: string, closureDays
     .minus({ days: closureDaysBefore })
     .set({ hour, minute, second: 0, millisecond: 0 });
 }
+
+/** The current hour (0-23) on the clock in the given timezone. */
+export function localHour(timeZone: string, now: DateTime = DateTime.now()): number {
+  return now.setZone(timeZone).hour;
+}

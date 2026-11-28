@@ -442,11 +442,17 @@ Resources:
                 StringEquals:
                   ses:FromAddress: !Ref SesFromEmail
       Events:
+        # Fires every hour (the logical ID, and so the schedule's name
+        # CoordinatorFunctionDailySchedule, is kept so the deploy role's
+        # scheduler permission still covers it). The coordinator does the full
+        # daily run only in the 08:00 run; the other hours just close
+        # invitations a captain sent by hand, at their own closing time.
         DailySchedule:
           Type: ScheduleV2
           Properties:
-            ScheduleExpression: cron(0 8 * * ? *)
+            ScheduleExpression: cron(0 * * * ? *)
             ScheduleExpressionTimezone: !Ref TimeZone
+            Input: '{"mode":"scheduled"}'
             FlexibleTimeWindow:
               Mode: 'OFF'
     Metadata:
@@ -742,11 +748,18 @@ Resources:
           POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
           POTW_BASE_BRANCH: main
           GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+          # "Send invitations now" claims the match's INVITATION action, then
+          # starts the coordinator to send the emails.
+          COORDINATOR_FUNCTION: !Ref CoordinatorFunction
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref AdminSessionsTable
         - SSMParameterReadPolicy:
             ParameterName: !Ref GithubTokenParameterName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledActionsTable
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CoordinatorFunction
       Events:
         List:
           Type: HttpApi

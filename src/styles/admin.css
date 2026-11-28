@@ -989,6 +989,19 @@
   opacity: 0.5;
 }
 
+.ad-schedule-invite {
+  color: var(--ad-muted);
+  font-size: 12px;
+}
+
+.ad-schedule-invite .ad-link-button {
+  font-size: 12px;
+}
+
+.ad-schedule-invite--sent {
+  color: var(--ad-green);
+}
+
 .ad-schedule-format {
   border: 1px solid var(--ad-amber);
   border-radius: 3px;

@@ -79,7 +79,9 @@ use for the frontend's `PUBLIC_AVAILABILITY_API_BASE_URL`.
   conditional DynamoDB write so duplicate coordinator runs never
   duplicate a send, while a genuinely `FAILED` action can be retried.
 - `src/handlers/coordinator.ts` wires all of the above together and
-  runs daily via the `ScheduleV2` event in `infrastructure/template.yaml`.
+  runs hourly via the `ScheduleV2` event in `infrastructure/template.yaml`
+  (the daily work at 08:00, other hours only close hand-sent invitations;
+  see `docs/operations.md`).
 
 **Phase 3 — invitations and player response:**
 

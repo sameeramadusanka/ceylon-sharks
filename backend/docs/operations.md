@@ -42,9 +42,13 @@ are always masked (`a***n@example.com`); raw tokens are never logged.
 
 ## Manually running the coordinator now
 
-The daily schedule fires at 08:00 `Asia/Singapore`. To run it
-immediately instead of waiting (e.g. to test, or to recover sooner
-after a fix):
+The schedule (`CoordinatorFunctionDailySchedule`) fires every hour,
+`Asia/Singapore` time. Only the 08:00 run does the daily work (invitations,
+reminders, closing summaries); the other hours only close invitations a
+captain sent by hand from the Schedule tab, at their own closing time (see
+"Sending invitations by hand" below). Invoking it by hand with no payload
+does the full daily run. To run it immediately instead of waiting (e.g. to
+test, or to recover sooner after a fix):
 
 ```bash
 aws lambda invoke --function-name ceylon-sharks-availability-coordinator \
@@ -68,9 +72,9 @@ aws scheduler get-schedule --region ap-southeast-1 --name CoordinatorFunctionDai
 
 # Disable
 aws scheduler update-schedule --region ap-southeast-1 --name CoordinatorFunctionDailySchedule \
-  --group-name default --schedule-expression "cron(0 8 * * ? *)" --schedule-expression-timezone "Asia/Singapore" \
+  --group-name default --schedule-expression "cron(0 * * * ? *)" --schedule-expression-timezone "Asia/Singapore" \
   --flexible-time-window Mode=OFF \
-  --target '{"Arn":"arn:aws:lambda:ap-southeast-1:<ACCOUNT_ID>:function:ceylon-sharks-availability-coordinator","RoleArn":"<CoordinatorFunctionDailyScheduleRole ARN from the stack>"}' \
+  --target '{"Arn":"arn:aws:lambda:ap-southeast-1:<ACCOUNT_ID>:function:ceylon-sharks-availability-coordinator","RoleArn":"<CoordinatorFunctionDailyScheduleRole ARN from the stack>","Input":"{\"mode\":\"scheduled\"}"}' \
   --state DISABLED   # or ENABLED
 ```
 
@@ -220,6 +224,44 @@ responses to the old one stay in the admin panel's history.
 
 ```bash
 aws logs tail /aws/lambda/ceylon-sharks-availability-admin-schedule --since 1h --region ap-southeast-1
+```
+
+### Sending invitations by hand
+
+The daily run sends invitations 5 days before a match, catches up a missed
+one while the match is still 3-4 days away, and never sends once the 2-day
+closing deadline has passed. A match added later than that (typically a
+knockout game confirmed a few days out) would get no invitations, so each
+upcoming match in the Schedule tab shows where its invitations stand, and
+**Send availability invitations** appears when it's 0-5 days away and they
+haven't gone out (or the last attempt failed).
+
+`POST /admin/schedule` with `{ action: "invite", season, key }`
+(`backend/src/manualInvitation.ts` has the rules):
+
+- 3-5 days out: sent now with the normal deadline; the reminder and closing
+  summary then follow the normal daily rules.
+- 2 days out or less: availability closes at 23:59 the night before the match,
+  or, if that's under an hour away (or it's match day), 2 hours before the start
+  time. If players would have under 30 minutes, it's refused.
+- The admin function claims the match's `INVITATION#{matchId}` action (same
+  conditional write as the daily run, so nothing is ever sent twice) with
+  `trigger: MANUAL`, `requestedBy`, a match snapshot and, when it has its own
+  closing time, `closesAt`. It then starts the coordinator asynchronously with
+  `{ mode: "manual-invitation", match, closesAt }`, which sends the emails
+  (about a second per player) and marks the action COMPLETED or FAILED. If the
+  coordinator can't be started, the action is marked FAILED and the button
+  comes back.
+- A `closesAt` invitation is closed by whichever coordinator run first sees
+  that time has passed - normally the next hourly run - which sends the usual
+  summary to the captain and vice-captain.
+
+To see a hand-sent invitation's record:
+
+```bash
+aws dynamodb scan --table-name <ScheduledActionsTable> --region ap-southeast-1 \
+  --filter-expression "#t = :m" --expression-attribute-names '{"#t":"trigger"}' \
+  --expression-attribute-values '{":m":{"S":"MANUAL"}}'
 ```
 
 ## Managing site photos from the admin panel

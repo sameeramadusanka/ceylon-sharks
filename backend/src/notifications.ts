@@ -1,3 +1,4 @@
+import type { DateTime } from 'luxon';
 import type { Match } from './providers/githubMatchProvider.js';
 import { loadConfig } from './config.js';
 import { logger } from './logger.js';
@@ -14,13 +15,14 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // SES sandbox in this account confirmed MaxSendRate: 1 request/second (ap-southeast-1).
 const SES_SEND_PACING_MS = 1100;
 
-export async function sendInvitations(match: Match): Promise<void> {
+/** `closesAt` overrides the normal deadline - for invitations a captain sent by hand after it had passed. */
+export async function sendInvitations(match: Match, closesAt?: DateTime): Promise<void> {
   const config = loadConfig();
   const docClient = createDocumentClient();
   const sesClient = createSesClient();
 
   const members = await listActiveMembers(docClient, config.teamMembersTable);
-  const deadline = closureDeadline(match.matchDate, config.timeZone, config.closureDaysBefore, config.closureLocalTime);
+  const deadline = closesAt?.setZone(config.timeZone) ?? closureDeadline(match.matchDate, config.timeZone, config.closureDaysBefore, config.closureLocalTime);
   const tokenExpiry = Math.floor(deadline.toSeconds());
   const deadlineLabel = deadline.toFormat('dd LLL yyyy HH:mm');
   const logoUrl = logoUrlFor(config.availabilityFrontendUrl);
