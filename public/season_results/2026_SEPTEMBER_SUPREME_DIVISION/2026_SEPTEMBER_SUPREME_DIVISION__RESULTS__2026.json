@@ -76,6 +76,15 @@
         "teamTwo": "Cool Blue",
         "result": "Ceylon Sharks won by 6 Wickets",
         "scoreSummary": "Ceylon Sharks: 82/4(11.1)Cool Blue: 81/5(15)"
+      },
+      {
+        "id": 9,
+        "format": "League",
+        "date": "2026-11-28",
+        "teamOne": "Ceylon Sharks",
+        "teamTwo": "Cool Stars",
+        "result": "Cool Stars won by 49 Runs",
+        "scoreSummary": "Ceylon Sharks: 81/9(15)Cool Stars: 130/7(15)"
       }
     ]
   }

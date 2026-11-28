@@ -9,11 +9,11 @@
         "player": "Hasanka Chandrasena",
         "team": null,
         "catches": 1,
-        "wicketKeeperCatches": 11,
+        "wicketKeeperCatches": 12,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
-        "stumpings": 0,
-        "totalDismissals": 12
+        "stumpings": 1,
+        "totalDismissals": 14
       },
       {
         "rank": 2,
@@ -127,18 +127,18 @@
       },
       {
         "rank": 12,
-        "player": "Lasitha Lokuge",
+        "player": "Chinthaka Rajarathna",
         "team": null,
-        "catches": 0,
+        "catches": 1,
         "wicketKeeperCatches": 0,
         "directRunOuts": 0,
         "indirectRunOuts": 0,
         "stumpings": 0,
-        "totalDismissals": 0
+        "totalDismissals": 1
       },
       {
         "rank": 13,
-        "player": "Chinthaka Rajarathna",
+        "player": "Lasitha Lokuge",
         "team": null,
         "catches": 0,
         "wicketKeeperCatches": 0,
