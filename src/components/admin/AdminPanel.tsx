@@ -366,7 +366,7 @@ export default function AdminPanel({ potwData, photosData }: AdminPanelProps) {
 
         {phase === 'potw' && session && canPublishPotw && <PlayerOfTheWeekPublisher data={potwData} sessionToken={session.token} onSessionExpired={expireSession} />}
         {phase === 'photos' && session && canPublishPotw && <SitePhotosManager data={photosData} sessionToken={session.token} onSessionExpired={expireSession} />}
-        {phase === 'schedule' && session && canPublishPotw && <ScheduleManager sessionToken={session.token} onSessionExpired={expireSession} />}
+        {phase === 'schedule' && session && canPublishPotw && <ScheduleManager scorecardDates={potwData.matches.map((match) => `${match.season}/${match.date}`)} sessionToken={session.token} onSessionExpired={expireSession} />}
 
         {phase === 'matches' && (
           <>

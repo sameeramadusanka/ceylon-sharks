@@ -11,6 +11,8 @@ const TIME_SLOTS = ['7:30 AM', '9:45 AM', '12:00 PM', '2:15 PM', '4:30 PM'];
 const OTHER_OPPONENT = '__other__';
 
 interface ScheduleManagerProps {
+  /** `${season}/${date}` of every match with a scorecard on the site (build time), so today's played match counts as completed. */
+  scorecardDates: string[];
   sessionToken: string;
   onSessionExpired: () => void;
 }
@@ -28,11 +30,17 @@ function displayDate(date: string): string {
   return Number.isNaN(parsed.getTime()) ? date : parsed.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+/** Today's date (YYYY-MM-DD) on this device, to compare with schedule dates. */
+function todayIso(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
 function emptyDraft(overview: ScheduleOverview): Draft {
   return { format: overview.formats.find((format) => format !== 'League') ?? overview.formats[0] ?? '', opponent: '', otherOpponent: '', date: '', time: TIME_SLOTS[1], ground: overview.grounds[0] ?? '' };
 }
 
-export default function ScheduleManager({ sessionToken, onSessionExpired }: ScheduleManagerProps) {
+export default function ScheduleManager({ scorecardDates, sessionToken, onSessionExpired }: ScheduleManagerProps) {
   const [overview, setOverview] = useState<ScheduleOverview | null>(null);
   const [loadError, setLoadError] = useState('');
   const [season, setSeason] = useState('');
@@ -119,6 +127,34 @@ export default function ScheduleManager({ sessionToken, onSessionExpired }: Sche
     setResult(null);
     submit({ action: 'delete', season, key: match.key });
   }
+
+  // Completed: before today, or its scorecard is on the site (newest first). Upcoming: the rest (soonest first).
+  const today = todayIso();
+  const isCompleted = (match: ScheduleItem) => match.date < today || scorecardDates.includes(`${season}/${match.date}`);
+  const upcoming = matches.filter((match) => !isCompleted(match));
+  const completed = matches.filter(isCompleted).reverse();
+
+  const renderRow = (match: ScheduleItem) => (
+    <li key={match.key} className={editing !== 'new' && editing?.key === match.key ? 'ad-schedule-row ad-schedule-row--editing' : 'ad-schedule-row'}>
+      <div className="ad-match-row__main">
+        <span className="ad-match-row__opponent">
+          vs {match.opponent}
+          {match.format !== 'League' && <span className="ad-schedule-format">{match.format}</span>}
+        </span>
+        <span className="ad-match-row__meta">
+          {displayDate(match.date)} · {match.time} · {match.ground}
+        </span>
+      </div>
+      <div className="ad-schedule-row__actions">
+        <button type="button" className="ad-link-button" onClick={() => openForm(match)} disabled={saving}>
+          Edit
+        </button>
+        <button type="button" className="ad-link-button ad-link-button--danger" onClick={() => remove(match)} disabled={saving}>
+          Remove
+        </button>
+      </div>
+    </li>
+  );
 
   const update = (field: keyof Draft, value: string) => setDraft((current) => (current ? { ...current, [field]: value } : current));
 
@@ -272,29 +308,20 @@ export default function ScheduleManager({ sessionToken, onSessionExpired }: Sche
       {matches.length === 0 ? (
         <p className="ad-empty">No matches in this season's schedule yet.</p>
       ) : (
-        <ul className="ad-schedule-list">
-          {matches.map((match) => (
-            <li key={match.key} className={editing !== 'new' && editing?.key === match.key ? 'ad-schedule-row ad-schedule-row--editing' : 'ad-schedule-row'}>
-              <div className="ad-match-row__main">
-                <span className="ad-match-row__opponent">
-                  vs {match.opponent}
-                  {match.format !== 'League' && <span className="ad-schedule-format">{match.format}</span>}
-                </span>
-                <span className="ad-match-row__meta">
-                  {displayDate(match.date)} · {match.time} · {match.ground}
-                </span>
-              </div>
-              <div className="ad-schedule-row__actions">
-                <button type="button" className="ad-link-button" onClick={() => openForm(match)} disabled={saving}>
-                  Edit
-                </button>
-                <button type="button" className="ad-link-button ad-link-button--danger" onClick={() => remove(match)} disabled={saving}>
-                  Remove
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <>
+          <section className="ad-schedule-section">
+            <h2 className="ad-schedule-section__title">
+              Upcoming <span>({upcoming.length})</span>
+            </h2>
+            {upcoming.length === 0 ? <p className="ad-empty">No upcoming matches. Add the next one above.</p> : <ul className="ad-schedule-list">{upcoming.map(renderRow)}</ul>}
+          </section>
+          <section className="ad-schedule-section">
+            <h2 className="ad-schedule-section__title">
+              Completed <span>({completed.length})</span>
+            </h2>
+            {completed.length === 0 ? <p className="ad-empty">No completed matches yet.</p> : <ul className="ad-schedule-list">{completed.map(renderRow)}</ul>}
+          </section>
+        </>
       )}
     </>
   );

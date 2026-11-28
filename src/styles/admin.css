@@ -1019,3 +1019,25 @@
     gap: 10px;
   }
 }
+
+.ad-schedule-section + .ad-schedule-section {
+  margin-top: 28px;
+}
+
+.ad-schedule-section__title {
+  color: var(--ad-muted);
+  font-family: var(--ad-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.ad-schedule-section__title span {
+  color: var(--ad-paper);
+}
+
+.ad-schedule-section .ad-empty {
+  margin: 0;
+}
