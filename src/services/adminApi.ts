@@ -261,3 +261,65 @@ export async function publishSitePhotos(sessionToken: string, request: SitePhoto
   }
   return readJsonOrThrow<{ success: true } & SitePhotosPublishResult>(response);
 }
+
+// ---------------------------------------------------------------------------
+// Match schedule (add knockout matches, fix dates/grounds)
+// ---------------------------------------------------------------------------
+
+export interface ScheduleItem {
+  /** Identifies the fixture when changing or removing it. */
+  key: string;
+  format: string;
+  opponent: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** e.g. "9:45 AM" */
+  time: string;
+  ground: string;
+  status: string;
+}
+
+export interface ScheduleOverview {
+  seasons: { season: string; matches: ScheduleItem[] }[];
+  /** Teams from every season's schedule, A-Z. */
+  opponents: string[];
+  formats: string[];
+  grounds: string[];
+}
+
+export interface ScheduleMatchInput {
+  format: string;
+  opponent: string;
+  date: string;
+  time: string;
+  ground: string;
+}
+
+export type ScheduleChange =
+  | { action: 'add'; season: string; match: ScheduleMatchInput }
+  | { action: 'update'; season: string; key: string; match: ScheduleMatchInput }
+  | { action: 'delete'; season: string; key: string };
+
+export async function fetchSchedule(sessionToken: string): Promise<ScheduleOverview> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/schedule`, { headers: { authorization: `Bearer ${sessionToken}` } });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true } & ScheduleOverview>(response);
+}
+
+export async function changeSchedule(sessionToken: string, change: ScheduleChange): Promise<ScheduleOverview & { commitUrl: string; summary: string }> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/admin/schedule`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${sessionToken}` },
+      body: JSON.stringify(change),
+    });
+  } catch {
+    throw unreachableError();
+  }
+  return readJsonOrThrow<{ success: true; commitUrl: string; summary: string } & ScheduleOverview>(response);
+}

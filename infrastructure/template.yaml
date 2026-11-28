@@ -333,6 +333,12 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${AWS::StackName}-notify-site-photos
       RetentionInDays: 30
 
+  AdminScheduleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AWS::StackName}-admin-schedule
+      RetentionInDays: 30
+
   # ---------------------------------------------------------------------
   # Lambda functions
   # ---------------------------------------------------------------------
@@ -715,6 +721,49 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints: [src/handlers/sitePhotos.ts]
+        Target: es2022
+
+  # Admin "Schedule" tab: adds, changes and removes fixtures (e.g. knockout
+  # matches once the league stage ends) by committing the season's schedule
+  # file to the site repo (same token and branch as Player of the Week).
+  # Captain, vice-captain and site owner only.
+  AdminScheduleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-admin-schedule
+      CodeUri: ../backend
+      Handler: src/handlers/adminSchedule.handler
+      Timeout: 30
+      LoggingConfig:
+        LogGroup: !Ref AdminScheduleLogGroup
+      Environment:
+        Variables:
+          GITHUB_REPO: !Ref GithubRepo
+          POTW_PUBLISH_BRANCH: !Ref PlayerOfTheWeekPublishBranch
+          POTW_BASE_BRANCH: main
+          GITHUB_TOKEN_PARAMETER: !Sub /${GithubTokenParameterName}
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AdminSessionsTable
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref GithubTokenParameterName
+      Events:
+        List:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/schedule
+            Method: GET
+        Change:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref AvailabilityHttpApi
+            Path: /admin/schedule
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/handlers/adminSchedule.ts]
         Target: es2022
 
   # Started (asynchronously) by SitePhotosFunction. Waits until the live site

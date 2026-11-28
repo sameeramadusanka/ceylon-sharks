@@ -13,9 +13,10 @@ import {
 import type { AdminPotwData } from '../../lib/playerOfTheWeekAdminData';
 import type { AdminSitePhotosData } from '../../lib/sitePhotosAdminData';
 import PlayerOfTheWeekPublisher from './PlayerOfTheWeekPublisher';
+import ScheduleManager from './ScheduleManager';
 import SitePhotosManager from './SitePhotosManager';
 
-type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'potw' | 'photos' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
+type Phase = 'email' | 'requesting' | 'code' | 'verifying' | 'loading-matches' | 'matches' | 'potw' | 'photos' | 'schedule' | 'loading-detail' | 'detail' | 'error' | 'signed-out';
 
 const REDIRECT_SECONDS = 5;
 
@@ -346,7 +347,7 @@ export default function AdminPanel({ potwData, photosData }: AdminPanelProps) {
           </p>
         )}
 
-        {canPublishPotw && (phase === 'matches' || phase === 'potw' || phase === 'photos') && (
+        {canPublishPotw && (phase === 'matches' || phase === 'potw' || phase === 'photos' || phase === 'schedule') && (
           <div className="ad-tabs" role="tablist">
             <button type="button" role="tab" aria-selected={phase === 'matches'} className={phase === 'matches' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('matches')}>
               Availability
@@ -357,11 +358,15 @@ export default function AdminPanel({ potwData, photosData }: AdminPanelProps) {
             <button type="button" role="tab" aria-selected={phase === 'photos'} className={phase === 'photos' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('photos')}>
               Site photos
             </button>
+            <button type="button" role="tab" aria-selected={phase === 'schedule'} className={phase === 'schedule' ? 'ad-tab ad-tab--active' : 'ad-tab'} onClick={() => setPhase('schedule')}>
+              Schedule
+            </button>
           </div>
         )}
 
         {phase === 'potw' && session && canPublishPotw && <PlayerOfTheWeekPublisher data={potwData} sessionToken={session.token} onSessionExpired={expireSession} />}
         {phase === 'photos' && session && canPublishPotw && <SitePhotosManager data={photosData} sessionToken={session.token} onSessionExpired={expireSession} />}
+        {phase === 'schedule' && session && canPublishPotw && <ScheduleManager sessionToken={session.token} onSessionExpired={expireSession} />}
 
         {phase === 'matches' && (
           <>
