@@ -912,3 +912,110 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Schedule tab                                                        */
+/* ------------------------------------------------------------------ */
+
+.ad-schedule-add {
+  margin-bottom: 24px;
+}
+
+.ad-schedule-form {
+  border: 1px solid var(--ad-line);
+  border-radius: 4px;
+  margin: 0 0 24px;
+  padding: 20px;
+}
+
+.ad-schedule-form__title {
+  font-family: var(--ad-serif);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+
+.ad-schedule-form__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+.ad-schedule-form__actions .ad-link-button {
+  margin-top: 0;
+}
+
+.ad-schedule-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ad-schedule-row {
+  align-items: center;
+  background: #0f1011;
+  border: 1px solid var(--ad-line);
+  border-radius: 4px;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 14px 16px;
+}
+
+.ad-schedule-row--editing {
+  border-color: var(--ad-amber);
+}
+
+.ad-schedule-row__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+.ad-schedule-row__actions .ad-link-button {
+  margin-top: 0;
+}
+
+.ad-link-button--danger {
+  color: var(--ad-red);
+}
+
+.ad-link-button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.ad-schedule-format {
+  border: 1px solid var(--ad-amber);
+  border-radius: 3px;
+  color: var(--ad-amber);
+  font-family: var(--ad-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  margin-left: 10px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+  /* Four tabs don't fit on a phone: wrap rather than hide one off-screen. */
+  .ad-tabs {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .ad-schedule-form {
+    padding: 16px;
+  }
+
+  .ad-schedule-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

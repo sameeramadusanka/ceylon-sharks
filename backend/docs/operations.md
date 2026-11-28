@@ -190,6 +190,38 @@ because of an email problem.
 aws logs tail /aws/lambda/ceylon-sharks-availability-notify-potw --since 1h --region ap-southeast-1
 ```
 
+## Changing the match schedule from the admin panel
+
+The admin panel's **Schedule** tab (same people as Player of the Week) edits
+the season schedule files in `public/upcoming_schedules/`, mainly to add the
+knockout matches (QF1, QF2, quarter final, semi final, final) that aren't
+known when the league schedule is published. It uses the `admin-schedule`
+Lambda, the same GitHub token and the same branch
+(`PlayerOfTheWeekPublishBranch`):
+
+- `GET /admin/schedule` lists every season (any with a squad folder or a
+  schedule file) and its fixtures, plus the opponents seen in any schedule.
+- `POST /admin/schedule` makes one change and commits it:
+  `{ action: "add", season, match }`, `{ action: "update", season, key, match }`
+  or `{ action: "delete", season, key }`, where `match` is
+  `{ format, opponent, date, time, ground }` and `key` is
+  `date|teamOne|teamTwo` from the list. Formats and grounds are fixed lists in
+  `backend/src/handlers/adminSchedule.ts`. A new match is stored as
+  `Ceylon Sharks` v the opponent with status `Scheduled`; an update keeps the
+  fixture's home/away order and the umpire/scorer fields. Two matches at the
+  same date and time are refused, and a stale key (someone else changed the
+  match first) returns 409 so the panel can reload.
+
+The coordinator reads the same files, so a new fixture gets availability
+emails like a league match. The availability match ID is built from the
+season, date and both team names, so changing a match's date or opponent
+after its invitations went out makes it a new match with fresh invitations;
+responses to the old one stay in the admin panel's history.
+
+```bash
+aws logs tail /aws/lambda/ceylon-sharks-availability-admin-schedule --since 1h --region ap-southeast-1
+```
+
 ## Managing site photos from the admin panel
 
 The admin panel's **Site photos** tab (same people as Player of the Week)
