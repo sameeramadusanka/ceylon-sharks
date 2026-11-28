@@ -134,7 +134,8 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
   const upcoming = matches.filter((match) => !isCompleted(match));
   const completed = matches.filter(isCompleted).reverse();
 
-  const renderRow = (match: ScheduleItem) => (
+  // Completed matches are read-only: only upcoming ones get Edit and Remove.
+  const renderRow = (match: ScheduleItem, editable: boolean) => (
     <li key={match.key} className={editing !== 'new' && editing?.key === match.key ? 'ad-schedule-row ad-schedule-row--editing' : 'ad-schedule-row'}>
       <div className="ad-match-row__main">
         <span className="ad-match-row__opponent">
@@ -145,14 +146,16 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
           {displayDate(match.date)} · {match.time} · {match.ground}
         </span>
       </div>
-      <div className="ad-schedule-row__actions">
-        <button type="button" className="ad-link-button" onClick={() => openForm(match)} disabled={saving}>
-          Edit
-        </button>
-        <button type="button" className="ad-link-button ad-link-button--danger" onClick={() => remove(match)} disabled={saving}>
-          Remove
-        </button>
-      </div>
+      {editable && (
+        <div className="ad-schedule-row__actions">
+          <button type="button" className="ad-link-button" onClick={() => openForm(match)} disabled={saving}>
+            Edit
+          </button>
+          <button type="button" className="ad-link-button ad-link-button--danger" onClick={() => remove(match)} disabled={saving}>
+            Remove
+          </button>
+        </div>
+      )}
     </li>
   );
 
@@ -313,13 +316,13 @@ export default function ScheduleManager({ scorecardDates, sessionToken, onSessio
             <h2 className="ad-schedule-section__title">
               Upcoming <span>({upcoming.length})</span>
             </h2>
-            {upcoming.length === 0 ? <p className="ad-empty">No upcoming matches. Add the next one above.</p> : <ul className="ad-schedule-list">{upcoming.map(renderRow)}</ul>}
+            {upcoming.length === 0 ? <p className="ad-empty">No upcoming matches. Add the next one above.</p> : <ul className="ad-schedule-list">{upcoming.map((match) => renderRow(match, true))}</ul>}
           </section>
           <section className="ad-schedule-section">
             <h2 className="ad-schedule-section__title">
               Completed <span>({completed.length})</span>
             </h2>
-            {completed.length === 0 ? <p className="ad-empty">No completed matches yet.</p> : <ul className="ad-schedule-list">{completed.map(renderRow)}</ul>}
+            {completed.length === 0 ? <p className="ad-empty">No completed matches yet.</p> : <ul className="ad-schedule-list">{completed.map((match) => renderRow(match, false))}</ul>}
           </section>
         </>
       )}
